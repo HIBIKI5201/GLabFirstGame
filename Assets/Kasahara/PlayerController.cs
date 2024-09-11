@@ -6,52 +6,61 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>プレイヤーキャラのHP。これが0になるとゲームオーバー</summary>
-    [SerializeField] int _maxHP;
+    [Header("体力の最大値")]
+    [SerializeField][Tooltip("プレイヤーの体力の最大値")] int _maxHP;
     /// <summary>プレイヤーキャラが攻撃を行った時に、エネミーに与えるダメージ。</summary>
-    [SerializeField] int _attack;
+    [Header("攻撃力")]
+    [SerializeField][Tooltip("プレイヤーの攻撃力")] int _attack;
     /// <summary>プレイヤーキャラクターの移動速度を決める値。数値が高いほど最大速度が高くなる</summary>
-    [SerializeField] float _speed;
+    [Header("移動速度の最大値")]
+    [SerializeField][Tooltip("プレイヤーの速度の最大値")] float _speed;
     /// <summary>プレイヤーキャラクターの移動速度の加速度を決める値。数値が高いほど最大速度までの加速時間が短い</summary>
-    [SerializeField] float _movePower;
+    [Header("移動速度の加速度")]
+    [SerializeField][Tooltip("プレイヤーの移動速度の加速度")] float _movePower;
     /// <summary>プレイヤーキャラクターのJump時に上方向に掛ける力。数値が高いほど、高くジャンプが行える</summary>
-    [SerializeField] float _jumpPower;
+    [Header("ジャンプ力")]
+    [SerializeField][Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
     /// <summary>エネミーからダメージを受けた際、一定時間はダメージを受けないようにする時間。整数値で入力する。1=1秒</summary>
-    [SerializeField] int _damageCool;
+    [Header("無敵時間")]
+    [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
     /// <summary>接地判定</summary>
    　bool _isGround;
     Rigidbody2D _rb;
-    // Start is called before the first frame update
+
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        var x = Input.GetAxisRaw("Horizontal");
-        _rb.AddForce(new Vector2(x * _movePower, 0), ForceMode2D.Force);
-        if (_rb.velocity.x > _speed)
-        {
-            _rb.velocity = new Vector2(_speed, _rb.velocity.y);
-        }
-        else if (_rb.velocity.x < - _speed)
-        {
-            _rb.velocity = new Vector2(- _speed, _rb.velocity.y);
-        }
-        if(_isGround && Input.GetKeyDown(KeyCode.Space))
-        {
-            _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
-            _isGround = false;
-            Debug.Log(_isGround);
-        }
+        Move();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             _isGround = true;
-            Debug.Log(_isGround);
+        }
+    }
+    private void Move()
+    {
+        //移動処理
+        var x = Input.GetAxisRaw("Horizontal");
+        _rb.AddForce(new Vector2(x * _movePower, 0), ForceMode2D.Force);
+        if (_rb.velocity.x > _speed)
+        {
+            _rb.velocity = new Vector2(_speed, _rb.velocity.y);
+        }
+        else if (_rb.velocity.x < -_speed)
+        {
+            _rb.velocity = new Vector2(-_speed, _rb.velocity.y);
+        }
+        //ジャンプ
+        if (_isGround && Input.GetKeyDown(KeyCode.Space))
+        {
+            _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+            _isGround = false;
         }
     }
 }
