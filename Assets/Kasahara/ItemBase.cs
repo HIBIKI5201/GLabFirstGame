@@ -13,7 +13,7 @@ public abstract class ItemBase : MonoBehaviour
     /// <summary>アイテムの効果をいつ発揮するか</summary>
     [Tooltip("Get を選ぶと、取った時に効果が発動する。Use を選ぶと、アイテムを使った時に発動する")]
     [SerializeField] ActivateTiming _whenActivated = ActivateTiming.Get;
-
+    public GameObject Player { get; private set; }
     /// <summary>
     /// アイテムが発動する効果を実装する
     /// </summary>
