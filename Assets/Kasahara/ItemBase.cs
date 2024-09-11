@@ -23,6 +23,7 @@ public abstract class ItemBase : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Player"))
         {
+            Player = collision.gameObject;
             if (_sound)
             {
                 AudioSource.PlayClipAtPoint(_sound, Camera.main.transform.position);
