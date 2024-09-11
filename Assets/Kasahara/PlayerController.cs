@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
     /// <summary>接地判定</summary>
    　bool _isGround;
+    /// <summary>持っているアイテムのリスト</summary>
+    List<ItemBase> _itemList = new List<ItemBase>();
     Rigidbody2D _rb;
 
     void Start()
@@ -34,7 +37,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Move();
+        var x = Input.GetAxisRaw("Horizontal");
+        Move(new Vector2(x, 0));
+        Jump();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -43,11 +48,11 @@ public class PlayerController : MonoBehaviour
             _isGround = true;
         }
     }
-    private void Move()
+    private void Move(Vector2 horiMove)
     {
         //移動処理
         var x = Input.GetAxisRaw("Horizontal");
-        _rb.AddForce(new Vector2(x * _movePower, 0), ForceMode2D.Force);
+        _rb.AddForce(horiMove * _movePower, ForceMode2D.Force);
         if (_rb.velocity.x > _speed)
         {
             _rb.velocity = new Vector2(_speed, _rb.velocity.y);
@@ -56,11 +61,17 @@ public class PlayerController : MonoBehaviour
         {
             _rb.velocity = new Vector2(-_speed, _rb.velocity.y);
         }
-        //ジャンプ
+    }
+    private void Jump()
+    {
         if (_isGround && Input.GetKeyDown(KeyCode.Space))
         {
             _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
             _isGround = false;
         }
+    }
+    public void GetItem(ItemBase item)
+    {
+        _itemList.Add(item);
     }
 }

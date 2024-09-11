@@ -159,7 +159,7 @@ MonoBehaviour:
   _maxHP: 0
   _attack: 0
   _speed: 10
-  _movePower: 10
+  _movePower: 1
   _jumpPower: 10
   _damageCool: 0
 --- !u!50 &538153192
