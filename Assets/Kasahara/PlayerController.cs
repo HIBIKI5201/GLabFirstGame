@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>プレイヤーキャラのHP。これが0になるとゲームオーバー</summary>
     [Header("体力の最大値")]
     [SerializeField][Tooltip("プレイヤーの体力の最大値")] int _maxHP;
+    int _currentHP;
     /// <summary>プレイヤーキャラが攻撃を行った時に、エネミーに与えるダメージ。</summary>
     [Header("攻撃力")]
     [SerializeField][Tooltip("プレイヤーの攻撃力")] int _attack;
@@ -73,5 +74,17 @@ public class PlayerController : MonoBehaviour
     public void GetItem(ItemBase item)
     {
         _itemList.Add(item);
+    }
+    /// <summary>
+    /// プレイヤーの体力を引数に渡した数値分増減させます。
+    /// </summary>
+    /// <param name="value"></param>
+    public void FluctuationLife(int value)
+    {
+        _currentHP += value;
+        if(_currentHP > _maxHP)
+        {
+            _currentHP = _maxHP;
+        }
     }
 }
