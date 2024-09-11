@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _jumpPower;
     /// <summary>エネミーからダメージを受けた際、一定時間はダメージを受けないようにする時間。整数値で入力する。1=1秒</summary>
     [SerializeField] int _damageCool;
+    /// <summary>接地判定</summary>
+   　bool _isGround;
     Rigidbody2D _rb;
     // Start is called before the first frame update
     void Start()
@@ -37,9 +39,19 @@ public class PlayerController : MonoBehaviour
         {
             _rb.velocity = new Vector2(- _speed, _rb.velocity.y);
         }
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(_isGround && Input.GetKeyDown(KeyCode.Space))
         {
             _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+            _isGround = false;
+            Debug.Log(_isGround);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            _isGround = true;
+            Debug.Log(_isGround);
         }
     }
 }
