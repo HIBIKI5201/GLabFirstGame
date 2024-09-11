@@ -10,10 +10,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] int _hp;
     [SerializeField] int _speed;
     [SerializeField] MoveType _moveType;
+    [Header("ジャンプの設定")]
     [SerializeField] JumpStruct _jump;
     float _jumpTimer;
+    [Header("地面や障害物の設定")]
     [SerializeField] GroundedRay _ground;
     [SerializeField] bool _isFry;
+    [Header("進行方向")]
     [SerializeField] Direction _dir;
     Transform _myTra;
     enum Direction
