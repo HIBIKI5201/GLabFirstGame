@@ -23,5 +23,9 @@ public class PlayerController : MonoBehaviour
     {
         var x = Input.GetAxisRaw("Horizontal");
         _rb.AddForce(new Vector2(x, 0), ForceMode2D.Force);
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+        }
     }
 }
