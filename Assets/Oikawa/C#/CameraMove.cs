@@ -5,12 +5,15 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour
 {
     [SerializeField] Transform _target;
+
     [Header("カメラの追跡速度")]
     [SerializeField] float _speed;
+
     [Header("カメラの移動できる範囲")]
     [SerializeField] Vector2 _minClamp;
     [SerializeField] Vector2 _maxClamp;
     Vector2 _outPos;
+
     [Header("手ブレ")]
     [SerializeField] float _shakeSpeed;
     [SerializeField] float _shakePower;
@@ -22,7 +25,6 @@ public class CameraMove : MonoBehaviour
         _outPos = _myTra.position;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         Vector2 targetPos = _target.position;
@@ -51,7 +53,12 @@ public class CameraMove : MonoBehaviour
         Debug.DrawLine(new Vector2(min.x, max.y),max);
 
         Vector2 p = _myTra.position;
-        Debug.DrawLine(new Vector2(min.x,p.y), new Vector2(max.x, p.y));
-        Debug.DrawLine(new Vector2(p.x,min.y), new Vector2(p.x, max.y));
+        Vector2 clampP = p;
+        clampP.x = Mathf.Clamp(clampP.x, min.x, max.x);
+        clampP.y = Mathf.Clamp(clampP.y, min.y, max.y);
+        Debug.DrawLine(new Vector2(min.x,clampP.y), p);
+        Debug.DrawLine(new Vector2(max.x,clampP.y), p);
+        Debug.DrawLine(new Vector2(clampP.x,min.y), p);
+        Debug.DrawLine(new Vector2(clampP.x,max.y), p);
     }
 }
