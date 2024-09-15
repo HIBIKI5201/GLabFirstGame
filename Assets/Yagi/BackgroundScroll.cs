@@ -1,4 +1,3 @@
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 public class BackgroundScroll : MonoBehaviour
 {
@@ -6,7 +5,7 @@ public class BackgroundScroll : MonoBehaviour
     [Tooltip("最初の座標")]float _startpos;
     /// <summary> スクロールさせる速さ</summary>
     [Header("スクロールの速さ")]
-    [SerializeField] float _scrollSpeed;
+    [SerializeField] private float _scrollSpeed;
     [SerializeField, Tooltip("スクロールさせる背景素材")] GameObject _background;
     SpriteRenderer _backgroundSprite;
     /// <summary>背景の複製</summary>
@@ -14,7 +13,7 @@ public class BackgroundScroll : MonoBehaviour
     /// <summary>背景の複製</summary>
     SpriteRenderer _backgroundClone2;
 
-    void Start()
+    private void Start()
     {
         //スピードの+-を合わせる
         _scrollSpeed *= -1;
