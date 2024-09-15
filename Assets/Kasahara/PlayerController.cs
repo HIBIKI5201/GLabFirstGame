@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
     bool _isStompEnemy;
     /// <summary>持っているアイテムのリスト</summary>
     List<ItemBase> _itemList = new List<ItemBase>();
+    /// <summary>持っている武器</summary>
+    (bool _isWoodStick, bool _isAxe, int _rocks) _weapons;
+    PlayerWeaponStatus _weaponStatus = PlayerWeaponStatus.Normal;
     Rigidbody2D _rb;
     float _jumpTimer = 0;
     void Start()
@@ -53,22 +56,32 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             _isStompEnemy = true;
-            _rb.velocity = new Vector2(_rb.velocity.x,0);
+            _rb.velocity = new Vector2(_rb.velocity.x, 0);
             Debug.Log("踏んだ");
         }
     }
+    enum PlayerWeaponStatus
+    {
+        WoodStick,
+        Axe,
+        Rock,
+        Normal,
+    }
     private void Move()
     {
-        //移動処理
-        var x = Input.GetAxisRaw("Horizontal");
-        _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
-        if (_rb.velocity.x > _speed)
+        if (!_isJump)
         {
-            _rb.velocity = new Vector2(_speed, _rb.velocity.y);
-        }
-        else if (_rb.velocity.x < -_speed)
-        {
-            _rb.velocity = new Vector2(-_speed, _rb.velocity.y);
+            //移動処理
+            var x = Input.GetAxisRaw("Horizontal");
+            _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
+            if (_rb.velocity.x > _speed)
+            {
+                _rb.velocity = new Vector2(_speed, _rb.velocity.y);
+            }
+            else if (_rb.velocity.x < -_speed)
+            {
+                _rb.velocity = new Vector2(-_speed, _rb.velocity.y);
+            }
         }
     }
     private void Jump()
@@ -101,6 +114,11 @@ public class PlayerController : MonoBehaviour
     {
         _itemList.Add(item);
     }
+    void ChangeWeapon()
+    {
+
+    }
+
     /// <summary>
     /// プレイヤーの体力を引数に渡した数値分増減させます。
     /// </summary>
