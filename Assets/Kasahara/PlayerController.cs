@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             _isStompEnemy = true;
+            _rb.velocity = new Vector2(_rb.velocity.x,0);
+            Debug.Log("“¥‚ñ‚¾");
         }
     }
     private void Move()
