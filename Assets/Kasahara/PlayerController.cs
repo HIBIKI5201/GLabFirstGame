@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -69,19 +70,20 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
-        if (!_isJump)
+        //ˆÚ“®ˆ—
+        var x = Input.GetAxisRaw("Horizontal");
+        if (_isJump)
         {
-            //ˆÚ“®ˆ—
-            var x = Input.GetAxisRaw("Horizontal");
-            _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
-            if (_rb.velocity.x > _speed)
-            {
-                _rb.velocity = new Vector2(_speed, _rb.velocity.y);
-            }
-            else if (_rb.velocity.x < -_speed)
-            {
-                _rb.velocity = new Vector2(-_speed, _rb.velocity.y);
-            }
+            x /= 5;
+        }
+        _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
+        if (_rb.velocity.x > _speed)
+        {
+            _rb.velocity = new Vector2(_speed, _rb.velocity.y);
+        }
+        else if (_rb.velocity.x < -_speed)
+        {
+            _rb.velocity = new Vector2(-_speed, _rb.velocity.y);
         }
     }
     private void Jump()
