@@ -123,4 +123,11 @@ public class Enemy : MonoBehaviour
         IsHitL = isHitL;
         return isHitR || isHitL;
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Enemy"))
+        {
+            _dir = _dir == Direction.right? Direction.left : Direction.right;
+        }
+    }
 }

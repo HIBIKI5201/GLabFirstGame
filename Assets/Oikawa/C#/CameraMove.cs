@@ -10,6 +10,7 @@ public class CameraMove : MonoBehaviour
     [SerializeField] float _speed;
 
     [Header("ÉJÉÅÉâÇÃà⁄ìÆÇ≈Ç´ÇÈîÕàÕ")]
+    [SerializeField] bool _clampEnabled;
     [SerializeField] Vector2 _minClamp;
     [SerializeField] Vector2 _maxClamp;
     Vector2 _outPos;
@@ -28,8 +29,11 @@ public class CameraMove : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 targetPos = _target.position;
-        targetPos.x = Mathf.Clamp(targetPos.x, _minClamp.x, _maxClamp.x);
-        targetPos.y = Mathf.Clamp(targetPos.y, _minClamp.y, _maxClamp.y);
+        if (_clampEnabled)
+        {
+            targetPos.x = Mathf.Clamp(targetPos.x, _minClamp.x, _maxClamp.x);
+            targetPos.y = Mathf.Clamp(targetPos.y, _minClamp.y, _maxClamp.y);
+        }
         _outPos = Vector3.Lerp(_outPos, targetPos, Time.deltaTime * _speed);
 
         Vector2 blur = new(
@@ -41,7 +45,8 @@ public class CameraMove : MonoBehaviour
 
         _myTra.position = outPos;
 
-        DebugClamp();
+        if (_clampEnabled)
+            DebugClamp();
     }
     void DebugClamp()
     {
