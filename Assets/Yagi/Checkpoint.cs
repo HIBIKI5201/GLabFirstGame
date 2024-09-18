@@ -10,7 +10,7 @@ public class Checkpoint : MonoBehaviour
 
     SpriteRenderer _spriteRenderer;
 
-    Vector2 _checkpoint;
+    public Vector2 _checkpoint { get; set; }
 
     private void Update()
     {
