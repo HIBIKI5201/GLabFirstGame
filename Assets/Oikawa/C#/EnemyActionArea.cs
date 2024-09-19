@@ -20,11 +20,10 @@ public class EnemyActionArea : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("in");
         Transform target = collision.transform;
         if (target.CompareTag("Enemy"))
         {
-            Debug.Log("enemy");
+            Debug.Log("“G‚ª“®‚«o‚µ‚½B");
             for (int i = 0; i < _enemies.Length; i++)
             {
                 if (target == _enemiesTra[i])

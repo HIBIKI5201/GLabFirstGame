@@ -128,6 +128,12 @@ public class Enemy : MonoBehaviour
         if (collision.transform.CompareTag("Enemy"))
         {
             _dir = _dir == Direction.right? Direction.left : Direction.right;
+            return;
+        }
+        if (collision.transform.CompareTag("Player"))
+        {
+            Debug.Log("Enemy Hit Player");
+            return;
         }
     }
 }

@@ -9,6 +9,9 @@ public class CameraMove : MonoBehaviour
     [Header("ƒJƒƒ‰‚Ì’ÇÕ‘¬“x")]
     [SerializeField] float _speed;
 
+    [Space]
+    [SerializeField] Vector2 _offset;
+
     [Header("ƒJƒƒ‰‚ÌˆÚ“®‚Å‚«‚é”ÍˆÍ")]
     [SerializeField] bool _clampEnabled;
     [SerializeField] Vector2 _minClamp;
@@ -28,7 +31,7 @@ public class CameraMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 targetPos = _target.position;
+        Vector2 targetPos = _offset + (Vector2)_target.position;
         if (_clampEnabled)
         {
             targetPos.x = Mathf.Clamp(targetPos.x, _minClamp.x, _maxClamp.x);
