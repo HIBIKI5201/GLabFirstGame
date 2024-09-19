@@ -12,37 +12,59 @@ public abstract class ItemBase : MonoBehaviour
     [SerializeField] AudioClip _sound = default;
     /// <summary>アイテムの効果をいつ発揮するか</summary>
     [Tooltip("Get を選ぶと、取った時に効果が発動する。Use を選ぶと、アイテムを使った時に発動する")]
-    [SerializeField] ActivateTiming _whenActivated = ActivateTiming.Get;
+    [SerializeField] ActivateTiming _whenActivated = ActivateTiming.Use;
+    /// <summary>アイテムをどう投げるか/summary>
+    [Tooltip("Straight まっすぐ、Parabola 放物的")]
+    [SerializeField] ThrowType _throwType = ThrowType.Straight;
+    [Tooltip("アイテムを投げた時敵と当たるか")]
+    [SerializeField] bool _hitEnemy;
+    public ThrowType Throw => _throwType;
+    bool _isThrowing;
     public GameObject Player { get; private set; }
     /// <summary>
     /// アイテムが発動する効果を実装する
     /// </summary>
     public abstract void Activate();
+    private void Update()
+    {
+        //あたり判定で悩んでる
+        if(_isThrowing)
+        {
+            RaycastHit2D hit;
+            //hit = Physics2D.OverlapCircle(Vector2.zero,1f,);
+            if(_hitEnemy)
+            {
 
+            }
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag.Equals("Player"))
+        if (!_isThrowing)
         {
-            Player = collision.gameObject;
-            if (_sound)
+            if (collision.gameObject.tag.Equals("Player"))
             {
-                AudioSource.PlayClipAtPoint(_sound, Camera.main.transform.position);
-            }
+                Player = collision.gameObject;
+                if (_sound)
+                {
+                    AudioSource.PlayClipAtPoint(_sound, Camera.main.transform.position);
+                }
 
-            // アイテム発動タイミングによって処理を分ける
-            if (_whenActivated == ActivateTiming.Get)
-            {
-                Activate();
-                Destroy(this.gameObject);
-            }
-            else if (_whenActivated == ActivateTiming.Use)
-            {
-                // 見えない所に移動する
-                this.transform.position = Camera.main.transform.position;
-                // コライダーを無効にする
-                GetComponent<Collider2D>().enabled = false;
-                // プレイヤーにアイテムを渡す
-                collision.gameObject.GetComponent<PlayerController>().GetItem(this);
+                // アイテム発動タイミングによって処理を分ける
+                if (_whenActivated == ActivateTiming.Get)
+                {
+                    Activate();
+                    Destroy(this.gameObject);
+                }
+                else if (_whenActivated == ActivateTiming.Use)
+                {
+                    // 見えない所に移動する
+                    this.transform.position = Camera.main.transform.position;
+                    // コライダーを無効にする
+                    GetComponent<Collider2D>().enabled = false;
+                    // プレイヤーにアイテムを渡す
+                    collision.gameObject.GetComponent<PlayerController>().GetItem(this);
+                }
             }
         }
     }
@@ -56,5 +78,12 @@ public abstract class ItemBase : MonoBehaviour
         Get,
         /// <summary>「使う」コマンドで使う</summary>
         Use,
+    }
+    public enum ThrowType
+    {
+        /// <summary>真っ直ぐ投げる</summary>
+        Straight,
+        /// <summary>放物線を描くように投げる</summary>
+        Parabola
     }
 }

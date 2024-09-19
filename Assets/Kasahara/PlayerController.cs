@@ -10,9 +10,15 @@ public class PlayerController : MonoBehaviour
     [Header("体力の最大値")]
     [SerializeField][Tooltip("プレイヤーの体力の最大値")] int _maxHp;
     int _currentHp;
-    /// <summary>プレイヤーキャラが攻撃を行った時に、エネミーに与えるダメージ。</summary>
-    [Header("攻撃力")]
-    [SerializeField][Tooltip("プレイヤーの攻撃力")] int _attack;
+    /// <summary>アイテムをまっすぐ投げる強さ</summary>
+    [Header("まっすぐ投げる強さ")]
+    [SerializeField][Tooltip("まっすぐ投げる強さ")] float _throwStraightPower = 5;
+    /// <summary>アイテムを放物的に投げる強さ</summary>
+    [Header("放物的に投げる強さ")]
+    [SerializeField][Tooltip("放物的に投げる強さ")] float _throwParabolaPower = 5;
+    /// <summary>アイテムを放物的に投げる方向</summary>
+    [Header("放物的に投げる方向")]
+    [SerializeField][Tooltip("放物的に投げる方向")] Vector2 _throwParabolaDirection = new Vector2(1, 1);
     /// <summary>プレイヤーキャラクターの移動速度を決める値。数値が高いほど最大速度が高くなる</summary>
     [Header("移動速度の最大値")]
     [SerializeField][Tooltip("プレイヤーの速度の最大値")] float _speed;
@@ -26,7 +32,7 @@ public class PlayerController : MonoBehaviour
     [Header("無敵時間")]
     [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
     /// <summary>接地判定</summary>
-   　bool _isJump;
+  　bool _isJump;
     /// <summary>敵を踏んだ判定</summary>
     bool _isStompEnemy;
     /// <summary>持っているアイテムのリスト</summary>
@@ -46,13 +52,16 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         Jump();
+        UseItem();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("ぶつかった");
         if (collision.gameObject.CompareTag("Ground"))
         {
             _isJump = false;
             _jumpTimer = 0;
+            Debug.Log("着地！");
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
@@ -76,6 +85,17 @@ public class PlayerController : MonoBehaviour
         {
             x /= 5;
         }
+        else
+        {
+            if(x < 0)
+            {
+                transform.localScale = new Vector2(-1,1);
+            }
+            else if(x > 0)
+            {
+                transform.localScale = new Vector2(1, 1);
+            }
+        }
         _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
         if (_rb.velocity.x > _speed)
         {
@@ -88,10 +108,18 @@ public class PlayerController : MonoBehaviour
     }
     private void Jump()
     {
-        if (!_isJump && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
-            _isJump = true;
+            if (!_isJump)
+            {
+                Debug.Log("ジャンプした");
+                _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+                _isJump = true;
+            }
+            else
+            {
+                Debug.Log("ジャンプできなかった");
+            }
         }
         if (Input.GetKey(KeyCode.Space))
         {
@@ -115,6 +143,40 @@ public class PlayerController : MonoBehaviour
     public void GetItem(ItemBase item)
     {
         _itemList.Add(item);
+        if(item.TryGetComponent<HealItem>(out HealItem a))
+        {
+            Debug.Log(a);
+        }
+    }
+    void UseItem()
+    {
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            if(_itemList.Count > 0)
+            {
+                ItemBase item = _itemList[0];
+                _itemList.RemoveAt(0);
+                item.transform.position = transform.position;
+                //投げるアイテムにRigidbodyがついてなかったらつける
+                if(!item.TryGetComponent(out Rigidbody2D rb))
+                {
+                    rb = item.AddComponent<Rigidbody2D>();
+                }
+                //まっすぐ投げる
+                if(item.Throw == ItemBase.ThrowType.Straight)
+                {
+                    _throwStraightPower *= transform.localScale.x;
+                    rb.AddForce(new Vector2(_throwStraightPower, 0), ForceMode2D.Impulse);
+                }
+                //放物的に投げる
+                else
+                {
+                    _throwParabolaPower *= transform.localScale.x;
+                    rb.AddForce(_throwParabolaDirection.normalized * _throwParabolaPower,ForceMode2D.Impulse);
+                }
+                //Destroy(item.gameObject);
+            }
+        }
     }
     void ChangeWeapon()
     {
