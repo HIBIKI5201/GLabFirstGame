@@ -14,10 +14,10 @@ public class PlayerController : MonoBehaviour
     int _currentHp;
     /// <summary>プレイヤーキャラクターの移動速度を決める値。数値が高いほど最大速度が高くなる</summary>
     [Header("移動速度の最大値")]
-    [SerializeField][Tooltip("プレイヤーの速度の最大値")] float _speed;
+    [SerializeField][Tooltip("プレイヤーの速度の最大値")]　public float _speed;
     /// <summary>プレイヤーキャラクターの移動速度の加速度を決める値。数値が高いほど最大速度までの加速時間が短い</summary>
     [Header("移動速度の加速度")]
-    [SerializeField][Tooltip("プレイヤーの移動速度の加速度")] float _movePower;
+    [SerializeField][Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
     /// <summary>プレイヤーキャラクターのJump時に上方向に掛ける力。</summary>
     [Header("ジャンプ力")]
     [SerializeField][Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
