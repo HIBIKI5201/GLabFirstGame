@@ -1,5 +1,7 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,15 +12,6 @@ public class PlayerController : MonoBehaviour
     [Header("体力の最大値")]
     [SerializeField][Tooltip("プレイヤーの体力の最大値")] int _maxHp;
     int _currentHp;
-    /// <summary>アイテムをまっすぐ投げる強さ</summary>
-    [Header("まっすぐ投げる強さ")]
-    [SerializeField][Tooltip("まっすぐ投げる強さ")] float _throwStraightPower = 5;
-    /// <summary>アイテムを放物的に投げる強さ</summary>
-    [Header("放物的に投げる強さ")]
-    [SerializeField][Tooltip("放物的に投げる強さ")] float _throwParabolaPower = 5;
-    /// <summary>アイテムを放物的に投げる方向</summary>
-    [Header("放物的に投げる方向")]
-    [SerializeField][Tooltip("放物的に投げる方向")] Vector2 _throwParabolaDirection = new Vector2(1, 1);
     /// <summary>プレイヤーキャラクターの移動速度を決める値。数値が高いほど最大速度が高くなる</summary>
     [Header("移動速度の最大値")]
     [SerializeField][Tooltip("プレイヤーの速度の最大値")] float _speed;
@@ -31,20 +24,43 @@ public class PlayerController : MonoBehaviour
     /// <summary>エネミーからダメージを受けた際、一定時間はダメージを受けないようにする時間。整数値で入力する。1=1秒</summary>
     [Header("無敵時間")]
     [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
-    /// <summary>接地判定</summary>
-  　bool _isJump;
-    /// <summary>敵を踏んだ判定</summary>
-    bool _isStompEnemy;
+    /// <summary>アイテムをまっすぐ投げる強さ</summary>
+    [Header("まっすぐ投げる強さ")]
+    [SerializeField][Tooltip("まっすぐ投げる強さ")] float _throwStraightPower = 5;
+    /// <summary>アイテムを放物的に投げる強さ</summary>
+    [Header("放物的に投げる強さ")]
+    [SerializeField][Tooltip("放物的に投げる強さ")] float _throwParabolaPower = 5;
+    /// <summary>アイテムを放物的に投げる方向</summary>
+    [Header("放物的に投げる方向")]
+    [SerializeField][Tooltip("放物的に投げる方向")] Vector2 _throwParabolaDirection = new Vector2(1, 1);
+    [Header("アイテムを投げる位置")]
+    [SerializeField][Tooltip("アイテムを投げる位置")] Vector2 _throwPos;
+    /// <summary>アイテムの数</summary>
+    [SerializeField, Header("持てる石の最大値")] int _maxRockCount;
+    int _currentRockCount;
+    [SerializeField, Header("持てる空き瓶の最大値")] int _maxBottleCount;
+    int _currentBottleCount;
+    [SerializeField, Header("持てる肉の最大値")] int _maxMeatCount;
+    int _currentMeatCount;
     /// <summary>持っているアイテムのリスト</summary>
     List<ItemBase> _itemList = new List<ItemBase>();
-    /// <summary>持っている武器</summary>
-    (bool _isWoodStick, bool _isAxe, int _rocks) _weapons;
-    PlayerWeaponStatus _weaponStatus = PlayerWeaponStatus.Normal;
+    List<Rock> _rockList = new List<Rock>();
+    List<Bottle> _bottleList = new List<Bottle>();
+    List<Meat> _meatList = new List<Meat>();
+    /// <summary>接地判定</summary>
+    bool _isJump;
+    /// <summary>敵を踏んだ判定</summary>
+    bool _isStompEnemy;
+    /// <summary>無敵時間中かどうか</summary>
+    bool _isInvincible;
+    PlayerStatus _playerStatus = PlayerStatus.Normal;
     Rigidbody2D _rb;
+    SpriteRenderer _spriteRenderer;
     float _jumpTimer = 0;
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _currentHp = _maxHp;
     }
 
@@ -52,6 +68,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         Jump();
+        ChangeItem();
         UseItem();
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -70,12 +87,14 @@ public class PlayerController : MonoBehaviour
             Debug.Log("踏んだ");
         }
     }
-    enum PlayerWeaponStatus
+    enum PlayerStatus
     {
-        WoodStick,
-        Axe,
         Rock,
+        Bottle,
+        Meat,
         Normal,
+        Damage,
+        Death
     }
     private void Move()
     {
@@ -87,11 +106,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if(x < 0)
+            if (x < 0)
             {
-                transform.localScale = new Vector2(-1,1);
+                transform.localScale = new Vector2(-1, 1);
             }
-            else if(x > 0)
+            else if (x > 0)
             {
                 transform.localScale = new Vector2(1, 1);
             }
@@ -142,45 +161,113 @@ public class PlayerController : MonoBehaviour
     }
     public void GetItem(ItemBase item)
     {
-        _itemList.Add(item);
-        if(item.TryGetComponent<HealItem>(out HealItem a))
+        //_itemList.Add(item);
+        if (item.TryGetComponent(out Rock a))
         {
-            Debug.Log(a);
+            if (_currentRockCount <= _maxRockCount)
+            {
+                _currentRockCount++;
+                _rockList.Add(a);
+            }
+        }
+        else if (item.TryGetComponent(out Bottle b))
+        {
+            if (_currentBottleCount <= _maxBottleCount)
+            {
+                _currentBottleCount++;
+                _bottleList.Add(b);
+            }
+        }
+        else if (item.TryGetComponent(out Meat c))
+        {
+            if (_currentMeatCount <= _maxMeatCount)
+            {
+                _currentMeatCount++;
+                _meatList.Add(c);
+            }
         }
     }
     void UseItem()
     {
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            if(_itemList.Count > 0)
+            ItemBase item = null;//= _itemList[0];
+            switch (_playerStatus)
             {
-                ItemBase item = _itemList[0];
-                _itemList.RemoveAt(0);
-                item.transform.position = transform.position;
-                //投げるアイテムにRigidbodyがついてなかったらつける
-                if(!item.TryGetComponent(out Rigidbody2D rb))
-                {
-                    rb = item.AddComponent<Rigidbody2D>();
-                }
-                //まっすぐ投げる
-                if(item.Throw == ItemBase.ThrowType.Straight)
-                {
-                    _throwStraightPower *= transform.localScale.x;
-                    rb.AddForce(new Vector2(_throwStraightPower, 0), ForceMode2D.Impulse);
-                }
-                //放物的に投げる
-                else
-                {
-                    _throwParabolaPower *= transform.localScale.x;
-                    rb.AddForce(_throwParabolaDirection.normalized * _throwParabolaPower,ForceMode2D.Impulse);
-                }
-                //Destroy(item.gameObject);
+                case PlayerStatus.Rock:
+                    item = _rockList[0];
+                    _rockList.RemoveAt(0);
+                    _currentRockCount--;
+                    break;
+                case PlayerStatus.Bottle:
+                    item = _bottleList[0];
+                    _bottleList.RemoveAt(0);
+                    _currentBottleCount--;
+                    break;
+                case PlayerStatus.Meat:
+                    item = _meatList[0];
+                    _meatList.RemoveAt(0);
+                    _currentMeatCount--;
+                    break;
+                case PlayerStatus.Normal:
+                    return;
             }
+            item.transform.position = transform.position + (Vector3)_throwPos;
+            Debug.Log(item + "を投げた");
+            //投げるアイテムにRigidbodyがついてなかったらつける
+            if (!item.TryGetComponent(out Rigidbody2D rb))
+            {
+                rb = item.AddComponent<Rigidbody2D>();
+            }
+            item.gameObject.GetComponent<Collider2D>().isTrigger = false;
+            item.Throwing();
+            //まっすぐ投げる
+            if (item.Throw == ItemBase.ThrowType.Straight)
+            {
+                _throwStraightPower *= transform.localScale.x;
+                rb.gravityScale = 0;
+                rb.AddForce(new Vector2(_throwStraightPower, 0), ForceMode2D.Impulse);
+            }
+            //放物的に投げる
+            else
+            {
+                _throwParabolaPower *= transform.localScale.x;
+                rb.AddForce(_throwParabolaDirection.normalized * _throwParabolaPower, ForceMode2D.Impulse);
+            }
+            //Destroy(item.gameObject);
         }
     }
-    void ChangeWeapon()
+    void ChangeItem()
     {
-
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            if (_currentRockCount > 0)
+            {
+                _playerStatus = PlayerStatus.Rock;
+                Debug.Log("石を使う");
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (_currentBottleCount > 0)
+            {
+                _playerStatus = PlayerStatus.Bottle;
+                Debug.Log("瓶を使う");
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (_currentMeatCount > 0)
+            {
+                _playerStatus = PlayerStatus.Meat;
+                Debug.Log("肉を使う");
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            _playerStatus = PlayerStatus.Normal;
+            Debug.Log("アイテムを持たない");
+        }
     }
 
     /// <summary>
@@ -189,7 +276,26 @@ public class PlayerController : MonoBehaviour
     /// <param name="value"></param>
     public void FluctuationLife(int value)
     {
-        _currentHp += value;
+        if (value < 0)
+        {
+            if (!_isInvincible)
+            {
+                _currentHp += value;
+            }
+            if (_currentHp <= 0)
+            {
+                _playerStatus = PlayerStatus.Death;
+            }
+            else
+            {
+                //ダメージを受けた時の処理、一旦保留
+                //DOTween.To(() => new Color(), s => )
+            }
+        }
+        else
+        {
+            _currentHp += value;
+        }
         if (_currentHp > _maxHp)
         {
             _currentHp = _maxHp;

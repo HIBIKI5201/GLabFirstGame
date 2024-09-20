@@ -16,10 +16,15 @@ public abstract class ItemBase : MonoBehaviour
     /// <summary>アイテムをどう投げるか/summary>
     [Tooltip("Straight まっすぐ、Parabola 放物的")]
     [SerializeField] ThrowType _throwType = ThrowType.Straight;
-    [Tooltip("アイテムを投げた時敵と当たるか")]
-    [SerializeField] bool _hitEnemy;
+    /// <summary>アイテム発動中の効果範囲/summary>
+    [Tooltip("アイテム発動中の効果範囲")]
+    [SerializeField] float _effectRange = 1f;
+    [Tooltip("アイテムの効果時間")]
+    [SerializeField] float _activateTime;
+    public float EffectRange => _effectRange;
     public ThrowType Throw => _throwType;
     bool _isThrowing;
+    public bool IsThrowing => _isThrowing;
     public GameObject Player { get; private set; }
     /// <summary>
     /// アイテムが発動する効果を実装する
@@ -27,16 +32,8 @@ public abstract class ItemBase : MonoBehaviour
     public abstract void Activate();
     private void Update()
     {
-        //あたり判定で悩んでる
-        if(_isThrowing)
-        {
-            RaycastHit2D hit;
-            //hit = Physics2D.OverlapCircle(Vector2.zero,1f,);
-            if(_hitEnemy)
-            {
-
-            }
-        }
+        if(_whenActivated == ActivateTiming.Use)
+        Activate();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -68,7 +65,10 @@ public abstract class ItemBase : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// アイテムを投げた時に呼ぶ
+    /// </summary>
+    public void Throwing() => _isThrowing = true;
     /// <summary>
     /// アイテムをいつアクティベートするか
     /// </summary>
