@@ -302,4 +302,23 @@ public class PlayerController : MonoBehaviour
         }
         Debug.Log($"Playerの体力:{_currentHp}");
     }
+    /// <summary>
+    /// プレイヤーの速度を調整する
+    /// </summary>
+    /// <param name="multi">倍率</param>
+    /// <param name="slowtime">継続時間</param>
+    public void Slow(float multi, float slowtime)
+    {
+        StartCoroutine(Slowing(multi, slowtime));
+    }
+    IEnumerator Slowing(float multi, float slowtime)
+    {
+        float defaultMovePower = _movePower;
+        float defaultMaxSpeed = _speed;
+        _movePower *= multi;
+        _speed *= multi;
+        yield return new WaitForSeconds(slowtime);
+        _movePower = defaultMovePower;
+        _speed = defaultMaxSpeed;
+    }
 }
