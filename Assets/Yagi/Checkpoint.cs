@@ -8,10 +8,18 @@ public class Checkpoint : MonoBehaviour
 
     [SerializeField] GameObject _player;
 
+    [Header("ïœçXÇ≥ÇÍÇÈâÊëú"),SerializeField] Sprite _changeSprite;
+
     SpriteRenderer _spriteRenderer;
+
+    CapsuleCollider2D _capsuleCollider;
 
     public Vector2 _checkpoint { get; set; }
 
+    private void Start()
+    {
+        _capsuleCollider = GetComponent<CapsuleCollider2D>();
+    }
     private void Update()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -26,7 +34,8 @@ public class Checkpoint : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             _checkpoint = _player.transform.position;
-            _spriteRenderer.enabled = false;
+            _capsuleCollider.enabled = false;
+            if (_changeSprite)_spriteRenderer.sprite = _changeSprite;
         }
     }
 }
