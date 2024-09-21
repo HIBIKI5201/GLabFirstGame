@@ -659,11 +659,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHp: 0
-  _attack: 0
   _speed: 10
   _movePower: 10
   _jumpPower: 10
   _damageCool: 0
+  _throwStraightPower: 5
+  _throwParabolaPower: 5
+  _throwParabolaDirection: {x: 1, y: 1}
+  _throwPos: {x: 0, y: 0}
+  _maxRockCount: 0
+  _maxBottleCount: 0
+  _maxMeatCount: 0
 --- !u!50 &599037243
 Rigidbody2D:
   serializedVersion: 4
@@ -1693,6 +1699,10 @@ PrefabInstance:
     - target: {fileID: 4785798156966279973, guid: 22cfddec794194442b92565b0d8efbd0, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8581883825412730314, guid: 22cfddec794194442b92565b0d8efbd0, type: 3}
+      propertyPath: _speed
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

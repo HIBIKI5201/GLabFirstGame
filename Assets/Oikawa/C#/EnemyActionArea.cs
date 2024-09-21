@@ -35,4 +35,21 @@ public class EnemyActionArea : MonoBehaviour
 
         }
     }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Transform target = collision.transform;
+        if (target.CompareTag("Enemy"))
+        {
+            for (int i = 0; i < _enemies.Length; i++)
+            {
+                if (target == _enemiesTra[i])
+                {
+                    _enemies[i].enabled = false;
+                    Debug.Log("“G‚ðŽ~‚ß‚½");
+                    return;
+                }
+            }
+
+        }
+    }
 }

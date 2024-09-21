@@ -7,8 +7,12 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     Rigidbody2D rb;
-    [SerializeField] int _hp;
-    [SerializeField] int _speed;
+    [SerializeField] int _maxHp;
+    [SerializeField] int _currentHp;
+
+    public float _speed;
+    public float _currentSpeed;
+
     [SerializeField] MoveType _moveType;
     [Header("ÉWÉÉÉìÉvÇÃê›íË")]
     [SerializeField] JumpStruct _jump;
@@ -46,6 +50,9 @@ public class Enemy : MonoBehaviour
     }
     void Start()
     {
+        _currentHp = _maxHp;
+        _currentSpeed = _speed;
+
         _jumpTimer = Time.time;
         _myTra = transform;
         _dir = Direction.left;
@@ -92,7 +99,7 @@ public class Enemy : MonoBehaviour
         }
 
         Vector2 velo = rb.velocity;
-        velo.x = _speed * _dir switch { Direction.right => 1, Direction.left => -1, _ => 0 };
+        velo.x = _currentSpeed * _dir switch { Direction.right => 1, Direction.left => -1, _ => 0 };
         rb.velocity = velo;
 
 
@@ -134,6 +141,43 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("Enemy Hit Player");
             return;
+        }
+    }
+    public void LifeFluctuation(int value)
+    {
+        _currentHp += value;
+        Debug.Log($"ìGHP{value}ëùå∏  écÇË:{_currentHp}");
+    }
+
+    [ContextMenu("TestSlowDown")]
+    void TestSlowDown()
+    {
+        SlowDownScale(0.5f, 10);
+    }
+
+    Coroutine coroutine = null;
+    public void SlowDownScale(float scale,float time)
+    {
+        if (coroutine != null)
+            StopCoroutine(coroutine);
+
+        coroutine = StartCoroutine(SlowDown());
+        IEnumerator SlowDown()
+        {
+            float startTime = Time.time;
+            float damageTime = Time.time;
+
+            _currentSpeed = _speed * scale;
+            while (Time.time <= startTime + time)
+            {
+                if(Time.time >= damageTime + 1)
+                {
+                    _currentHp--;
+                    damageTime = Time.time;
+                }
+                yield return null;
+            }
+            _currentSpeed = _speed;
         }
     }
 }
