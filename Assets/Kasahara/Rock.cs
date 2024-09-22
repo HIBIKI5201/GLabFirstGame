@@ -13,11 +13,14 @@ public class Rock : ItemBase
     {
         if (IsThrowing)
         {
-            var hit = Physics2D.OverlapCircle(transform.position, EffectRange);
-            if (hit != null && hit.gameObject.CompareTag("Enemy"))
+            var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+            foreach (var obj in hit)
             {
-                //敵をスタンさせる処理
-                hit.gameObject.GetComponent<Enemy>().ReactionStone(ActivateTtime);
+                if (obj.gameObject.CompareTag("Enemy"))
+                {
+                    //敵をスタンさせる処理
+                    obj.gameObject.GetComponent<Enemy>().ReactionStone(ActivateTtime);
+                }
             }
         }
     }

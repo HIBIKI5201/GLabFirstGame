@@ -20,12 +20,15 @@ public class Meat : ItemBase
         {
             if (!_isGround)
             {
-                var hit = Physics2D.OverlapBox(transform.position, size, angle);
-                if (hit != null && hit.gameObject.CompareTag("Ground"))
+                var hit = Physics2D.OverlapBoxAll(transform.position, size, angle);
+                foreach (var obj in hit)
                 {
-                    _isGround = true;
-                    //地面についたらコライダーを復活
-                    GetComponent<Collider2D>().enabled = true;
+                    if (obj.gameObject.CompareTag("Ground"))
+                    {
+                        _isGround = true;
+                        //地面についたらコライダーを復活
+                        GetComponent<Collider2D>().enabled = true;
+                    }
                 }
             }
             else
