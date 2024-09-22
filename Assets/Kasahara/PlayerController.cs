@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
+using UnityEngine.UI;
 using static UnityEditor.Progress;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -28,24 +29,29 @@ public class PlayerController : MonoBehaviour
     /// <summary>エネミーからダメージを受けた際、一定時間はダメージを受けないようにする時間。整数値で入力する。1=1秒</summary>
     [Header("無敵時間")]
     [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
-    /// <summary>アイテムをまっすぐ投げる強さ</summary>
-    [Header("まっすぐ投げる強さ")]
-    [SerializeField][Tooltip("まっすぐ投げる強さ")] float _throwStraightPower = 5;
-    /// <summary>アイテムを放物的に投げる強さ</summary>
-    [Header("放物的に投げる強さ")]
-    [SerializeField][Tooltip("放物的に投げる強さ")] float _maxThrowParabolaPower;
-    float _throwParabolaPower = 0;
-    /// <summary>アイテムを放物的に投げる方向</summary>
-    [Header("放物的に投げる方向")]
-    [SerializeField][Tooltip("放物的に投げる方向")] Vector2 _throwParabolaDirection = new Vector2(1, 1);
-    [Header("アイテムを投げる位置")]
-    [SerializeField][Tooltip("アイテムを投げる位置")] Vector2 _throwPos;
-    /// <summary>アイテムの数</summary>
-    [SerializeField, Header("持てる石の最大値")] int _maxRockCount;
-    [SerializeField, Header("持てる空き瓶の最大値")] int _maxBottleCount;
-    [SerializeField, Header("持てる肉の最大値")] int _maxMeatCount;
-    [SerializeField, Header("弾道予測線")] LineRenderer _line;
-    [SerializeField] int _simulateFrame;
+    [SerializeField,Header("<アイテムを投げる設定>")] Throwsetting _throwsetting;
+    [SerializeField,Header("<アイテムの設定>")] ItemSetting _itemSetting;
+    [System.Serializable]
+    struct Throwsetting
+    {
+        [Tooltip("まっすぐ投げる強さ")]public float _throwStraightPower;
+        [Tooltip("放物的に投げる強さ")]public float _maxThrowParabolaPower;
+        [Tooltip("放物的に投げる方向")]public Vector2 _throwParabolaDirection;
+        [Tooltip("アイテムを投げる位置")]public Vector2 _throwPos;
+        [Tooltip("弾道予測線")] public LineRenderer _line;
+        public int _simulateFrame;
+    }
+    /// <summary>アイテムの設定</summary>
+    [System.Serializable]
+    struct ItemSetting
+    {
+        [Tooltip("持てる石の最大値")] public int _maxRockCount;
+        [Tooltip("持てる空き瓶の最大値")] public int _maxBottleCount;
+        [Tooltip("持てる肉の最大値")] public int _maxMeatCount;
+        [Tooltip("石の個数を表示するテキスト")] public Text _rockCountText;
+        [Tooltip("空き瓶の個数を表示するテキスト")] public Text _bottleCountText;
+        [Tooltip("肉の個数を表示するテキスト")] public Text _meatCountText;
+    }
     /// <summary>持っているアイテムのリスト</summary>
     List<ItemBase> _itemList = new List<ItemBase>();
     /// <summary>接地判定</summary>
@@ -60,6 +66,7 @@ public class PlayerController : MonoBehaviour
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
     float _jumpTimer = 0;
+    float _throwParabolaPower = 0;
     void Start()
     {
         CreatePhysicsScene();
@@ -169,13 +176,12 @@ public class PlayerController : MonoBehaviour
     /// <param name="item"></param>
     public void GetItem(ItemBase item)
     {
-
-        //_itemList.Add(item);
         if (item as Rock)
         {
-            if (_itemList.Where(i => i as Rock).ToList().Count < _maxRockCount)
+            if (_itemList.Where(i => i as Rock).ToList().Count < _itemSetting._maxRockCount)
             {
                 _itemList.Add(item);
+                _itemSetting._rockCountText.text = _itemList.Where(i => i as Rock).Count().ToString();
             }
             else
             {
@@ -184,9 +190,10 @@ public class PlayerController : MonoBehaviour
         }
         else if (item as Bottle)
         {
-            if (_itemList.Where(i => i as Bottle).ToList().Count < _maxBottleCount)
+            if (_itemList.Where(i => i as Bottle).ToList().Count < _itemSetting._maxBottleCount)
             {
                 _itemList.Add(item);
+                _itemSetting._bottleCountText.text = _itemList.Where(i => i as Bottle).Count().ToString();
             }
             else
             {
@@ -195,9 +202,10 @@ public class PlayerController : MonoBehaviour
         }
         else if (item as Meat)
         {
-            if (_itemList.Where(i => i as Meat).ToList().Count < _maxMeatCount)
+            if (_itemList.Where(i => i as Meat).ToList().Count < _itemSetting._maxMeatCount)
             {
                 _itemList.Add(item);
+                _itemSetting._meatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
             }
             else
             {
@@ -282,12 +290,12 @@ public class PlayerController : MonoBehaviour
         SceneManager.MoveGameObjectToScene(ghost.gameObject, m_simulationScene);
         ghost.GetComponent<Rigidbody2D>().AddForce(_velocity, ForceMode2D.Impulse);
 
-        _line.positionCount = _simulateFrame;
+       _throwsetting._line.positionCount = _throwsetting._simulateFrame;
 
-        for (int i = 0; i < _simulateFrame; i++)
+        for (int i = 0; i < _throwsetting._simulateFrame; i++)
         {
             m_physicsScene.Simulate(Time.fixedDeltaTime);
-            _line.SetPosition(i, ghost.transform.position);
+            _throwsetting._line.SetPosition(i, ghost.transform.position);
         }
         Destroy(ghost.gameObject);
     }
@@ -355,51 +363,50 @@ public class PlayerController : MonoBehaviour
         if (item.Throw == ItemBase.ThrowType.Straight)
         {
             //アイテムをプレイヤーの位置に持ってくる
-            item.transform.position = transform.position + (Vector3)_throwPos;
+            item.transform.position = transform.position + (Vector3)_throwsetting._throwPos;
             rb.gravityScale = 0;
-            _throwStraightPower *= transform.localScale.x;
-            rb.AddForce(new Vector2(_throwStraightPower, 0), ForceMode2D.Impulse);
+            _throwsetting._throwStraightPower *= transform.localScale.x;
+            rb.AddForce(new Vector2(_throwsetting._throwStraightPower, 0), ForceMode2D.Impulse);
         }
         //放物的に投げる
         else
         {
             while (Input.GetKey(KeyCode.Return))
             {
-                if(Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E))
                 {
-                    GetItem(item);
                     yield break;
                 }
-                if (_throwParabolaPower < _maxThrowParabolaPower)
+                if (_throwParabolaPower < _throwsetting._maxThrowParabolaPower)
                 {
                     _throwParabolaPower += 0.1f;
                 }
-                ThrowLineSimulate(item.gameObject, transform.position, _throwParabolaDirection.normalized * _throwParabolaPower);
+                ThrowLineSimulate(item.gameObject, transform.position, _throwsetting._throwParabolaDirection.normalized * _throwParabolaPower);
                 yield return new WaitForEndOfFrame();
             }
-            _line.positionCount = 0;
+            _throwsetting._line.positionCount = 0;
             //アイテムをプレイヤーの位置に持ってくる
-            item.transform.position = transform.position + (Vector3)_throwPos;
+            item.transform.position = transform.position + (Vector3)_throwsetting._throwPos;
             rb.velocity = Vector3.zero;
             _throwParabolaPower *= transform.localScale.x;
-            rb.AddForce(_throwParabolaDirection.normalized * _throwParabolaPower, ForceMode2D.Impulse);
+            rb.AddForce(_throwsetting._throwParabolaDirection.normalized * _throwParabolaPower, ForceMode2D.Impulse);
             _throwParabolaPower = 0;
         }
         item.Throwing();
-        if(item as Rock)
+        if (item as Rock)
         {
             _itemList.Remove((Rock)item);
-
+            _itemSetting._rockCountText.text = _itemList.Where(i=>i as Rock).Count().ToString();
         }
-        else if(item as Bottle)
+        else if (item as Bottle)
         {
             _itemList.Remove((Bottle)item);
-
+            _itemSetting._bottleCountText.text = _itemList.Where(i => i as Bottle).Count().ToString();
         }
         else
         {
             _itemList.Remove((Meat)item);
-
+            _itemSetting._meatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
         }
     }
 }
