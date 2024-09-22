@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Swamp : MonoBehaviour
 {
     Enemy _enemy;
     PlayerController _player;
-    [Tooltip("沼の中にいるのかの判定")] bool _isSwamp = false;
     [SerializeField, Tooltip("ダメージの間隔")] float _damageInterval = 1f;
     [SerializeField, Tooltip("移動速度減少の倍率")] float _speedDown;
     float _timer;
