@@ -34,6 +34,7 @@ public class Meat : ItemBase
                 if (hit != null && hit.gameObject.CompareTag("Enemy"))
                 {
                     //“G‚ğ—U“±‚·‚éˆ—
+                    hit.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position);
                 }
             }
         }

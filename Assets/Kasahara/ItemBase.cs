@@ -21,6 +21,7 @@ public abstract class ItemBase : MonoBehaviour
     [SerializeField] float _effectRange = 1f;
     [Tooltip("ƒAƒCƒeƒ€‚ÌŒø‰ÊŽžŠÔ")]
     [SerializeField] float _activateTime;
+    public float ActivateTtime => _activateTime;
     public float EffectRange => _effectRange;
     public ThrowType Throw => _throwType;
     bool _isThrowing;

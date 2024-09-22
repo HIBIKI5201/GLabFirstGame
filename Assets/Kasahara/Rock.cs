@@ -17,6 +17,7 @@ public class Rock : ItemBase
             if (hit != null && hit.gameObject.CompareTag("Enemy"))
             {
                 //“G‚ğƒXƒ^ƒ“‚³‚¹‚éˆ—
+                hit.gameObject.GetComponent<Enemy>().ReactionStone(ActivateTtime);
             }
         }
     }

@@ -34,6 +34,7 @@ public class Bottle : ItemBase
                 if (hit != null && hit.CompareTag("Enemy"))
                 {
                     //“G‚ª“¦‚°‚éˆ—
+                    hit.gameObject.GetComponent<Enemy>().ReactionBottle(transform.position);
                 }
             }
 
