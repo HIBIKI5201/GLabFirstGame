@@ -705,15 +705,20 @@ MonoBehaviour:
   _movePower: 5
   _jumpPower: 10
   _damageCool: 0
-  _throwStraightPower: 10
-  _maxThrowParabolaPower: 10
-  _throwParabolaDirection: {x: 1, y: 1}
-  _throwPos: {x: 1, y: 1}
-  _maxRockCount: 5
-  _maxBottleCount: 5
-  _maxMeatCount: 5
-  _line: {fileID: 195223071}
-  _simulateFrame: 300
+  _throwsetting:
+    _throwStraightPower: 10
+    _maxThrowParabolaPower: 20
+    _throwParabolaDirection: {x: 1, y: 1}
+    _throwPos: {x: 0, y: 0}
+    _line: {fileID: 195223071}
+    _simulateFrame: 100
+  _itemSetting:
+    _maxRockCount: 5
+    _maxBottleCount: 5
+    _maxMeatCount: 5
+    _rockCountText: {fileID: 588666897}
+    _bottleCountText: {fileID: 6336856}
+    _meatCountText: {fileID: 1052903213}
 --- !u!50 &538153192
 Rigidbody2D:
   serializedVersion: 4
