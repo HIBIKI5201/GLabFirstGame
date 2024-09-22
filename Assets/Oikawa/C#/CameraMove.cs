@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[ExecuteInEditMode]
 public class CameraMove : MonoBehaviour
 {
     [SerializeField] Transform _target;
@@ -47,26 +47,25 @@ public class CameraMove : MonoBehaviour
         outPos.z = -20;
 
         _myTra.position = outPos;
-
-        if (_clampEnabled)
-            DebugClamp();
     }
-    void DebugClamp()
+    private void OnDrawGizmosSelected()
     {
+        if (!_clampEnabled)
+            return;
         Vector2 min = _minClamp;
         Vector2 max = _maxClamp;
-        Debug.DrawLine(min, new Vector2(min.x, max.y));
-        Debug.DrawLine(min, new Vector2(max.x, min.y));
-        Debug.DrawLine(new Vector2(max.x, min.y),max);
-        Debug.DrawLine(new Vector2(min.x, max.y),max);
+        Gizmos.DrawLine(min, new Vector2(min.x, max.y));
+        Gizmos.DrawLine(min, new Vector2(max.x, min.y));
+        Gizmos.DrawLine(new Vector2(max.x, min.y),max);
+        Gizmos.DrawLine(new Vector2(min.x, max.y),max);
 
         Vector2 p = _myTra.position;
         Vector2 clampP = p;
         clampP.x = Mathf.Clamp(clampP.x, min.x, max.x);
         clampP.y = Mathf.Clamp(clampP.y, min.y, max.y);
-        Debug.DrawLine(new Vector2(min.x,clampP.y), p);
-        Debug.DrawLine(new Vector2(max.x,clampP.y), p);
-        Debug.DrawLine(new Vector2(clampP.x,min.y), p);
-        Debug.DrawLine(new Vector2(clampP.x,max.y), p);
+        Gizmos.DrawLine(new Vector2(min.x,clampP.y), p);
+        Gizmos.DrawLine(new Vector2(max.x,clampP.y), p);
+        Gizmos.DrawLine(new Vector2(clampP.x,min.y), p);
+        Gizmos.DrawLine(new Vector2(clampP.x,max.y), p);
     }
 }
