@@ -30,11 +30,14 @@ public class Bottle : ItemBase
             }
             else
             {
-                var hit = Physics2D.OverlapCircle(transform.position, EffectRange);
-                if (hit != null && hit.CompareTag("Enemy"))
+                var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+                foreach (var obj in hit)
                 {
-                    //“G‚ª“¦‚°‚éˆ—
-                    hit.gameObject.GetComponent<Enemy>().ReactionBottle(transform.position);
+                    if (obj.CompareTag("Enemy"))
+                    {
+                        //“G‚ª“¦‚°‚éˆ—
+                        obj.gameObject.GetComponent<Enemy>().ReactionBottle(transform.position);
+                    }
                 }
             }
 

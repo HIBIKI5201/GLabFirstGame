@@ -30,11 +30,14 @@ public class Meat : ItemBase
             }
             else
             {
-                var hit = Physics2D.OverlapCircle(transform.position, EffectRange);
-                if (hit != null && hit.gameObject.CompareTag("Enemy"))
+                var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+                foreach (var obj in hit)
                 {
-                    //“G‚ğ—U“±‚·‚éˆ—
-                    hit.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position);
+                    if (obj.gameObject.CompareTag("Enemy"))
+                    {
+                        //“G‚ğ—U“±‚·‚éˆ—
+                        obj.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position);
+                    }
                 }
             }
         }
