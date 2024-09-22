@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
 
     [Space]
     [SerializeField] State _state;
+    State _State {  get => _state;  set{ Debug.Log($"ìG{_state}Ç©ÇÁ{value}Ç…à⁄çs");_state = value; } }
 
     [Header("ínñ Ç‚è·äQï®ÇÃê›íË")]
     [SerializeField] GroundedRay _ground;
@@ -62,7 +63,7 @@ public class Enemy : MonoBehaviour
     }
     void Update()
     {
-        switch (_state)
+        switch (_State)
         {
             case State.Normal:
                 UpdateReturn();
@@ -143,19 +144,19 @@ public class Enemy : MonoBehaviour
         StartCoroutine(Stun());
         IEnumerator Stun()
         {
-            _state = State.Stun;
+            _State = State.Stun;
             yield return new WaitForSeconds(stunTime);
-            _state = State.Normal;
+            _State = State.Normal;
         }
     }
     public void ReactionBottle(Vector3 bottlePosi)
     {
-        _state = State.Bottle;
+        _State = State.Bottle;
         _bottlePosi = bottlePosi;
     }
     public void ReactionMeat(Vector3 meatPosi)
     {
-        _state = State.Meat;
+        _State = State.Meat;
         _meatPosi = meatPosi;
     }
         

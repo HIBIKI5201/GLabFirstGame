@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rock : ItemBase
 {
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireSphere(transform.position, EffectRange);

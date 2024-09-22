@@ -8,7 +8,7 @@ public class Meat : ItemBase
     [SerializeField, Header("Ú’n”»’è‚Ì‘å‚«‚³")] Vector2 size;
     [SerializeField, Header("Ú’n”»’è‚ÌŠp“x")] float angle;
     bool _isGround;
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireSphere(transform.position, EffectRange);

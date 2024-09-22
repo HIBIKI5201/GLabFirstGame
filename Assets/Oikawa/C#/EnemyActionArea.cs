@@ -42,6 +42,8 @@ public class EnemyActionArea : MonoBehaviour
         {
             for (int i = 0; i < _enemies.Length; i++)
             {
+                if(_enemies[i] == null) 
+                    continue;
                 if (target == _enemiesTra[i])
                 {
                     _enemies[i].enabled = false;
