@@ -226,15 +226,12 @@ public class PlayerController : MonoBehaviour
         {
             case PlayerStatus.Rock:
                 item = _itemList.Where(i => i as Rock).ToList().First();
-                _itemList.Remove((Rock)item);
                 return true;
             case PlayerStatus.Bottle:
                 item = _itemList.Where(i => i as Bottle).ToList().First();
-                _itemList.Remove((Bottle)item);
                 return true;
             case PlayerStatus.Meat:
                 item = _itemList.Where(i => i as Meat).ToList().First();
-                _itemList.Remove((Meat)item);
                 return true;
             default:
                 item = null;
@@ -292,7 +289,7 @@ public class PlayerController : MonoBehaviour
             m_physicsScene.Simulate(Time.fixedDeltaTime);
             _line.SetPosition(i, ghost.transform.position);
         }
-        //Destroy(ghost.gameObject);
+        Destroy(ghost.gameObject);
     }
     /// <summary>
     /// プレイヤーの体力を引数に渡した数値分増減させます。
@@ -368,6 +365,11 @@ public class PlayerController : MonoBehaviour
         {
             while (Input.GetKey(KeyCode.Return))
             {
+                if(Input.GetKeyDown(KeyCode.E))
+                {
+                    GetItem(item);
+                    yield break;
+                }
                 if (_throwParabolaPower < _maxThrowParabolaPower)
                 {
                     _throwParabolaPower += 0.1f;
@@ -384,5 +386,20 @@ public class PlayerController : MonoBehaviour
             _throwParabolaPower = 0;
         }
         item.Throwing();
+        if(item as Rock)
+        {
+            _itemList.Remove((Rock)item);
+
+        }
+        else if(item as Bottle)
+        {
+            _itemList.Remove((Bottle)item);
+
+        }
+        else
+        {
+            _itemList.Remove((Meat)item);
+
+        }
     }
 }
