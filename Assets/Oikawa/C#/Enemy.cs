@@ -182,6 +182,8 @@ public class Enemy : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (_State != State.Normal)
+            return;
         if (collision.transform.CompareTag("Enemy"))
         {
             _dir = _dir == Direction.right ? Direction.left : Direction.right;
@@ -190,6 +192,7 @@ public class Enemy : MonoBehaviour
         if (collision.transform.CompareTag("Player"))
         {
             Debug.Log("Enemy Hit Player");
+            collision.transform.GetComponent<PlayerController>().FluctuationLife(-1);
             return;
         }
     }

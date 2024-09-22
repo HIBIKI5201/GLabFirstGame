@@ -309,7 +309,7 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _whenActivated: 1
   _throwType: 1
-  _effectRange: 1
+  _effectRange: 5
   _activateTime: 0
   size: {x: 1, y: 1}
   angle: 0
@@ -1991,6 +1991,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Ground
       objectReference: {fileID: 0}
+    - target: {fileID: 2487641627948388333, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _gameManager
+      value: 
+      objectReference: {fileID: 569288186}
     - target: {fileID: 2528273922670716484, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
       propertyPath: m_Size.x
       value: 0.16
