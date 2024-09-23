@@ -1,13 +1,16 @@
 using UnityEngine;
+using System.Collections;
+
 
 
 public class Torabasami : MonoBehaviour
 {
     [Header("ê∂ê¨Ç∑ÇÈì˜"),SerializeField] GameObject _meat;
     [SerializeField] GameObject _player;
+    [SerializeField] float _stopTime;
     PlayerController _controller;
-    float _timer = 0;
-    public bool _isTrap;
+    bool _isTrap;
+    float _timer;
     void Start()
     {
         _controller = GameObject.Find("Player").GetComponent<PlayerController>();
@@ -15,18 +18,16 @@ public class Torabasami : MonoBehaviour
 
     private void Update()
     {
-        _timer += Time.deltaTime;
+        if (_isTrap) _player.transform.position = new Vector2(transform.position.x,_player.transform.position.y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            _player.transform.position = transform.position;
+            StartCoroutine(TrapTime(_stopTime));
             _controller.FluctuationLife(-1);
-            _timer = 0;
-            if (_timer < 1) _isTrap = true;
-            else _isTrap = false;           
+            _controller.StopAction(_stopTime);
         }
 
         if (collision.gameObject.tag == "Enemy")
@@ -35,4 +36,13 @@ public class Torabasami : MonoBehaviour
             if (_meat)Instantiate(_meat);
         }
     }
+
+    IEnumerator TrapTime(float time)
+    {
+        _isTrap = true;
+        yield return new WaitForSeconds(time);
+        _isTrap = false;
+    }
+
+
 }
