@@ -29,15 +29,15 @@ public class PlayerController : MonoBehaviour
     /// <summary>エネミーからダメージを受けた際、一定時間はダメージを受けないようにする時間。整数値で入力する。1=1秒</summary>
     [Header("無敵時間")]
     [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
-    [SerializeField,Header("<アイテムを投げる設定>")] Throwsetting _throwsetting;
-    [SerializeField,Header("<アイテムの設定>")] ItemSetting _itemSetting;
+    [SerializeField, Header("<アイテムを投げる設定>")] Throwsetting _throwsetting;
+    [SerializeField, Header("<アイテムの設定>")] ItemSetting _itemSetting;
     [System.Serializable]
     struct Throwsetting
     {
-        [Tooltip("まっすぐ投げる強さ")]public float _throwStraightPower;
-        [Tooltip("放物的に投げる強さ")]public float _maxThrowParabolaPower;
-        [Tooltip("放物的に投げる方向")]public Vector2 _throwParabolaDirection;
-        [Tooltip("アイテムを投げる位置")]public Vector2 _throwPos;
+        [Tooltip("まっすぐ投げる強さ")] public float _throwStraightPower;
+        [Tooltip("放物的に投げる強さ")] public float _maxThrowParabolaPower;
+        [Tooltip("放物的に投げる方向")] public Vector2 _throwParabolaDirection;
+        [Tooltip("アイテムを投げる位置")] public Vector2 _throwPos;
         [Tooltip("弾道予測線")] public LineRenderer _line;
         public int _simulateFrame;
     }
@@ -48,6 +48,9 @@ public class PlayerController : MonoBehaviour
         [Tooltip("持てる石の最大値")] public int _maxRockCount;
         [Tooltip("持てる空き瓶の最大値")] public int _maxBottleCount;
         [Tooltip("持てる肉の最大値")] public int _maxMeatCount;
+        [Tooltip("石のUI")] public GameObject _rockUi;
+        [Tooltip("空き瓶のUI")] public GameObject _bottleUi;
+        [Tooltip("肉のUI")] public GameObject _meatUi;
         [Tooltip("石の個数を表示するテキスト")] public Text _rockCountText;
         [Tooltip("空き瓶の個数を表示するテキスト")] public Text _bottleCountText;
         [Tooltip("肉の個数を表示するテキスト")] public Text _meatCountText;
@@ -60,27 +63,32 @@ public class PlayerController : MonoBehaviour
     bool _isStompEnemy;
     /// <summary>無敵時間中かどうか</summary>
     bool _isInvincible;
+    bool _canAction = true;
     PlayerStatus _playerStatus = PlayerStatus.Normal;
     Rigidbody2D _rb;
     SpriteRenderer _spriteRenderer;
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
-    float _jumpTimer = 0;
     float _throwParabolaPower = 0;
+    GameObject[] _itemPos = new GameObject[3];
     void Start()
     {
         CreatePhysicsScene();
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _currentHp = _maxHp;
+        _itemPos = new GameObject[] { _itemSetting._rockUi, _itemSetting._bottleUi, _itemSetting._meatUi };
     }
 
     void Update()
     {
-        Move();
-        Jump();
-        ChangeItem();
-        UseItem();
+        if (_canAction)
+        {
+            Move();
+            Jump();
+            ChangeItem();
+            UseItem();
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -88,7 +96,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             _isJump = false;
-            _jumpTimer = 0;
             Debug.Log("着地！");
         }
         if (collision.gameObject.CompareTag("Enemy"))
@@ -253,6 +260,7 @@ public class PlayerController : MonoBehaviour
             if (_itemList.Any(i => i as Rock))
             {
                 _playerStatus = PlayerStatus.Rock;
+
                 Debug.Log("石を使う");
             }
         }
@@ -277,6 +285,15 @@ public class PlayerController : MonoBehaviour
             _playerStatus = PlayerStatus.Normal;
             Debug.Log("アイテムを持たない");
         }
+        void RotateItem()
+        {
+
+            Vector2 itemPos = _itemPos[(int)_playerStatus].transform.position;
+            for (int i = 0; i < _itemPos.Length - 1; i++)
+            {
+                _itemPos[(int)_playerStatus % _itemPos.Length].transform.position = _itemPos[(int)_playerStatus + 1 % _itemPos.Length].transform.position;
+            }
+        }
     }
     void CreatePhysicsScene()
     {
@@ -290,7 +307,7 @@ public class PlayerController : MonoBehaviour
         SceneManager.MoveGameObjectToScene(ghost.gameObject, m_simulationScene);
         ghost.GetComponent<Rigidbody2D>().AddForce(_velocity, ForceMode2D.Impulse);
 
-       _throwsetting._line.positionCount = _throwsetting._simulateFrame;
+        _throwsetting._line.positionCount = _throwsetting._simulateFrame;
 
         for (int i = 0; i < _throwsetting._simulateFrame; i++)
         {
@@ -339,6 +356,20 @@ public class PlayerController : MonoBehaviour
     public void Slow(float multi, float slowtime)
     {
         StartCoroutine(Slowing(multi, slowtime));
+    }
+    /// <summary>
+    /// プレイヤーが行動できなくなる処理
+    /// </summary>
+    /// <param name="time"></param>
+    public void StopAction(float time)
+    {
+        StartCoroutine(StoppingAction(time));
+    }
+    IEnumerator StoppingAction(float time)
+    {
+        _canAction = false;
+        yield return new WaitForSeconds(time);
+        _canAction = true;
     }
     IEnumerator Slowing(float multi, float slowtime)
     {
@@ -396,17 +427,29 @@ public class PlayerController : MonoBehaviour
         if (item as Rock)
         {
             _itemList.Remove((Rock)item);
-            _itemSetting._rockCountText.text = _itemList.Where(i=>i as Rock).Count().ToString();
+            _itemSetting._rockCountText.text = _itemList.Where(i => i as Rock).Count().ToString();
+            if (_itemSetting._rockCountText.text == "0")
+            {
+                _playerStatus = PlayerStatus.Normal;
+            }
         }
         else if (item as Bottle)
         {
             _itemList.Remove((Bottle)item);
             _itemSetting._bottleCountText.text = _itemList.Where(i => i as Bottle).Count().ToString();
+            if (_itemSetting._bottleCountText.text == "0")
+            {
+                _playerStatus = PlayerStatus.Normal;
+            }
         }
         else
         {
             _itemList.Remove((Meat)item);
             _itemSetting._meatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
+            if (_itemSetting._meatCountText.text == "0")
+            {
+                _playerStatus = PlayerStatus.Normal;
+            }
         }
     }
 }
