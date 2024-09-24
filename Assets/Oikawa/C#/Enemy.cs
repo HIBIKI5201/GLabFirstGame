@@ -23,6 +23,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] State _state;
     State _State {  get => _state;  set{ Debug.Log($"“G{_state}‚©‚ç{value}‚ÉˆÚs");_state = value; } }
 
+    [Header("”ò‚Ñ‰z‚¦‚é")]
+    [SerializeField] bool _jumpOver;
+    [SerializeField] float _jumpRayLong;
+
     [Header("’n–Ê‚âáŠQ•¨‚ÌÝ’è")]
     [SerializeField] GroundedRay _ground;
 
@@ -45,7 +49,6 @@ public class Enemy : MonoBehaviour
         public Vector2 _rightRayPos;
         public Vector2 _leftRayPos;
         public float _rayLong;
-        public float _sideRayLong;
     }
     enum State
     {
@@ -105,11 +108,6 @@ public class Enemy : MonoBehaviour
     void UpdateReturn()
     {
         IsGrounded(out bool isHitRGround, out bool isHitLGround);
-        IsSideTouch(out bool isHitRSide, out bool isHitLSide);
-        if (isHitRSide ^ isHitLSide)
-        {
-            _dir = isHitRSide ? Direction.left : Direction.right;
-        }
         if (isHitRGround ^ isHitLGround)
         {
             _dir = isHitRGround ? Direction.right : Direction.left;
@@ -151,15 +149,17 @@ public class Enemy : MonoBehaviour
         velo.x = _currentSpeed * _dir switch { Direction.right => 1, Direction.left => -1, _ => 0 };
         _rb.velocity = velo;
     }
-    bool IsSideTouch(out bool IsHitR, out bool IsHitL)
+    void VelocityJump()
+    {
+        Vector2 velo = _rb.velocity;
+        velo.y = 5;
+        _rb.velocity = velo;
+    }
+    bool IsJump()
     {
         Vector2 rayPos = _myTra.position;
-        bool isHitR = Physics2D.Raycast(rayPos, Vector2.right, _ground._sideRayLong, _ground._mask);
-        bool isHitL = Physics2D.Raycast(rayPos, Vector2.left, _ground._sideRayLong, _ground._mask);
-
-        IsHitR = isHitR;
-        IsHitL = isHitL;
-        return isHitR || isHitL;
+        Vector2 dir = _dir switch { Direction.right => Vector2.right, Direction.left => Vector2.left, _ => Vector2.zero };
+        return Physics2D.Raycast(rayPos, dir, _jumpRayLong, _ground._mask);
     }
     bool IsGrounded(out bool IsHitR, out bool IsHitL)
     {
@@ -224,18 +224,35 @@ public class Enemy : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (_State != State.Normal)
-            return;
-        if (collision.transform.CompareTag("Enemy"))
+        switch (_State)
         {
-            _dir = _dir == Direction.right ? Direction.left : Direction.right;
-            return;
+            case State.Stun:
+            case State.Meat:
+            case State.Bottle:
+                return;
         }
         if (collision.transform.CompareTag("Player"))
         {
             Debug.Log("Enemy Hit Player");
             collision.transform.GetComponent<PlayerController>().FluctuationLife(-1);
             return;
+        }
+        CollisionReturn(collision.GetContact(0).normal, collision.GetContact(0).point);
+        void CollisionReturn(Vector2 normal,Vector2 point)
+        {
+            float x = point.x - _myTra.position.x;
+            bool isLeft = x < 0;
+            bool isTrue = _dir switch { Direction.right => !isLeft, Direction.left => isLeft, _ => false };
+            if (Mathf.Abs(normal.y) <= 0.2f)
+                if (isTrue)
+                    if (_jumpOver && _State == State.Chase)
+                    {
+                        VelocityJump();
+                    }
+                    else
+                    {
+                        _dir = (_dir == Direction.right) ? Direction.left : Direction.right;
+                    }
         }
     }
     public void LifeFluctuation(int value)
@@ -269,18 +286,6 @@ public class Enemy : MonoBehaviour
             Gizmos.DrawLine(lRayPos, hit.point);
         else
             Gizmos.DrawLine(lRayPos, lRayPos + Vector2.down * _ground._rayLong);
-
-        hit = Physics2D.Raycast(rayPos, Vector2.right, _ground._sideRayLong, _ground._mask);
-        if(hit)
-            Gizmos.DrawLine(rayPos, hit.point);
-        else
-            Gizmos.DrawLine(rayPos, rayPos + Vector2.right * _ground._sideRayLong);
-
-        hit = Physics2D.Raycast(rayPos, Vector2.left, _ground._sideRayLong, _ground._mask);
-        if(hit)
-            Gizmos.DrawLine(rayPos, hit.point);
-        else
-            Gizmos.DrawLine(rayPos, rayPos + Vector2.left * _ground._sideRayLong);
     }
 
     [ContextMenu("TestSlowDown")]
@@ -305,6 +310,5 @@ public class Enemy : MonoBehaviour
         _ground._rightRayPos.x = size.x / 2f;
         _ground._leftRayPos.x = -size.x / 2f;
         _ground._rayLong = (size.y / 2f) + 0.1f;
-        _ground._sideRayLong = (size.x / 2f) + 0.1f;
     }
 }
