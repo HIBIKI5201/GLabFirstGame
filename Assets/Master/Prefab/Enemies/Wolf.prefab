@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8312359118121280405}
   - component: {fileID: 5105451591066162868}
   - component: {fileID: 7941804746880001879}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wolf
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5862455671583783741}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.25, y: -5.4, z: 0.05010683}
   m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHp: 3
   _currentHp: 0
-  _speed: 9
+  _speed: 3
   _currentSpeed: 0
   _attack: 1
   _state: 0
@@ -181,8 +181,8 @@ MonoBehaviour:
     _mask:
       serializedVersion: 2
       m_Bits: 51
-    _rightRayPos: {x: 1.09, y: 0}
-    _leftRayPos: {x: -1.09, y: 0}
-    _rayLong: 0.675
-    _sideRayLong: 1.19
+    _rightRayPos: {x: 1.199, y: 0}
+    _leftRayPos: {x: -1.199, y: 0}
+    _rayLong: 1.065
+    _sideRayLong: 1.435
   _dir: 1
