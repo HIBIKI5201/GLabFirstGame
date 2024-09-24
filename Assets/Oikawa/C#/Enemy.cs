@@ -7,6 +7,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     Rigidbody2D _rb;
+    Transform _playerTra;
+    SpriteRenderer _spriteRenderer;
     [SerializeField] int _maxHp;
     [SerializeField] int _currentHp;
 
@@ -30,6 +32,8 @@ public class Enemy : MonoBehaviour
     Transform _myTra;
     Vector2 _bottlePosi;
     Vector2 _meatPosi;
+    float _meatTimer;
+    bool _meatEat;
     enum Direction
     {
         right, left, none
@@ -48,7 +52,8 @@ public class Enemy : MonoBehaviour
         Normal,//通常
         Stun,//気絶
         Meat,//肉に気づいた
-        Bottle//ボトルの音に気づいた
+        Bottle,//ボトルの音に気づいた
+        Chase,
     }
 
     void Start()
@@ -60,9 +65,20 @@ public class Enemy : MonoBehaviour
         _myTra = transform;
         if (_rb == null)
             _rb = GetComponent<Rigidbody2D>();
+
+        if(_spriteRenderer == null)
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        if(_playerTra == null)
+            _playerTra = GameObject.FindAnyObjectByType<PlayerController>().transform;
     }
     void Update()
     {
+        if (_currentHp <= 0)
+        {
+            Debug.Log("敵死亡");
+            Destroy(this.gameObject);
+        }
+        _spriteRenderer.flipX = _dir switch { Direction.right => true, Direction.left => false, _ => _spriteRenderer.flipX };
         switch (_State)
         {
             case State.Normal:
@@ -77,6 +93,9 @@ public class Enemy : MonoBehaviour
                 break;
             case State.Bottle:
                 UpdateBottle();
+                break;
+            case State.Chase:
+                UpdateChase();
                 break;
             default:
                 UpdateReturn();
@@ -108,7 +127,22 @@ public class Enemy : MonoBehaviour
         float x = _meatPosi.x - _myTra.position.x;
         _dir = x <= 0 ? Direction.left : Direction.right;
         if (Mathf.Abs(x) <= 0.05f)
+        {
             _dir = Direction.none;
+            if (_meatEat)
+                _meatTimer = Time.time;
+            _meatEat = true;
+        }
+        if (Time.time >= _meatTimer + 5)
+        {
+            _State = State.Normal;
+        }
+        UpdateVelocity();
+    }
+    void UpdateChase()
+    {
+        float x = _playerTra.position.x - _myTra.position.x;
+        _dir = x <= 0 ? Direction.left : Direction.right;
         UpdateVelocity();
     }
     void UpdateVelocity()
@@ -146,18 +180,26 @@ public class Enemy : MonoBehaviour
         {
             _State = State.Stun;
             yield return new WaitForSeconds(stunTime);
-            _State = State.Normal;
+            _State = State.Chase;
         }
     }
     public void ReactionBottle(Vector3 bottlePosi)
     {
-        _State = State.Bottle;
-        _bottlePosi = bottlePosi;
+        StartCoroutine(Bottle());
+        IEnumerator Bottle()
+        {
+            _State = State.Bottle;
+            _bottlePosi = bottlePosi;
+            yield return new WaitForSeconds(5);
+            _State = State.Normal;
+        }
     }
     public void ReactionMeat(Vector3 meatPosi)
     {
         _State = State.Meat;
+        _meatEat = false;
         _meatPosi = meatPosi;
+        _meatTimer = Time.time;
     }
         
     Coroutine coroutine = null;
