@@ -26,9 +26,13 @@ public class PlayerController : MonoBehaviour
     /// <summary>プレイヤーキャラクターのJump時に上方向に掛ける力。</summary>
     [Header("ジャンプ力")]
     [SerializeField][Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
+    [SerializeField, Header("落下速度")] float _fallSpeed;
     /// <summary>エネミーからダメージを受けた際、一定時間はダメージを受けないようにする時間。整数値で入力する。1=1秒</summary>
     [Header("無敵時間")]
     [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
+    [SerializeField, Header("接地判定の位置")] Vector2 point;
+    [SerializeField, Header("接地判定の大きさ")] Vector2 size;
+    [SerializeField, Header("接地判定の角度")] float angle;
     [SerializeField, Header("<アイテムを投げる設定>")] Throwsetting _throwsetting;
     [SerializeField, Header("<アイテムの設定>")] ItemSetting _itemSetting;
     [System.Serializable]
@@ -70,7 +74,13 @@ public class PlayerController : MonoBehaviour
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
     float _throwParabolaPower = 0;
+    int _beforeStatus = 1;
     GameObject[] _itemPos = new GameObject[3];
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1, 1, 1, 0.5f);
+        Gizmos.DrawWireCube((Vector2)transform.position + point, size);
+    }
     void Start()
     {
         CreatePhysicsScene();
@@ -90,21 +100,21 @@ public class PlayerController : MonoBehaviour
             UseItem();
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log("ぶつかった");
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            _isJump = false;
-            Debug.Log("着地！");
-        }
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            _isStompEnemy = true;
-            _rb.velocity = new Vector2(_rb.velocity.x, 0);
-            Debug.Log("踏んだ");
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    Debug.Log("ぶつかった");
+    //    if (collision.gameObject.CompareTag("Ground"))
+    //    {
+    //        _isJump = false;
+    //        Debug.Log("着地！");
+    //    }
+    //    if (collision.gameObject.CompareTag("Enemy"))
+    //    {
+    //        _isStompEnemy = true;
+    //        _rb.velocity = new Vector2(_rb.velocity.x, 0);
+    //        Debug.Log("踏んだ");
+    //    }
+    //}
     enum PlayerStatus
     {
         Rock,
@@ -152,6 +162,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("ジャンプした");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
+                StartCoroutine(GroundingJudge());
             }
             else
             {
@@ -164,18 +175,50 @@ public class PlayerController : MonoBehaviour
             {
                 _isStompEnemy = false;
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+                StartCoroutine(GroundingJudge());
             }
         }
         else if (_isStompEnemy)
         {
+            Debug.Log("敵を踏んで小ジャンプ");
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
+            StartCoroutine(GroundingJudge());
         }
         else if (_rb.velocity.y > 0)
         {
             _rb.velocity = new Vector2(_rb.velocity.x, _rb.velocity.y * 0.99f);
         }
         //Debug.Log(_isJump);
+    }
+    IEnumerator GroundingJudge()
+    {
+        while (_rb.velocity.y > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        _rb.gravityScale = _fallSpeed;
+        while (_isJump)
+        {
+            yield return new WaitForEndOfFrame();
+            var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + point, size, angle);
+            foreach (var obj in hit)
+            {
+                Debug.Log(obj);
+                if (obj.gameObject.CompareTag("Ground"))
+                {
+                    _isJump = false;
+                    _rb.gravityScale = 1;
+                }
+                else if (obj.gameObject.CompareTag("Enemy"))
+                {
+                    _isStompEnemy = true;
+                    _rb.velocity = new Vector2(_rb.velocity.x, 0);
+                    _rb.gravityScale = 1;
+                    yield break;
+                }
+            }
+        }
     }
     /// <summary>
     /// プレイヤーがアイテムを入手したときに呼ぶメソッド
@@ -257,26 +300,28 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (_itemList.Any(i => i as Rock))
+            if (_itemList.Any(i => i as Rock) && _playerStatus != PlayerStatus.Rock)
             {
                 _playerStatus = PlayerStatus.Rock;
-
+                RotateItem();
                 Debug.Log("石を使う");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            if (_itemList.Any(i => i as Bottle))
+            if (_itemList.Any(i => i as Bottle) && _playerStatus != PlayerStatus.Bottle)
             {
                 _playerStatus = PlayerStatus.Bottle;
+                RotateItem();
                 Debug.Log("瓶を使う");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            if (_itemList.Any(i => i as Meat))
+            if (_itemList.Any(i => i as Meat) && _playerStatus != PlayerStatus.Meat)
             {
                 _playerStatus = PlayerStatus.Meat;
+                RotateItem();
                 Debug.Log("肉を使う");
             }
         }
@@ -287,12 +332,15 @@ public class PlayerController : MonoBehaviour
         }
         void RotateItem()
         {
-
             Vector2 itemPos = _itemPos[(int)_playerStatus].transform.position;
             for (int i = 0; i < _itemPos.Length - 1; i++)
             {
-                _itemPos[(int)_playerStatus % _itemPos.Length].transform.position = _itemPos[(int)_playerStatus + 1 % _itemPos.Length].transform.position;
+                Debug.Log($"{_itemPos[((int)_playerStatus + i) % _itemPos.Length]}を{_itemPos[(i + _beforeStatus) % _itemPos.Length]}の位置に");
+                _itemPos[((int)_playerStatus + i) % _itemPos.Length].transform.position = _itemPos[(i + 1 + _beforeStatus) % _itemPos.Length].transform.position;
             }
+            Debug.Log(_itemPos[((int)_playerStatus + _itemPos.Length - 1) % _itemPos.Length]);
+            _itemPos[((int)_playerStatus + _itemPos.Length - 1) % _itemPos.Length].transform.position = itemPos;
+            _beforeStatus = (int)_playerStatus;
         }
     }
     void CreatePhysicsScene()
