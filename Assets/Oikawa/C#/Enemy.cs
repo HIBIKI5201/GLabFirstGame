@@ -71,6 +71,7 @@ public class Enemy : MonoBehaviour
 
         if(_spriteRenderer == null)
             _spriteRenderer = GetComponent<SpriteRenderer>();
+
         if(_playerTra == null)
             _playerTra = GameObject.FindAnyObjectByType<PlayerController>().transform;
     }
@@ -155,12 +156,6 @@ public class Enemy : MonoBehaviour
         velo.y = 5;
         _rb.velocity = velo;
     }
-    bool IsJump()
-    {
-        Vector2 rayPos = _myTra.position;
-        Vector2 dir = _dir switch { Direction.right => Vector2.right, Direction.left => Vector2.left, _ => Vector2.zero };
-        return Physics2D.Raycast(rayPos, dir, _jumpRayLong, _ground._mask);
-    }
     bool IsGrounded(out bool IsHitR, out bool IsHitL)
     {
         Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
@@ -222,7 +217,7 @@ public class Enemy : MonoBehaviour
             _currentSpeed = _speed;
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D col)
     {
         switch (_State)
         {
@@ -231,13 +226,12 @@ public class Enemy : MonoBehaviour
             case State.Bottle:
                 return;
         }
-        if (collision.transform.CompareTag("Player"))
+        if (col.transform.CompareTag("Player"))
         {
-            Debug.Log("Enemy Hit Player");
-            collision.transform.GetComponent<PlayerController>().FluctuationLife(-1);
+            CollisionPlayer(col.GetContact(0).normal, col.GetContact(0).point);
             return;
         }
-        CollisionReturn(collision.GetContact(0).normal, collision.GetContact(0).point);
+        CollisionReturn(col.GetContact(0).normal, col.GetContact(0).point);
         void CollisionReturn(Vector2 normal,Vector2 point)
         {
             float x = point.x - _myTra.position.x;
@@ -253,6 +247,14 @@ public class Enemy : MonoBehaviour
                     {
                         _dir = (_dir == Direction.right) ? Direction.left : Direction.right;
                     }
+        }
+        void CollisionPlayer(Vector2 normal, Vector2 point)
+        {
+            Debug.Log("Enemy Hit Player");
+            Vector2 localPosi = point - (Vector2)_myTra.position;
+            bool isSteppedOn = (normal.y <= 0.5f) && (localPosi.y >= 0.2f);
+            if(!isSteppedOn)
+                col.transform.GetComponent<PlayerController>().FluctuationLife(-_attack);
         }
     }
     public void LifeFluctuation(int value)
