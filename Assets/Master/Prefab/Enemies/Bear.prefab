@@ -177,12 +177,13 @@ MonoBehaviour:
   _currentSpeed: 0
   _attack: 2
   _state: 0
+  _jumpOver: 0
   _ground:
     _mask:
       serializedVersion: 2
-      m_Bits: 51
+      m_Bits: 0
     _rightRayPos: {x: 1.335, y: 0}
     _leftRayPos: {x: -1.335, y: 0}
     _rayLong: 1.065
-    _sideRayLong: 1.435
+    _jumpRayLong: 1.535
   _dir: 1

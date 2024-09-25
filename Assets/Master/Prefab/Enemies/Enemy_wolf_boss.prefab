@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3780141631592928989}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.8334503, y: -6.892413, z: 0}
+  m_LocalPosition: {x: -4.8334503, y: -6.857, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -132,15 +132,16 @@ MonoBehaviour:
   _currentSpeed: 0
   _attack: 1
   _state: 0
+  _jumpOver: 0
   _ground:
     _mask:
       serializedVersion: 2
       m_Bits: 0
-    _rightRayPos: {x: 0, y: 0}
-    _leftRayPos: {x: 0, y: 0}
-    _rayLong: 0
-    _sideRayLong: 0
-  _dir: 2
+    _rightRayPos: {x: 1.833333, y: 0}
+    _leftRayPos: {x: -1.833333, y: 0}
+    _rayLong: 1.141667
+    _jumpRayLong: 2.033333
+  _dir: 1
 --- !u!61 &6421892462430893437
 BoxCollider2D:
   m_ObjectHideFlags: 0

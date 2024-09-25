@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,28 +10,31 @@ public class Enemy : MonoBehaviour
     Rigidbody2D _rb;
     Transform _playerTra;
     SpriteRenderer _spriteRenderer;
+
+    [Tooltip("Å‘åHP")]
     [SerializeField] int _maxHp;
+    [Tooltip("Œ»İHP")]
     [SerializeField] int _currentHp;
 
-    [Space]
+    [Space,Tooltip("‰Šú‚Ì‘¬“x")]
     public float _speed;
+    [Tooltip("Œ»İ‚Ì‘¬“x")]
     public float _currentSpeed;
 
-    [Space]
+    [Space,Tooltip("UŒ‚—Í")]
     [SerializeField] int _attack;
 
-    [Space]
+    [Space, Tooltip("ó‘Ô")]
     [SerializeField] State _state;
     State _State {  get => _state;  set{ Debug.Log($"“G{_state}‚©‚ç{value}‚ÉˆÚs");_state = value; } }
 
-    [Header("”ò‚Ñ‰z‚¦‚é")]
+    [Tooltip("”ò‚Ñ‰z‚¦‚é")]
     [SerializeField] bool _jumpOver;
-    [SerializeField] float _jumpRayLong;
 
-    [Header("’n–Ê‚âáŠQ•¨‚Ìİ’è")]
+    [Tooltip("’n–Ê‚âáŠQ•¨‚Ìİ’è")]
     [SerializeField] GroundedRay _ground;
 
-    [Header("is•ûŒü")]
+    [Tooltip("is•ûŒü")]
     [SerializeField] Direction _dir;
 
     Transform _myTra;
@@ -45,10 +49,20 @@ public class Enemy : MonoBehaviour
     [System.Serializable]
     struct GroundedRay
     {
+        [Tooltip("Ray‚ª”½‰‚·‚éLayer")]
         public LayerMask _mask;
+
+        [Tooltip("‰E‘¤‚ÌŠR‚ğ”»’f‚·‚éRay‚Ì’†S")]
         public Vector2 _rightRayPos;
+
+        [Tooltip("¶‘¤‚ÌŠR‚ğ”»’f‚·‚éRay‚Ì’†S")]
         public Vector2 _leftRayPos;
+
+        [Space, Tooltip("ŠR‚ğ”»’f‚·‚éRay‚Ì’·‚³")]
         public float _rayLong;
+
+        [Space, Tooltip("”ò‚Ô‚Ì‚ğ”»’f‚·‚éRay‚Ì’·‚³")]
+        public float _jumpRayLong;
     }
     enum State
     {
@@ -61,6 +75,10 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        PhysicsMaterial2D physicsMaterial2D = new PhysicsMaterial2D();
+        physicsMaterial2D.friction = 0;
+        physicsMaterial2D.bounciness = 0;
+        GetComponent<Collider2D>().sharedMaterial = physicsMaterial2D;
         _currentHp = _maxHp;
         _currentSpeed = _speed;
         _state = State.Normal;
@@ -142,6 +160,8 @@ public class Enemy : MonoBehaviour
     {
         float x = _playerTra.position.x - _myTra.position.x;
         _dir = x <= 0 ? Direction.left : Direction.right;
+        if (IsJump() && IsGrounded(out _,out _))
+            VelocityJump();
         UpdateVelocity();
     }
     void UpdateVelocity()
@@ -166,6 +186,11 @@ public class Enemy : MonoBehaviour
         IsHitR = isHitR;
         IsHitL = isHitL;
         return isHitR || isHitL;
+    }
+    bool IsJump()
+    {
+        Vector2 dir = _dir switch { Direction.left => Vector2.left, Direction.right => Vector2.right, _ => Vector2.zero};
+        return Physics2D.Raycast(_myTra.position, dir, _ground._jumpRayLong, _ground._mask);
     }
     public void ReactionStone(float stunTime)
     {
@@ -228,10 +253,13 @@ public class Enemy : MonoBehaviour
         }
         if (col.transform.CompareTag("Player"))
         {
-            CollisionPlayer(col.GetContact(0).normal, col.GetContact(0).point);
+            for (int i = 0; i < col.contacts.Length; i++)
+                CollisionPlayer(col.GetContact(i).normal, col.GetContact(i).point);
             return;
         }
-        CollisionReturn(col.GetContact(0).normal, col.GetContact(0).point);
+        for(int i = 0; i < col.contacts.Length; i++)
+            CollisionReturn(col.GetContact(i).normal, col.GetContact(i).point);
+
         void CollisionReturn(Vector2 normal,Vector2 point)
         {
             float x = point.x - _myTra.position.x;
@@ -239,14 +267,9 @@ public class Enemy : MonoBehaviour
             bool isTrue = _dir switch { Direction.right => !isLeft, Direction.left => isLeft, _ => false };
             if (Mathf.Abs(normal.y) <= 0.2f)
                 if (isTrue)
-                    if (_jumpOver && _State == State.Chase)
-                    {
-                        VelocityJump();
-                    }
-                    else
-                    {
-                        _dir = (_dir == Direction.right) ? Direction.left : Direction.right;
-                    }
+                {
+                    _dir = (_dir == Direction.right) ? Direction.left : Direction.right;
+                }
         }
         void CollisionPlayer(Vector2 normal, Vector2 point)
         {
@@ -257,6 +280,8 @@ public class Enemy : MonoBehaviour
                 col.transform.GetComponent<PlayerController>().FluctuationLife(-_attack);
         }
     }
+    ContactPoint2D[] V;
+    private void OnCollisionStay2D(Collision2D collision)=> V = collision.contacts;
     public void LifeFluctuation(int value)
     {
         _currentHp += value;
@@ -271,7 +296,8 @@ public class Enemy : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         _myTra = transform;
-        Vector3 dirPos = _myTra.position + Vector3.up; 
+        Gizmos.color = Color.yellow;
+        Vector3 dirPos = _myTra.position + Vector3.up;
         Gizmos.DrawLine(dirPos, dirPos + (_dir == Direction.right ? Vector3.right : Vector3.left));
         Vector2 rayPos = _myTra.position;
         Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
@@ -288,6 +314,21 @@ public class Enemy : MonoBehaviour
             Gizmos.DrawLine(lRayPos, hit.point);
         else
             Gizmos.DrawLine(lRayPos, lRayPos + Vector2.down * _ground._rayLong);
+
+        Vector2 dir = _dir switch { Direction.left => Vector2.left, Direction.right => Vector2.right, _ => Vector2.zero };
+        if (_State == State.Chase)
+            Gizmos.color = Color.red;
+        else
+            Gizmos.color = Color.blue;
+        Gizmos.DrawLine(_myTra.position, _myTra.position + (Vector3)(dir * _ground._jumpRayLong));
+        if (V.Length <= 0 || V == null)
+            return;
+        Gizmos.color = Color.red;
+        foreach (ContactPoint2D v in V)
+        {
+            Gizmos.DrawSphere(v.point, 0.2f);
+            Gizmos.DrawLine(v.point, v.point + v.normal);
+        }
     }
 
     [ContextMenu("TestSlowDown")]
@@ -299,7 +340,7 @@ public class Enemy : MonoBehaviour
     void TestReactionBottle() => ReactionBottle(Vector2.zero);
     [ContextMenu("TestReactionMeat")]
     void TestReactionMeat() => ReactionMeat(Vector2.zero);
-    [ContextMenu("InitializeGroundedRay")]
+    [ContextMenu("InitializeGroundedRay(©“®İ’è)")]
     void InitializeGroundedRay()
     {
         if (!TryGetComponent<BoxCollider2D>(out BoxCollider2D col)) 
@@ -309,8 +350,10 @@ public class Enemy : MonoBehaviour
         }
 
         Vector2 size = col.size * transform.localScale;
+        _ground._mask = Convert.ToInt32("10000000", 2);
         _ground._rightRayPos.x = size.x / 2f;
         _ground._leftRayPos.x = -size.x / 2f;
         _ground._rayLong = (size.y / 2f) + 0.1f;
+        _ground._jumpRayLong = (size.x / 2f) + 0.2f;
     }
 }

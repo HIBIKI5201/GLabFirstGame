@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     {
         BeforeStart,
         Playing,
+        Pause,
         StageClear,
         GameOver
     }
