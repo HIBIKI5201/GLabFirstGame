@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [Header("体力の最大値")]
     [SerializeField][Tooltip("プレイヤーの体力の最大値")] int _maxHp;
     int _currentHp;
+    [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose;
     /// <summary>プレイヤーキャラクターの移動速度を決める値。数値が高いほど最大速度が高くなる</summary>
     [Header("移動速度の最大値")]
     [SerializeField][Tooltip("プレイヤーの速度の最大値")] public float _speed;
@@ -58,6 +59,11 @@ public class PlayerController : MonoBehaviour
         [Tooltip("石の個数を表示するテキスト")] public Text _rockCountText;
         [Tooltip("空き瓶の個数を表示するテキスト")] public Text _bottleCountText;
         [Tooltip("肉の個数を表示するテキスト")] public Text _meatCountText;
+        [Tooltip("アイテムを持っていないときの色")] public Color _zeroItemColor;
+        [Tooltip("石に対応する葉っぱ")] public GameObject _leafRock;
+        [Tooltip("空き瓶に対応する葉っぱ")] public GameObject _leafBottle;
+        [Tooltip("肉に対応する葉っぱ")] public GameObject _leafMeat;
+        [Tooltip("葉っぱの拡大率")] public float _leafSize;
     }
     /// <summary>持っているアイテムのリスト</summary>
     List<ItemBase> _itemList = new List<ItemBase>();
@@ -76,6 +82,9 @@ public class PlayerController : MonoBehaviour
     float _throwParabolaPower = 0;
     int _beforeStatus = 1;
     GameObject[] _itemPos = new GameObject[3];
+    Vector3[] _afterItemPos0 = new Vector3[3];
+    Vector3[] _afterItemPos1 = new Vector3[3];
+    Vector3[] _afterItemPos2 = new Vector3[3];
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
@@ -88,6 +97,10 @@ public class PlayerController : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _currentHp = _maxHp;
         _itemPos = new GameObject[] { _itemSetting._rockUi, _itemSetting._bottleUi, _itemSetting._meatUi };
+        _afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
+        _afterItemPos1 = new Vector3[] { _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position };
+        _afterItemPos2 = new Vector3[] { _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position };
+
     }
 
     void Update()
@@ -232,6 +245,7 @@ public class PlayerController : MonoBehaviour
             {
                 _itemList.Add(item);
                 _itemSetting._rockCountText.text = _itemList.Where(i => i as Rock).Count().ToString();
+                _itemSetting._rockUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
             }
             else
             {
@@ -244,6 +258,7 @@ public class PlayerController : MonoBehaviour
             {
                 _itemList.Add(item);
                 _itemSetting._bottleCountText.text = _itemList.Where(i => i as Bottle).Count().ToString();
+                _itemSetting._bottleUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
             }
             else
             {
@@ -256,6 +271,7 @@ public class PlayerController : MonoBehaviour
             {
                 _itemList.Add(item);
                 _itemSetting._meatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
+                _itemSetting._meatUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
             }
             else
             {
@@ -303,7 +319,13 @@ public class PlayerController : MonoBehaviour
             if (_itemList.Any(i => i as Rock) && _playerStatus != PlayerStatus.Rock)
             {
                 _playerStatus = PlayerStatus.Rock;
-                RotateItem();
+                _itemSetting._leafRock.transform.localScale *= _itemSetting._leafSize;
+                _itemSetting._leafBottle.transform.localScale = Vector3.one;
+                _itemSetting._leafMeat.transform.localScale = Vector3.one;
+                //for (int i = 0; i < _itemPos.Length; i++)
+                //{
+                //    _itemPos[i].transform.position = _afterItemPos2[i];
+                //}
                 Debug.Log("石を使う");
             }
         }
@@ -312,7 +334,13 @@ public class PlayerController : MonoBehaviour
             if (_itemList.Any(i => i as Bottle) && _playerStatus != PlayerStatus.Bottle)
             {
                 _playerStatus = PlayerStatus.Bottle;
-                RotateItem();
+                _itemSetting._leafRock.transform.localScale = Vector3.one;
+                _itemSetting._leafBottle.transform.localScale *= _itemSetting._leafSize;
+                _itemSetting._leafMeat.transform.localScale = Vector3.one;
+                //for (int i = 0; i < _itemPos.Length; i++)
+                //{
+                //    _itemPos[i].transform.position = _afterItemPos1[i];
+                //}
                 Debug.Log("瓶を使う");
             }
         }
@@ -321,26 +349,23 @@ public class PlayerController : MonoBehaviour
             if (_itemList.Any(i => i as Meat) && _playerStatus != PlayerStatus.Meat)
             {
                 _playerStatus = PlayerStatus.Meat;
-                RotateItem();
+                _itemSetting._leafRock.transform.localScale = Vector3.one;
+                _itemSetting._leafBottle.transform.localScale = Vector3.one;
+                _itemSetting._leafMeat.transform.localScale *= _itemSetting._leafSize;
+                //for (int i = 0; i < _itemPos.Length; i++)
+                //{
+                //    _itemPos[i].transform.position = _afterItemPos0[i];
+                //}
                 Debug.Log("肉を使う");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             _playerStatus = PlayerStatus.Normal;
+            _itemSetting._leafRock.transform.localScale = Vector3.one;
+            _itemSetting._leafBottle.transform.localScale = Vector3.one;
+            _itemSetting._leafMeat.transform.localScale = Vector3.one;
             Debug.Log("アイテムを持たない");
-        }
-        void RotateItem()
-        {
-            Vector2 itemPos = _itemPos[(int)_playerStatus].transform.position;
-            for (int i = 0; i < _itemPos.Length - 1; i++)
-            {
-                Debug.Log($"{_itemPos[((int)_playerStatus + i) % _itemPos.Length]}を{_itemPos[(i + _beforeStatus) % _itemPos.Length]}の位置に");
-                _itemPos[((int)_playerStatus + i) % _itemPos.Length].transform.position = _itemPos[(i + 1 + _beforeStatus) % _itemPos.Length].transform.position;
-            }
-            Debug.Log(_itemPos[((int)_playerStatus + _itemPos.Length - 1) % _itemPos.Length]);
-            _itemPos[((int)_playerStatus + _itemPos.Length - 1) % _itemPos.Length].transform.position = itemPos;
-            _beforeStatus = (int)_playerStatus;
         }
     }
     void CreatePhysicsScene()
@@ -375,6 +400,11 @@ public class PlayerController : MonoBehaviour
             if (!_isInvincible)
             {
                 _currentHp += value;
+                for (int i = 0; i < value || _rose.Count > 0; i++)
+                {
+                    Destroy(_rose[0]);
+                    _rose.RemoveAt(0);
+                }
             }
             if (_currentHp <= 0)
             {
@@ -479,6 +509,8 @@ public class PlayerController : MonoBehaviour
             if (_itemSetting._rockCountText.text == "0")
             {
                 _playerStatus = PlayerStatus.Normal;
+                _itemSetting._rockUi.GetComponent<Image>().color = _itemSetting._zeroItemColor;
+                _itemSetting._leafRock.transform.localScale = Vector3.one;
             }
         }
         else if (item as Bottle)
@@ -488,6 +520,8 @@ public class PlayerController : MonoBehaviour
             if (_itemSetting._bottleCountText.text == "0")
             {
                 _playerStatus = PlayerStatus.Normal;
+                _itemSetting._bottleUi.GetComponent<Image>().color = _itemSetting._zeroItemColor;
+                _itemSetting._leafBottle.transform.localScale = Vector3.one;
             }
         }
         else
@@ -497,6 +531,8 @@ public class PlayerController : MonoBehaviour
             if (_itemSetting._meatCountText.text == "0")
             {
                 _playerStatus = PlayerStatus.Normal;
+                _itemSetting._meatUi.GetComponent<Image>().color = _itemSetting._zeroItemColor;
+                _itemSetting._leafMeat.transform.localScale = Vector3.one;
             }
         }
     }
