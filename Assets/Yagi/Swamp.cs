@@ -1,7 +1,9 @@
 using UnityEngine;
+using System.Collections;
 
 public class Swamp : MonoBehaviour
 {
+    Coroutine _coroutine;
     Enemy _enemy;
     PlayerController _player;
     [SerializeField, Tooltip("ダメージの間隔")] float _damageInterval = 1f;
@@ -14,6 +16,8 @@ public class Swamp : MonoBehaviour
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<PlayerController>();
+        _defaultSpeed = _player._speed;
+        _defaultMove = _player._movePower;
     }
 
     private void Update()
@@ -25,8 +29,12 @@ public class Swamp : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            _defaultSpeed = _player._speed;
-            _defaultMove = _player._movePower;
+            if (_coroutine != null)
+            {
+                StopAllCoroutines();
+            }
+            _player._speed = _defaultSpeed;
+            _player._movePower = _defaultMove;
             _player._speed *= _speedDown;
             _player._movePower *= _speedDown;
         }
@@ -35,10 +43,10 @@ public class Swamp : MonoBehaviour
         {
             _enemy = collision.gameObject.GetComponent<Enemy>();
             if (_enemy == null) Debug.Log("エネミーは空");
-            
-                _defaultEnemySpeed = _enemy._currentSpeed;
-                _enemy._currentSpeed *= _speedDown;
-            
+
+            _defaultEnemySpeed = _enemy._currentSpeed;
+            _enemy._currentSpeed *= _speedDown;
+
         }
 
     }
@@ -68,7 +76,8 @@ public class Swamp : MonoBehaviour
         {
             _player._speed = _defaultSpeed;
             _player._movePower = _defaultMove;
-            _player.Slow(_speedDown, 2f);
+            //_player.Slow(_speedDown, 2f);
+            _coroutine = StartCoroutine(Slow(_speedDown, 2f));
         }
 
         if (collision.gameObject.tag == "Enemy")
@@ -80,5 +89,16 @@ public class Swamp : MonoBehaviour
     private void PlayerDamage()
     {
         _player.FluctuationLife(-1);
+    }
+
+    IEnumerator Slow(float down, float time)
+    {
+        float defaultSpeed = _defaultSpeed;
+        float defaultMove = _defaultMove;
+        _player._movePower *= down;
+        _player._speed *= down;
+        yield return new WaitForSeconds(time);
+        _player._movePower =  defaultSpeed;
+        _player._speed = defaultMove;
     }
 }

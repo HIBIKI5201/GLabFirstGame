@@ -210,6 +210,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 662889080141976448, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2034024158115051724, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
       propertyPath: m_LocalPosition.x
       value: -13.7
@@ -290,7 +294,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!61 &343968098
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -456,7 +460,7 @@ MonoBehaviour:
     _leftRayPos: {x: 0, y: 0}
     _rayLong: 0
     _sideRayLong: 0
-  _dir: 0
+  _dir: 1
 --- !u!1 &367784558
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,7 +675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &933663535
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -813,6 +817,7 @@ GameObject:
   - component: {fileID: 1096710697}
   - component: {fileID: 1096710701}
   - component: {fileID: 1096710702}
+  - component: {fileID: 1096710703}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -846,7 +851,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &1096710698
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -943,7 +948,7 @@ Transform:
   m_GameObject: {fileID: 1096710696}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.22, y: 3.95, z: 0}
+  m_LocalPosition: {x: 5.8, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -964,7 +969,7 @@ MonoBehaviour:
   _maxHp: 0
   _speed: 5
   _movePower: 3
-  _jumpPower: 0
+  _jumpPower: 5
   _damageCool: 0
   _throwsetting:
     _throwStraightPower: 0
@@ -998,6 +1003,51 @@ MonoBehaviour:
   _gameManager: {fileID: 646255660}
   _clearText: {fileID: 191149872}
   _timerTxt: {fileID: 1104538239}
+--- !u!61 &1096710703
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096710696}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.6564846}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.2534094}
+  m_EdgeRadius: 0
 --- !u!1 &1104538237
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,7 +1617,7 @@ GameObject:
   - component: {fileID: 1408402622}
   m_Layer: 0
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1678,8 +1728,8 @@ Transform:
   m_GameObject: {fileID: 1408402621}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0465, y: -1.7, z: 0}
-  m_LocalScale: {x: 18.053776, y: 1.4423865, z: 1}
+  m_LocalPosition: {x: -15.1708, y: -1.7, z: 0}
+  m_LocalScale: {x: 48.48883, y: 1.4423865, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2136,8 +2186,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4515391679452665234, guid: 2fda61bf7015af746a47a599ebedbfc0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 17.575956
+      objectReference: {fileID: 0}
+    - target: {fileID: 4515391679452665234, guid: 2fda61bf7015af746a47a599ebedbfc0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.1
+      value: -6.9313
       objectReference: {fileID: 0}
     - target: {fileID: 4515391679452665234, guid: 2fda61bf7015af746a47a599ebedbfc0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2181,7 +2235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9115452683861626798, guid: 2fda61bf7015af746a47a599ebedbfc0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
