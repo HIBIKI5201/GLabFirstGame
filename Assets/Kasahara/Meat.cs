@@ -5,14 +5,14 @@ using static UnityEditor.Progress;
 
 public class Meat : ItemBase
 {
-    [SerializeField, Header("接地判定の大きさ")] Vector2 size;
-    [SerializeField, Header("接地判定の角度")] float angle;
+    [SerializeField, Header("接地判定の大きさ")] Vector2 _size;
+    [SerializeField, Header("接地判定の角度")] float _angle;
     bool _isGround;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireSphere(transform.position, EffectRange);
-        Gizmos.DrawWireCube(transform.position, size);
+        Gizmos.DrawWireCube(transform.position, _size);
     }
     public override void Activate()
     {
@@ -20,7 +20,7 @@ public class Meat : ItemBase
         {
             if (!_isGround)
             {
-                var hit = Physics2D.OverlapBoxAll(transform.position, size, angle);
+                var hit = Physics2D.OverlapBoxAll(transform.position, _size, _angle);
                 foreach (var obj in hit)
                 {
                     if (obj.gameObject.CompareTag("Ground"))

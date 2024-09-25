@@ -13,29 +13,19 @@ using static UnityEditor.Progress;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    /// <summary>プレイヤーキャラのHP。これが0になるとゲームオーバー</summary>
-    [Header("体力の最大値")]
-    [SerializeField][Tooltip("プレイヤーの体力の最大値")] int _maxHp;
+    [SerializeField, Tooltip("プレイヤーの体力の最大値")] int _maxHp;
     int _currentHp;
-    [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose;
-    /// <summary>プレイヤーキャラクターの移動速度を決める値。数値が高いほど最大速度が高くなる</summary>
-    [Header("移動速度の最大値")]
-    [SerializeField][Tooltip("プレイヤーの速度の最大値")] public float _speed;
-    /// <summary>プレイヤーキャラクターの移動速度の加速度を決める値。数値が高いほど最大速度までの加速時間が短い</summary>
-    [Header("移動速度の加速度")]
-    [SerializeField][Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
-    /// <summary>プレイヤーキャラクターのJump時に上方向に掛ける力。</summary>
-    [Header("ジャンプ力")]
-    [SerializeField][Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
-    [SerializeField, Header("落下速度")] float _fallSpeed;
-    /// <summary>エネミーからダメージを受けた際、一定時間はダメージを受けないようにする時間。整数値で入力する。1=1秒</summary>
-    [Header("無敵時間")]
-    [SerializeField][Tooltip("プレイヤーの無敵時間")] int _damageCool;
-    [SerializeField, Header("接地判定の位置")] Vector2 point;
-    [SerializeField, Header("接地判定の大きさ")] Vector2 size;
-    [SerializeField, Header("接地判定の角度")] float angle;
-    [SerializeField, Header("<アイテムを投げる設定>")] Throwsetting _throwsetting;
-    [SerializeField, Header("<アイテムの設定>")] ItemSetting _itemSetting;
+    [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose = new List<GameObject>();
+    [SerializeField, Tooltip("プレイヤーの速度の最大値")] public float _speed;
+    [SerializeField, Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
+    [SerializeField, Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
+    [SerializeField, Tooltip("落下速度")] float _fallSpeed;
+    [SerializeField, Tooltip("プレイヤーの無敵時間")] int _damageCool;
+    [SerializeField, Tooltip("接地判定の位置")] Vector2 _point;
+    [SerializeField, Tooltip("接地判定の大きさ")] Vector2 _size;
+    [SerializeField, Tooltip("接地判定の角度")] float _angle;
+    [SerializeField, Tooltip("<アイテムを投げる設定>")] Throwsetting _throwsetting;
+    [SerializeField, Tooltip("<アイテムの設定>")] ItemSetting _itemSetting;
     [System.Serializable]
     struct Throwsetting
     {
@@ -88,7 +78,7 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
-        Gizmos.DrawWireCube((Vector2)transform.position + point, size);
+        Gizmos.DrawWireCube((Vector2)transform.position + _point, _size);
     }
     void Start()
     {
@@ -113,21 +103,6 @@ public class PlayerController : MonoBehaviour
             UseItem();
         }
     }
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    Debug.Log("ぶつかった");
-    //    if (collision.gameObject.CompareTag("Ground"))
-    //    {
-    //        _isJump = false;
-    //        Debug.Log("着地！");
-    //    }
-    //    if (collision.gameObject.CompareTag("Enemy"))
-    //    {
-    //        _isStompEnemy = true;
-    //        _rb.velocity = new Vector2(_rb.velocity.x, 0);
-    //        Debug.Log("踏んだ");
-    //    }
-    //}
     enum PlayerStatus
     {
         Rock,
@@ -157,13 +132,10 @@ public class PlayerController : MonoBehaviour
             }
         }
         _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
-        if (_rb.velocity.x > _speed)
+
+        if (Mathf.Abs(_rb.velocity.x) > _speed)
         {
-            _rb.velocity = new Vector2(_speed, _rb.velocity.y);
-        }
-        else if (_rb.velocity.x < -_speed)
-        {
-            _rb.velocity = new Vector2(-_speed, _rb.velocity.y);
+            _rb.velocity = new Vector2(_speed * Mathf.Sign(_rb.velocity.x), _rb.velocity.y);
         }
     }
     private void Jump()
@@ -204,6 +176,10 @@ public class PlayerController : MonoBehaviour
         }
         //Debug.Log(_isJump);
     }
+    /// <summary>
+    /// 着地を検知する
+    /// </summary>
+    /// <returns></returns>
     IEnumerator GroundingJudge()
     {
         while (_rb.velocity.y > 0)
@@ -214,7 +190,7 @@ public class PlayerController : MonoBehaviour
         while (_isJump)
         {
             yield return new WaitForEndOfFrame();
-            var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + point, size, angle);
+            var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + _point, _size, _angle);
             foreach (var obj in hit)
             {
                 Debug.Log(obj);
@@ -490,15 +466,14 @@ public class PlayerController : MonoBehaviour
                 {
                     _throwParabolaPower += 0.1f;
                 }
-                ThrowLineSimulate(item.gameObject, transform.position, _throwsetting._throwParabolaDirection.normalized * _throwParabolaPower);
+                ThrowLineSimulate(item.gameObject, transform.position, _throwsetting._throwParabolaDirection.normalized * _throwParabolaPower * transform.localScale);
                 yield return new WaitForEndOfFrame();
             }
             _throwsetting._line.positionCount = 0;
             //アイテムをプレイヤーの位置に持ってくる
             item.transform.position = transform.position + (Vector3)_throwsetting._throwPos;
             rb.velocity = Vector3.zero;
-            _throwParabolaPower *= transform.localScale.x;
-            rb.AddForce(_throwsetting._throwParabolaDirection.normalized * _throwParabolaPower, ForceMode2D.Impulse);
+            rb.AddForce(_throwsetting._throwParabolaDirection.normalized * _throwParabolaPower * transform.localScale, ForceMode2D.Impulse);
             _throwParabolaPower = 0;
         }
         item.Throwing();
