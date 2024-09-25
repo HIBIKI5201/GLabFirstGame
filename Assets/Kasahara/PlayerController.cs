@@ -70,7 +70,6 @@ public class PlayerController : MonoBehaviour
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
     float _throwParabolaPower = 0;
-    int _beforeStatus = 1;
     GameObject[] _itemPos = new GameObject[3];
     Vector3[] _afterItemPos0 = new Vector3[3];
     Vector3[] _afterItemPos1 = new Vector3[3];
@@ -376,7 +375,7 @@ public class PlayerController : MonoBehaviour
             if (!_isInvincible)
             {
                 _currentHp += value;
-                for (int i = 0; i < value || _rose.Count > 0; i++)
+                for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
                     Destroy(_rose[0]);
                     _rose.RemoveAt(0);
