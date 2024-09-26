@@ -1,17 +1,24 @@
 using System.Collections;
 using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Goal : MonoBehaviour
 {
     [SerializeField] GameManager _gameManager;
+    [Header("フェードアウトするイメージ"),SerializeField] GameObject _fadeImage;
     PlayerController _playerController;
     [SerializeField] Text _clearText;
     [SerializeField] Text _timerTxt;
     Rigidbody2D _rb;
     Timer _timer;
     bool _wark;
+
+    private void Awake()
+    {
+        _fadeImage.SetActive(false);
+    }
 
     private void Start()
     {
@@ -23,7 +30,7 @@ public class Goal : MonoBehaviour
 
     void Update()
     {
-        if (_wark) this.transform.position = new Vector2(transform.position.x + Time.deltaTime, transform.position.y);
+        if (_wark) this.transform.position = new Vector2(transform.position.x + Time.deltaTime *2, transform.position.y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -52,5 +59,20 @@ public class Goal : MonoBehaviour
         _wark = true;
         yield return new WaitForSeconds(time);
         _wark = false;
+        StartCoroutine(Image(2f));
+    }
+
+    IEnumerator Image(float time)
+    {
+        yield return new WaitForSeconds(time);
+        _fadeImage.SetActive(true);
+        FadeOut fadeOut = _fadeImage.GetComponent<FadeOut>();
+        StartCoroutine(LoadScene(fadeOut._fadeTime));
+    }
+
+    IEnumerator LoadScene(float time)
+    {
+        yield return new WaitForSeconds(time);
+        SceneManager.LoadScene("SelectStage");
     }
 }
