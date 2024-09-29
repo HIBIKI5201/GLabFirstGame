@@ -15,7 +15,7 @@ public class Swamp : MonoBehaviour
     float _defaultEnemySpeed;
     private void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<PlayerController>();
+        _player = FindAnyObjectByType<PlayerController>();
         _defaultSpeed = _player._speed;
         _defaultMove = _player._movePower;
     }

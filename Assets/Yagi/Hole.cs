@@ -7,7 +7,7 @@ public class Hole : MonoBehaviour
     GameManager _gameManager;
     void Start()
     {
-        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _gameManager = FindAnyObjectByType<GameManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
