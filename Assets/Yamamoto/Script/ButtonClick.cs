@@ -8,7 +8,7 @@ public class ButtonClick : MonoBehaviour
     [SerializeField] GameObject panel;
     public void StartGame()
     {
-        SceneManager.LoadScene("");
+        SceneManager.LoadScene("SelectStage");
     }
 
     public void OpenCreditPanel()
@@ -20,6 +20,16 @@ public class ButtonClick : MonoBehaviour
     {
         panel.SetActive(false);
         Debug.Log("‰Ÿ‚³‚ê‚Ü‚µ‚½");
+    }
+
+    public void ReturnTitle()
+    {
+        SceneManager.LoadScene("Title");
+    }
+
+    public void SelectStage()
+    {
+        SceneManager.LoadScene("InGame");
     }
     // Start is called before the first frame update
     void Start()

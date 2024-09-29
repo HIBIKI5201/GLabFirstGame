@@ -6,55 +6,53 @@ using UnityEngine.UI;
 
 public class SelectedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
-    public Vector3 _bigscale = new Vector3(1.2f, 1.2f, 1f);
-    public Vector3 _normalScale = new Vector3(1f,1f, 1f);
-    public Vector3 _newPosition = new Vector3(-15f,0f,0f);
+    public Vector3 _bigscale;
+    public Vector3 _normalScale;
+    public Vector2 _newPosition = new Vector2(-15f,0f);
 
     private RectTransform rt;
-    private Vector3 _original;
+    private Vector2 _originalPosition;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rt = GetComponent<RectTransform>();
-        _original = rt.localPosition;
+        _normalScale = rt.localScale;
+        _bigscale = _normalScale * 1.1f;
+        _originalPosition = rt.anchoredPosition;
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        ChangeScale();
-        Debug.Log("選択中");
+        ChangeScale(_bigscale);
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         ResetScale();
-        Debug.Log("選択はずれました");
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ChangeScale();
-        Debug.Log("選択中");
+        ChangeScale(_bigscale);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         ResetScale();
-        Debug.Log("選択はずれました");
     }
 
 
 
-    public void ChangeScale()
+    public void ChangeScale(Vector3 _big)
     {
-        rt.localScale = _bigscale;
-        rt.localPosition = _original + _newPosition;
+        rt.localScale = _big;
+        rt.anchoredPosition = _originalPosition +_newPosition;
     }
 
     public void ResetScale()
     {
         rt.localScale = _normalScale;
-        rt.localPosition = _original;
+        rt.anchoredPosition = _originalPosition;
     }
 
     // Update is called once per frame
