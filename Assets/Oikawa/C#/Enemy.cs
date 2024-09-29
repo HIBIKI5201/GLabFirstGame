@@ -16,17 +16,17 @@ public class Enemy : MonoBehaviour
     [Tooltip("現在HP")]
     [SerializeField] int _currentHp;
 
-    [Space,Tooltip("初期の速度")]
+    [Space, Tooltip("初期の速度")]
     public float _speed;
     [Tooltip("現在の速度")]
     public float _currentSpeed;
 
-    [Space,Tooltip("攻撃力")]
+    [Space, Tooltip("攻撃力")]
     [SerializeField] int _attack;
 
     [Space, Tooltip("状態")]
     [SerializeField] State _state;
-    State _State {  get => _state;  set{ Debug.Log($"敵{_state}から{value}に移行");_state = value; } }
+    State _State { get => _state; set { Debug.Log($"敵{_state}から{value}に移行"); _state = value; } }
 
     [Tooltip("飛び越える")]
     [SerializeField] bool _jumpOver;
@@ -36,6 +36,9 @@ public class Enemy : MonoBehaviour
 
     [Tooltip("進行方向")]
     [SerializeField] Direction _dir;
+
+    [Tooltip("常にデバッグを表示")]
+    [SerializeField] bool _alwaysDebug;
 
     Transform _myTra;
     Vector2 _bottlePosi;
@@ -87,10 +90,10 @@ public class Enemy : MonoBehaviour
         if (_rb == null)
             _rb = GetComponent<Rigidbody2D>();
 
-        if(_spriteRenderer == null)
+        if (_spriteRenderer == null)
             _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if(_playerTra == null)
+        if (_playerTra == null)
             _playerTra = GameObject.FindAnyObjectByType<PlayerController>().transform;
     }
     void Update()
@@ -123,75 +126,78 @@ public class Enemy : MonoBehaviour
                 UpdateReturn();
                 break;
         }
-    }
-    void UpdateReturn()
-    {
-        IsGrounded(out bool isHitRGround, out bool isHitLGround);
-        if (isHitRGround ^ isHitLGround)
+        void UpdateReturn()
         {
-            _dir = isHitRGround ? Direction.right : Direction.left;
+            IsGrounded(out bool isHitRGround, out bool isHitLGround);
+            if (isHitRGround ^ isHitLGround)
+            {
+                _dir = isHitRGround ? Direction.right : Direction.left;
+            }
+            UpdateVelocity();
         }
-        UpdateVelocity();
-    }
-    void UpdateBottle()
-    {
-        float x = _bottlePosi.x - _myTra.position.x;
-        _dir = x >= 0 ? Direction.left : Direction.right;
-        UpdateVelocity();
-    }
-    void UpdateMeat()
-    {
-        float x = _meatPosi.x - _myTra.position.x;
-        _dir = x <= 0 ? Direction.left : Direction.right;
-        if (Mathf.Abs(x) <= 0.05f)
+        void UpdateBottle()
         {
-            _dir = Direction.none;
-            if (_meatEat)
-                _meatTimer = Time.time;
-            _meatEat = true;
+            float x = _bottlePosi.x - _myTra.position.x;
+            _dir = x >= 0 ? Direction.left : Direction.right;
+            UpdateVelocity();
         }
-        if (Time.time >= _meatTimer + 5)
+        void UpdateMeat()
         {
-            _State = State.Normal;
+            float x = _meatPosi.x - _myTra.position.x;
+            _dir = x <= 0 ? Direction.left : Direction.right;
+            if (Mathf.Abs(x) <= 0.05f)
+            {
+                _dir = Direction.none;
+                if (_meatEat)
+                    _meatTimer = Time.time;
+                _meatEat = true;
+            }
+            if (Time.time >= _meatTimer + 5)
+            {
+                _State = State.Normal;
+            }
+            if (IsJump() && IsGrounded(out _, out _) && _jumpOver)
+                VelocityJump();
+            UpdateVelocity();
         }
-        UpdateVelocity();
-    }
-    void UpdateChase()
-    {
-        float x = _playerTra.position.x - _myTra.position.x;
-        _dir = x <= 0 ? Direction.left : Direction.right;
-        if (IsJump() && IsGrounded(out _,out _))
-            VelocityJump();
-        UpdateVelocity();
-    }
-    void UpdateVelocity()
-    {
-        Vector2 velo = _rb.velocity;
-        velo.x = _currentSpeed * _dir switch { Direction.right => 1, Direction.left => -1, _ => 0 };
-        _rb.velocity = velo;
-    }
-    void VelocityJump()
-    {
-        Vector2 velo = _rb.velocity;
-        velo.y = 5;
-        _rb.velocity = velo;
-    }
-    bool IsGrounded(out bool IsHitR, out bool IsHitL)
-    {
-        Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
-        Vector2 lRayPos = _myTra.position + (Vector3)_ground._leftRayPos;
-        bool isHitR = Physics2D.Raycast(rRayPos, Vector2.down, _ground._rayLong, _ground._mask);
-        bool isHitL = Physics2D.Raycast(lRayPos, Vector2.down, _ground._rayLong, _ground._mask);
+        void UpdateChase()
+        {
+            float x = _playerTra.position.x - _myTra.position.x;
+            _dir = x <= 0 ? Direction.left : Direction.right;
+            if (IsJump() && IsGrounded(out _, out _) && _jumpOver)
+                VelocityJump();
+            UpdateVelocity();
+        }
+        void UpdateVelocity()
+        {
+            Vector2 velo = _rb.velocity;
+            velo.x = _currentSpeed * _dir switch { Direction.right => 1, Direction.left => -1, _ => 0 };
+            _rb.velocity = velo;
+        }
+        void VelocityJump()
+        {
+            Vector2 velo = _rb.velocity;
+            velo.y = 5;
+            _rb.velocity = velo;
+        }
+        bool IsGrounded(out bool IsHitR, out bool IsHitL)
+        {
+            Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
+            Vector2 lRayPos = _myTra.position + (Vector3)_ground._leftRayPos;
+            bool isHitR = Physics2D.Raycast(rRayPos, Vector2.down, _ground._rayLong, _ground._mask);
+            bool isHitL = Physics2D.Raycast(lRayPos, Vector2.down, _ground._rayLong, _ground._mask);
 
-        IsHitR = isHitR;
-        IsHitL = isHitL;
-        return isHitR || isHitL;
+            IsHitR = isHitR;
+            IsHitL = isHitL;
+            return isHitR || isHitL;
+        }
+        bool IsJump()
+        {
+            Vector2 dir = _dir switch { Direction.left => Vector2.left, Direction.right => Vector2.right, _ => Vector2.zero };
+            return Physics2D.Raycast(_myTra.position, dir, _ground._jumpRayLong, _ground._mask);
+        }
     }
-    bool IsJump()
-    {
-        Vector2 dir = _dir switch { Direction.left => Vector2.left, Direction.right => Vector2.right, _ => Vector2.zero};
-        return Physics2D.Raycast(_myTra.position, dir, _ground._jumpRayLong, _ground._mask);
-    }
+
     public void ReactionStone(float stunTime)
     {
         _rb.velocity = Vector2.zero;
@@ -221,7 +227,7 @@ public class Enemy : MonoBehaviour
         _meatPosi = meatPosi;
         _meatTimer = Time.time;
     }
-        
+
     Coroutine coroutine = null;
     public void SlowDownScale(float scale, float time)
     {
@@ -257,10 +263,10 @@ public class Enemy : MonoBehaviour
                 CollisionPlayer(col.GetContact(i).normal, col.GetContact(i).point);
             return;
         }
-        for(int i = 0; i < col.contacts.Length; i++)
+        for (int i = 0; i < col.contacts.Length; i++)
             CollisionReturn(col.GetContact(i).normal, col.GetContact(i).point);
 
-        void CollisionReturn(Vector2 normal,Vector2 point)
+        void CollisionReturn(Vector2 normal, Vector2 point)
         {
             float x = point.x - _myTra.position.x;
             bool isLeft = x < 0;
@@ -276,12 +282,12 @@ public class Enemy : MonoBehaviour
             Debug.Log("Enemy Hit Player");
             Vector2 localPosi = point - (Vector2)_myTra.position;
             bool isSteppedOn = (normal.y <= 0.5f) && (localPosi.y >= 0.2f);
-            if(!isSteppedOn)
+            if (!isSteppedOn)
                 col.transform.GetComponent<PlayerController>().FluctuationLife(-_attack);
         }
     }
     ContactPoint2D[] V;
-    private void OnCollisionStay2D(Collision2D collision)=> V = collision.contacts;
+    private void OnCollisionStay2D(Collision2D collision) => V = collision.contacts;
     public void LifeFluctuation(int value)
     {
         _currentHp += value;
@@ -293,7 +299,9 @@ public class Enemy : MonoBehaviour
             _rb = GetComponent<Rigidbody2D>();
         _rb.velocity = Vector3.zero;
     }
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos(){if(_alwaysDebug) DebugRendering(); }
+    private void OnDrawGizmosSelected() { if (!_alwaysDebug) DebugRendering(); }
+    void DebugRendering()
     {
         _myTra = transform;
         Gizmos.color = Color.yellow;
