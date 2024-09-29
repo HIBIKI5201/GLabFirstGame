@@ -2,13 +2,10 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.U2D;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -131,7 +128,6 @@ public class PlayerController : MonoBehaviour
             }
         }
         _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
-
         if (Mathf.Abs(_rb.velocity.x) > _speed)
         {
             _rb.velocity = new Vector2(_speed * Mathf.Sign(_rb.velocity.x), _rb.velocity.y);
