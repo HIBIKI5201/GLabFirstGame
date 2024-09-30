@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Checkpoint : MonoBehaviour
 {
     [SerializeField] GameManager _gameManager;
@@ -23,11 +24,6 @@ public class Checkpoint : MonoBehaviour
     private void Update()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        if (_gameManager.State == GameManager.GameState.GameOver)
-        {
-            _player.transform.position = _checkpoint;
-            _gameManager.State = GameManager.GameState.Playing;
-        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
