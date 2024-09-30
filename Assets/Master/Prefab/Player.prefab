@@ -128,13 +128,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHp: 4
   _rose: []
-  _speed: 7
-  _movePower: 3
-  _jumpPower: 6
-  _fallSpeed: 0
+  _speed: 9
+  _movePower: 5
+  _jumpPower: 9.5
+  _fallSpeed: 4
   _damageCool: 0
-  _point: {x: 0, y: 0}
-  _size: {x: 0, y: 0}
+  _point: {x: 0, y: -0.7}
+  _size: {x: 1, y: 1}
   _angle: 0
   _throwsetting:
     _throwStraightPower: 10
@@ -190,6 +190,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: 0, y: -0.09}
+  m_Size: {x: 1, y: 2.17}
   m_Direction: 0
