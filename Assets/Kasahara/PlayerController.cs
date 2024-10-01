@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose = new List<GameObject>();
     [SerializeField, Tooltip("プレイヤーの速度の最大値")] public float _speed;
     [SerializeField, Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
+    [SerializeField, Tooltip("入力がない時の減速度")] public float _deceleration;
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
     [SerializeField, Tooltip("落下速度")] float _fallSpeed;
     [SerializeField, Tooltip("プレイヤーの無敵時間")] int _damageCool;
@@ -71,6 +72,7 @@ public class PlayerController : MonoBehaviour
     Vector3[] _afterItemPos0 = new Vector3[3];
     Vector3[] _afterItemPos1 = new Vector3[3];
     Vector3[] _afterItemPos2 = new Vector3[3];
+    float _horiInput = 0;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
@@ -86,7 +88,8 @@ public class PlayerController : MonoBehaviour
         _afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
         _afterItemPos1 = new Vector3[] { _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position };
         _afterItemPos2 = new Vector3[] { _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position };
-
+        //var gamemanager = GameObject.FindAnyObjectByType<GameManager>();
+        //gamemanager._updateAction += Move;
     }
 
     void Update()
@@ -99,6 +102,8 @@ public class PlayerController : MonoBehaviour
             UseItem();
         }
     }
+    int f = 0;
+    Vector2 a;
     enum PlayerStatus
     {
         Rock,
@@ -110,31 +115,51 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
-        //移動処理
-        var x = Input.GetAxisRaw("Horizontal");
-        if (_isJump)
+        //問題点:
+        //1:地面についてるとき横方向への移動速度が不安定
+        //2:プレイヤーを吹っ飛ばす場合に横入力によってあまり吹っ飛ばせないかも
+        _horiInput = Input.GetAxisRaw("Horizontal");
+        if (_horiInput == 0)
         {
-            x /= 5;
+            float x = _rb.velocity.x - _deceleration * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
+            if (Mathf.Abs(x) < _deceleration && _rb.velocity.x != 0)
+            {
+                x = 0;
+            }
+            _rb.velocity = new Vector2(x, _rb.velocity.y);
         }
         else
         {
-            if (x < 0)
+            float x = _rb.velocity.x + _movePower * _horiInput * Time.deltaTime;
+            if (Mathf.Abs(x) > _speed)
+            {
+                x = _speed * Mathf.Sign(x);
+            }
+            _rb.velocity = new Vector2(x, _rb.velocity.y);
+        }
+        if (_isJump)
+        {
+            _horiInput /= 5;
+        }
+        else
+        {
+            if (_horiInput < 0)
             {
                 transform.localScale = new Vector2(-1, 1);
             }
-            else if (x > 0)
+            else if (_horiInput > 0)
             {
                 transform.localScale = new Vector2(1, 1);
             }
         }
-        _rb.AddForce(new Vector2(x, 0) * _movePower, ForceMode2D.Force);
-        if (Mathf.Abs(_rb.velocity.x) > _speed)
-        {
-            _rb.velocity = new Vector2(_speed * Mathf.Sign(_rb.velocity.x), _rb.velocity.y);
-        }
     }
     private void Jump()
     {
+        if(_rb.velocity.y < 0)
+        {
+            _isJump = true;
+            StartCoroutine(GroundingJudge());
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (!_isJump)
@@ -188,7 +213,7 @@ public class PlayerController : MonoBehaviour
             var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + _point, _size, _angle);
             foreach (var obj in hit)
             {
-                Debug.Log(obj);
+                //Debug.Log(obj);
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;

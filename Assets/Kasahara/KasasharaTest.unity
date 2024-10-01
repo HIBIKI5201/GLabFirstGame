@@ -1132,8 +1132,9 @@ MonoBehaviour:
   - {fileID: 581440820}
   - {fileID: 1371536639}
   - {fileID: 1294765930}
-  _speed: 10
-  _movePower: 5
+  _speed: 5
+  _movePower: 0.5
+  _deceleration: 0.1
   _jumpPower: 10
   _fallSpeed: 2
   _damageCool: 0
@@ -1175,7 +1176,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.1
+  m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -1606,6 +1607,10 @@ PrefabInstance:
     - target: {fileID: 1250848069273996158, guid: a57334f6d9dfa49499b23d862f4a728b, type: 3}
       propertyPath: m_Name
       value: StrayDog
+      objectReference: {fileID: 0}
+    - target: {fileID: 1250848069273996158, guid: a57334f6d9dfa49499b23d862f4a728b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2158453038202738566, guid: a57334f6d9dfa49499b23d862f4a728b, type: 3}
       propertyPath: _attack
