@@ -171,13 +171,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449ebfaab24753844aa8fa10c546a673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _beast: 2
   _maxHp: 3
   _currentHp: 0
-  _speed: 3
+  _speed: 8.099999
+  _chaseSpeed: 9.900001
   _currentSpeed: 0
   _attack: 1
   _state: 0
-  _jumpOver: 0
+  _jumpOver: 1
+  _canChase: 1
+  _canDamage: 0
   _ground:
     _mask:
       serializedVersion: 2
@@ -185,5 +189,7 @@ MonoBehaviour:
     _rightRayPos: {x: 1.199, y: 0}
     _leftRayPos: {x: -1.199, y: 0}
     _rayLong: 0.7325
+    _sideRayLong: 1.299
     _jumpRayLong: 1.399
   _dir: 1
+  _alwaysDebug: 0

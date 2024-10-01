@@ -936,6 +936,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _movePower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _throwsetting._line
       value: 
       objectReference: {fileID: 217638793}
