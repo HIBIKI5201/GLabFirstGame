@@ -24,6 +24,7 @@ public class SelectedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnSelect(BaseEventData eventData)
     {
         ChangeScale(_bigscale);
+        AudioManager.Instance.PlaySE("cursor");
     }
 
     public void OnDeselect(BaseEventData eventData)
@@ -34,6 +35,7 @@ public class SelectedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnPointerEnter(PointerEventData eventData)
     {
         ChangeScale(_bigscale);
+        AudioManager.Instance.PlaySE("cursor");
     }
 
     public void OnPointerExit(PointerEventData eventData)

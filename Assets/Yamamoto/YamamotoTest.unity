@@ -807,7 +807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bigscale: {x: 1.2, y: 1.2, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
-  _newPosition: {x: -15, y: 0, z: 0}
+  _newPosition: {x: -15, y: 0}
 --- !u!1 &1606870140
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,6 +915,7 @@ GameObject:
   - component: {fileID: 1727490788}
   - component: {fileID: 1727490789}
   - component: {fileID: 1727490790}
+  - component: {fileID: 1727490791}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1052,6 +1053,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 807330430}
+--- !u!114 &1727490791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727490783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d59e8455ada44214d96151e66d29fba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1834598007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1200,7 +1213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bigscale: {x: 1.2, y: 1.2, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
-  _newPosition: {x: -15, y: 0, z: 0}
+  _newPosition: {x: -15, y: 0}
 --- !u!1 &2001903585
 GameObject:
   m_ObjectHideFlags: 0
