@@ -8,11 +8,15 @@ using UnityEngine.SceneManagement;
 public class GameOverSystem : MonoBehaviour
 {
     GameManager _gameManager;
+    SceneLoader _sceneLoader;
     PlayerController _playerController;
     Timer _timer;
+    bool _called;
     void Start()
     {
+        _called = false;
         _gameManager = FindAnyObjectByType<GameManager>();
+        _sceneLoader = FindAnyObjectByType<SceneLoader>();
         _playerController = FindAnyObjectByType<PlayerController>();
         _timer = FindAnyObjectByType<Timer>();
     }
@@ -28,12 +32,18 @@ public class GameOverSystem : MonoBehaviour
             .GetField("_currentTime", BindingFlags.NonPublic | BindingFlags.Instance);
         float currentTime = (float)field.GetValue(_timer);
 
-        if (_gameManager.State == GameManager.GameState.GameOver
-            ||currentHP <= 0
-            ||currentTime <= 0)
+        if (
+            (_gameManager.State == GameManager.GameState.GameOver
+            || currentHP <= 0
+            || currentTime <= 0)&&!_called)
         {
-            Debug.Log("ゲームオーバーによるやり直し");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            _called = true;
+            Invoke("Load", 2);
         }
+    }
+    public void Load()
+    {
+        Debug.Log("ゲームオーバーによるやり直し");
+        _sceneLoader.FadeAndLoadScene();
     }
 }
