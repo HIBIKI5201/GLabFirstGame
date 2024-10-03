@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     Rigidbody2D _rb;
     Transform _playerTra;
     SpriteRenderer _spriteRenderer;
+    BoxCollider2D _boxCollider;
 
     [Tooltip("“®•¨‚ÌŽí—Þ")]
     [SerializeField] Beast _beast;
@@ -155,6 +156,17 @@ public class Enemy : MonoBehaviour
 
         if (_playerTra == null)
             _playerTra = GameObject.FindAnyObjectByType<PlayerController>().transform;
+
+        if(_boxCollider == null)
+            _boxCollider = GetComponent<BoxCollider2D>();
+
+        RaycastHit2D hit = Physics2D.BoxCast(_myTra.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
+        if (hit)
+        {
+            Vector2 pos = _myTra.position;
+            pos.y = hit.point.y + _boxCollider.size.y / 2;
+            _myTra.position = pos;
+        }
     }
     void Update()
     {
@@ -212,7 +224,7 @@ public class Enemy : MonoBehaviour
             if (Mathf.Abs(x) <= 0.05f)
             {
                 _dir = Direction.none;
-                if (_meatEat)
+                if (!_meatEat)
                     _meatTimer = Time.time;
                 _meatEat = true;
             }
@@ -275,11 +287,16 @@ public class Enemy : MonoBehaviour
             return Physics2D.Raycast(_myTra.position, dir, _ground._jumpRayLong, _ground._mask);
         }
     }
-
+    Coroutine _reactionCoro = null;
     public void ReactionStone(float stunTime)
     {
+        if (_State == State.Escape || _State == State.Faint)
+            return;
+
+        if (_reactionCoro != null)
+            StopCoroutine(_reactionCoro);
         _rb.velocity = Vector2.zero;
-        StartCoroutine(Stun());
+        _reactionCoro = StartCoroutine(Stun());
         IEnumerator Stun()
         {
             _State = State.Faint;
@@ -289,7 +306,12 @@ public class Enemy : MonoBehaviour
     }
     public void ReactionBottle(Vector3 bottlePosi)
     {
-        StartCoroutine(Bottle());
+        if (_State == State.Faint)
+            return;
+
+        if(_reactionCoro != null)
+            StopCoroutine(_reactionCoro);
+        _reactionCoro = StartCoroutine(Bottle());
         IEnumerator Bottle()
         {
             _State = State.Escape;
@@ -300,6 +322,9 @@ public class Enemy : MonoBehaviour
     }
     public void ReactionMeat(Vector3 meatPosi)
     {
+        if (_State == State.Bite|| _State == State.Faint)
+            return;
+
         _State = State.Bite;
         _meatEat = false;
         _meatPosi = meatPosi;
@@ -403,11 +428,13 @@ public class Enemy : MonoBehaviour
     {
         if (_rb == null)
             _rb = GetComponent<Rigidbody2D>();
-        _rb.velocity = Vector3.zero;
         _rb.isKinematic = true;
+        _rb.velocity = Vector2.zero;
     }
     void OnEnable()
     {
+        if (_rb == null)
+            _rb = GetComponent<Rigidbody2D>();
         _rb.isKinematic = false;
     }
     private void OnDrawGizmos(){if(_alwaysDebug) DebugRendering(); }
@@ -440,7 +467,9 @@ public class Enemy : MonoBehaviour
         else
             Gizmos.color = Color.blue;
         Gizmos.DrawLine(_myTra.position, _myTra.position + (Vector3)(dir * _ground._jumpRayLong));
-        if (V.Length <= 0 || V == null)
+        if (V == null)
+            return;
+        if (V.Length <= 0)
             return;
         Gizmos.color = Color.red;
         foreach (ContactPoint2D v in V)
@@ -462,13 +491,13 @@ public class Enemy : MonoBehaviour
     [ContextMenu("InitializeGroundedRay(Ž©“®Ý’è)")]
     void InitializeGroundedRay()
     {
-        if (!TryGetComponent<BoxCollider2D>(out BoxCollider2D col)) 
+        if (!TryGetComponent<BoxCollider2D>(out _boxCollider)) 
         { 
             Debug.Log("BoxCollider2D‚ª‚Ý‚Â‚©‚ç‚È‚¢"); 
             return;
         }
 
-        Vector2 size = col.size * transform.localScale;
+        Vector2 size = _boxCollider.size * transform.localScale;
         _ground._mask = Convert.ToInt32("10000000", 2);
         _ground._rightRayPos.x = size.x / 2f;
         _ground._leftRayPos.x = -size.x / 2f;
