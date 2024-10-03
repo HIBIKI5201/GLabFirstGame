@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField, Tooltip("プレイヤーの体力の最大値")] int _maxHp;
-    int _currentHp;
+    public int CurrentHp { get; private set; }
     [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose = new List<GameObject>();
     [SerializeField, Tooltip("プレイヤーの速度の最大値")] public float _speed;
     [SerializeField, Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
@@ -73,17 +73,23 @@ public class PlayerController : MonoBehaviour
     Vector3[] _afterItemPos1 = new Vector3[3];
     Vector3[] _afterItemPos2 = new Vector3[3];
     float _horiInput = 0;
+    PauseManager _pauseManager;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireCube((Vector2)transform.position + _point, _size);
+    }
+    private void Awake()
+    {
+        _pauseManager = FindAnyObjectByType<PauseManager>();
+        _pauseManager.OnPauseResume += PauseAction;
     }
     void Start()
     {
         CreatePhysicsScene();
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _currentHp = _maxHp;
+        CurrentHp = _maxHp;
         _itemPos = new GameObject[] { _itemSetting._rockUi, _itemSetting._bottleUi, _itemSetting._meatUi };
         _afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
         _afterItemPos1 = new Vector3[] { _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position };
@@ -102,8 +108,6 @@ public class PlayerController : MonoBehaviour
             UseItem();
         }
     }
-    int f = 0;
-    Vector2 a;
     enum PlayerStatus
     {
         Rock,
@@ -112,6 +116,33 @@ public class PlayerController : MonoBehaviour
         Normal,
         Damage,
         Death
+    }
+    private void PauseAction(bool isPause)
+    {
+        if (isPause)
+        {
+            Pause();
+        }
+        else
+        {
+            Resume();
+        }
+    }
+    Vector2 _pauseVelocity;
+    void Pause()
+    {
+        Debug.Log("Pause");
+        _canAction = false;
+        _pauseVelocity = _rb.velocity;
+        _rb.velocity = Vector2.zero;
+        _rb.Sleep();
+    }
+    void Resume()
+    {
+        Debug.Log("Resume");
+        _rb.WakeUp();
+        _canAction = true;
+        _rb.velocity = _pauseVelocity;
     }
     private void Move()
     {
@@ -167,7 +198,6 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("ジャンプした");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
-                StartCoroutine(GroundingJudge());
             }
             else
             {
@@ -202,10 +232,6 @@ public class PlayerController : MonoBehaviour
     /// <returns></returns>
     IEnumerator GroundingJudge()
     {
-        while (_rb.velocity.y > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
         _rb.gravityScale = _fallSpeed;
         while (_isJump)
         {
@@ -369,12 +395,12 @@ public class PlayerController : MonoBehaviour
         m_simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         m_physicsScene = m_simulationScene.GetPhysicsScene2D();
     }
-    void ThrowLineSimulate(GameObject _ballPrefab, Vector2 _pos, Vector2 _velocity)
+    void ThrowLineSimulate(GameObject ballPrefab, Vector2 pos, Vector2 velocity)
     {
-        var ghost = Instantiate(_ballPrefab, _pos, Quaternion.identity);
+        var ghost = Instantiate(ballPrefab, pos, Quaternion.identity);
         ghost.GetComponent<Renderer>().enabled = false;
         SceneManager.MoveGameObjectToScene(ghost.gameObject, m_simulationScene);
-        ghost.GetComponent<Rigidbody2D>().AddForce(_velocity, ForceMode2D.Impulse);
+        ghost.GetComponent<Rigidbody2D>().AddForce(velocity, ForceMode2D.Impulse);
 
         _throwsetting._line.positionCount = _throwsetting._simulateFrame;
 
@@ -395,14 +421,14 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isInvincible)
             {
-                _currentHp += value;
+                CurrentHp += value;
                 for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
                     Destroy(_rose[0]);
                     _rose.RemoveAt(0);
                 }
             }
-            if (_currentHp <= 0)
+            if (CurrentHp <= 0)
             {
                 _playerStatus = PlayerStatus.Death;
             }
@@ -414,13 +440,13 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            _currentHp += value;
+            CurrentHp += value;
         }
-        if (_currentHp > _maxHp)
+        if (CurrentHp > _maxHp)
         {
-            _currentHp = _maxHp;
+            CurrentHp = _maxHp;
         }
-        Debug.Log($"Playerの体力:{_currentHp}");
+        Debug.Log($"Playerの体力:{CurrentHp}");
     }
     /// <summary>
     /// プレイヤーの速度を調整する
