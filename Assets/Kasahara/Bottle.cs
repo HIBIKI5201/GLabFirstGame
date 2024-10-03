@@ -41,6 +41,7 @@ public class Bottle : ItemBase
                         obj.gameObject.GetComponent<Enemy>().ReactionBottle(transform.position);
                     }
                 }
+                Destroy(gameObject);
             }
 
         }

@@ -21,6 +21,7 @@ public class Rock : ItemBase
                     //“G‚ğƒXƒ^ƒ“‚³‚¹‚éˆ—
                     obj.gameObject.GetComponent<Enemy>().ReactionStone(ActivateTtime);
                 }
+                Destroy(gameObject);
             }
         }
     }

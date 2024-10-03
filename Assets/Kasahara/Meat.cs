@@ -41,6 +41,7 @@ public class Meat : ItemBase
                         obj.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position);
                     }
                 }
+                Destroy(gameObject);
             }
         }
     }
