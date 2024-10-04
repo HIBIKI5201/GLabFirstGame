@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -25,21 +26,18 @@ public class SceneLoader : MonoBehaviour
     {
         None = -1,
         Title,
-        StageSelect,
+        InGame,
+        Ending,
+        SelectStage,
         Stage1,
         Stage2,
         Stage3,
         Stage4,
     }
-    string[] SceneName =
-    {
-        "Title",
-        "StageSelect",
-        "Stage1",
-        "Stage2",
-        "Stage3",
-        "Stage4"
-    };
-    public void FadeAndLoadScene() =>DOTween.To(() => _image.color, c => _image.color = c, _fadeColor, _fadeTime).OnComplete(SceneLoad);
-    void SceneLoad() => SceneManager.LoadScene(SceneName[(int)_scene]);
+    /// <summary>
+    /// シーンを呼び出すメソッド
+    /// </summary>
+    [ContextMenu("シーンを呼び出すメソッド")]
+    public void FadeAndLoadScene() => DOTween.To(() => _image.color, c => _image.color = c, _fadeColor, _fadeTime).OnComplete(SceneLoad);
+    void SceneLoad() => SceneManager.LoadScene(Enum.GetName(typeof(Scenes), _scene));
 }
