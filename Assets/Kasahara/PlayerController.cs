@@ -82,7 +82,10 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _pauseManager = FindAnyObjectByType<PauseManager>();
-        _pauseManager.OnPauseResume += PauseAction;
+        if (_pauseManager != null)
+            _pauseManager.OnPauseResume += PauseAction;
+        else
+            Debug.LogError("このシーンにPauseManagerが存在しません");
     }
     void Start()
     {
@@ -308,7 +311,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            StartCoroutine(ThrowItem());
+            _pauseManager.BeginCoroutine(ThrowItem());
+            //StartCoroutine(ThrowItem());
         }
     }
     /// <summary>
@@ -463,13 +467,22 @@ public class PlayerController : MonoBehaviour
     /// <param name="time"></param>
     public void StopAction(float time)
     {
-        StartCoroutine(StoppingAction(time));
+        //StartCoroutine(StoppingAction(time));
+        _pauseManager.BeginCoroutine(StoppingAction(time));
     }
     IEnumerator StoppingAction(float time)
     {
+        IEnumerator enumerator = _pauseManager.GetCoroutine();
         _canAction = false;
-        yield return new WaitForSeconds(time);
+        float timer = 0;
+        while (timer<time)
+        {
+            yield return new WaitForEndOfFrame();
+            timer += Time.deltaTime;
+        }
         _canAction = true;
+        yield return new WaitForEndOfFrame();
+        _pauseManager.OnComplete(enumerator);
     }
     IEnumerator Slowing(float multi, float slowtime)
     {
@@ -483,7 +496,11 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator ThrowItem()
     {
-        if (!Item(out ItemBase item)) yield break;
+        IEnumerator enumerator = _pauseManager.GetCoroutine();
+        if (!Item(out ItemBase item))
+        {
+            goto EndCoroutine;
+        }
         //投げるアイテムにRigidbodyがついてなかったらつける
         if (!item.TryGetComponent(out Rigidbody2D rb))
         {
@@ -504,9 +521,12 @@ public class PlayerController : MonoBehaviour
         {
             while (Input.GetKey(KeyCode.Return))
             {
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKey(KeyCode.E))//||Input.GetButton("Cancel"))
                 {
-                    yield break;
+                    Debug.Log("ThrowCancel");
+                    _throwsetting._line.positionCount = 0;
+                    _throwParabolaPower = 0;
+                    goto EndCoroutine;
                 }
                 if (_throwParabolaPower < _throwsetting._maxThrowParabolaPower)
                 {
@@ -556,5 +576,8 @@ public class PlayerController : MonoBehaviour
                 _itemSetting._leafMeat.transform.localScale = Vector3.one;
             }
         }
+        EndCoroutine:
+        yield return new WaitForEndOfFrame();
+        _pauseManager.OnComplete(enumerator);
     }
 }
