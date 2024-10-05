@@ -40,4 +40,9 @@ public class SceneLoader : MonoBehaviour
     [ContextMenu("シーンを呼び出すメソッド")]
     public void FadeAndLoadScene() => DOTween.To(() => _image.color, c => _image.color = c, _fadeColor, _fadeTime).OnComplete(SceneLoad);
     void SceneLoad() => SceneManager.LoadScene(Enum.GetName(typeof(Scenes), _scene));
+    /// <summary>
+    /// シーンを呼び出すメソッド
+    /// </summary>
+    [ContextMenu("シーンを呼び出すメソッド")]
+    public void FadeAndLoadScene(Image image, Color fadeColor, float fadeTime, Scenes scene) => DOTween.To(() => image.color, c => image.color = c, fadeColor, _fadeTime).OnComplete(() => SceneManager.LoadScene(Enum.GetName(typeof(Scenes), scene)));
 }
