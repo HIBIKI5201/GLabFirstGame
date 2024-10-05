@@ -8,7 +8,9 @@ public class SelectedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 {
     public Vector3 _bigscale;
     public Vector3 _normalScale;
-    public Vector2 _newPosition = new Vector2(-15f,0f);
+    public Vector2 _newPosition = new Vector2(-15f, 0f);
+    [SerializeField] Sprite [] _buttonImage;
+    public Image _currentImage;
 
     private RectTransform rt;
     private Vector2 _originalPosition;
@@ -23,23 +25,27 @@ public class SelectedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnSelect(BaseEventData eventData)
     {
+        ChangeImage(1);
         ChangeScale(_bigscale);
         AudioManager.Instance.PlaySE("cursor");
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
+        ChangeImage(0);
         ResetScale();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        ChangeImage(1);
         ChangeScale(_bigscale);
         AudioManager.Instance.PlaySE("cursor");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        ChangeImage(0);
         ResetScale();
     }
 
@@ -57,6 +63,10 @@ public class SelectedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         rt.anchoredPosition = _originalPosition;
     }
 
+    public void ChangeImage(int _index)
+    {
+        _currentImage.sprite = _buttonImage[_index];
+    }
     // Update is called once per frame
     void Update()
     {

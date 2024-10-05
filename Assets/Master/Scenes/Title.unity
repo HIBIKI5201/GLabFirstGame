@@ -819,7 +819,7 @@ SpriteRenderer:
   m_Size: {x: 19.2, y: 10.8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1349831210
@@ -986,6 +986,10 @@ MonoBehaviour:
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: -10, y: 0}
+  _buttonImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentImage: {fileID: 1364357198}
 --- !u!1 &1406563552
 GameObject:
   m_ObjectHideFlags: 0
@@ -1561,6 +1565,8 @@ MonoBehaviour:
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: 0, y: 0}
+  _buttonImage: []
+  _currentImage: {fileID: 0}
 --- !u!1 &1834716695
 GameObject:
   m_ObjectHideFlags: 0
@@ -1954,6 +1960,10 @@ MonoBehaviour:
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: -10, y: 0}
+  _buttonImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentImage: {fileID: 2051364723}
 --- !u!1 &2096494691
 GameObject:
   m_ObjectHideFlags: 0

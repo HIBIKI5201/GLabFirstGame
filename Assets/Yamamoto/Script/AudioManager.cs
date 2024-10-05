@@ -61,10 +61,6 @@ public class AudioManager : MonoBehaviour
 
     public void StopBGM()
     {
-        while(_bgmSource.volume > 0f)
-        {
-            _bgmSource.volume -= 0.01f;
-        }
         _bgmSource.Stop();
     }
 
