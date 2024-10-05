@@ -137,7 +137,6 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Pause");
         _canAction = false;
         _pauseVelocity = _rb.velocity;
-        _rb.velocity = Vector2.zero;
         _rb.Sleep();
     }
     void Resume()

@@ -6,11 +6,12 @@ using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
+    [SerializeField,Header("ポーズ時に有効化するUI"),Tooltip("ポーズ時に有効化するUI")] GameObject[] PauseUI;
+    [Header("リタイアした時のフェードアウトの設定")]
     [SerializeField] SceneLoader _loader;
     [SerializeField] GameObject _fadePanel;
     [SerializeField] Color _color;
     [SerializeField] float _fadeTime;
-    [SerializeField] GameObject[] PauseUI;
     /// <summary>true の時は一時停止とする</summary>
     bool _pauseFlg = false;
     /// <summary>デリゲートを入れておく変数</summary>
