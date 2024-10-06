@@ -582,7 +582,7 @@ public class Enemy : MonoBehaviour
     void SettingStatus()
     {
         PlayerController player = FindAnyObjectByType<PlayerController>();
-        float pSpeed = player._speed;
+        float pSpeed = player._maxSpeed;
 
         switch (_beast)
         {
