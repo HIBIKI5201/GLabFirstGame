@@ -2401,13 +2401,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c027cbc03a56f84bb5d3170dd3070eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _loader: {fileID: 367784559}
-  _fadePanel: {fileID: 446758983}
-  _color: {r: 0, g: 0, b: 0, a: 0}
-  _fadeTime: 1
   PauseUI:
   - {fileID: 2145986325}
   - {fileID: 840377336}
+  _loader: {fileID: 367784559}
+  _fadePanel: {fileID: 446758983}
+  _color: {r: 0, g: 0, b: 0, a: 1}
+  _fadeTime: 1
 --- !u!4 &1070289909
 Transform:
   m_ObjectHideFlags: 0

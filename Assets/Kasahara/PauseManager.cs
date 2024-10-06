@@ -63,10 +63,12 @@ public class PauseManager : MonoBehaviour
         if (_pauseFlg)
         {
             PauseAllCoroutine();
+            Time.timeScale = 0;
         }
         else
         {
             ResumeAllCoroutine();
+            Time.timeScale = 1;
         }
     }
     /// <summary>
