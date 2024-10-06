@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         [Tooltip("まっすぐ投げる強さ")] public float ThrowStraightPower;
         [Tooltip("放物的に投げる強さ")] public float MaxThrowParabolaPower;
+        [Tooltip("前後に動くやつの増加率")] public float ThrowRate; 
         [Tooltip("放物的に投げる方向")] public Vector2 ThrowParabolaDirection;
         [Tooltip("アイテムを投げる位置")] public Vector2 ThrowPos;
         [Tooltip("弾道予測線")] public LineRenderer BulletSimulationLine;
@@ -56,7 +57,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>持っているアイテムのリスト</summary>
     List<ItemBase> _itemList = new List<ItemBase>();
     /// <summary>接地判定</summary>
-    [SerializeField]bool _isJump;
+    [SerializeField] bool _isJump;
     /// <summary>敵を踏んだ判定</summary>
     bool _isStompEnemy;
     /// <summary>無敵時間中かどうか</summary>
@@ -193,7 +194,7 @@ public class PlayerController : MonoBehaviour
                 float x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
                 if (Mathf.Abs(x) < _deceleration && _rb.velocity.x != 0)
                 {
-                    
+
                     x = 0;
                 }
                 _rb.velocity = new Vector2(x, _rb.velocity.y);
@@ -558,11 +559,13 @@ public class PlayerController : MonoBehaviour
         //放物的に投げる
         else
         {
-            if(_throwsetting.BulletSimulationLine==null)
+            if (_throwsetting.BulletSimulationLine == null)
             {
                 Debug.LogError("LineRendererがnullで投げれません");
                 goto EndCoroutine;
             }
+            float t = 0;
+            float throwParabolaPower = 0;
             while (Input.GetKey(KeyCode.Return))
             {
                 if (Input.GetKey(KeyCode.E))//||Input.GetButton("Cancel"))
@@ -576,14 +579,16 @@ public class PlayerController : MonoBehaviour
                 {
                     _throwParabolaPower += 0.1f;
                 }
-                ThrowLineSimulate(item.gameObject, transform.position, _throwsetting.ThrowParabolaDirection.normalized * _throwParabolaPower * transform.localScale);
+                throwParabolaPower = Mathf.Sin(t) * _throwParabolaPower + _throwsetting.MaxThrowParabolaPower;
+                t += _throwsetting.ThrowRate * Time.deltaTime;
+                ThrowLineSimulate(item.gameObject, transform.position, _throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale);
                 yield return new WaitForEndOfFrame();
             }
             _throwsetting.BulletSimulationLine.positionCount = 0;
             //アイテムをプレイヤーの位置に持ってくる
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.velocity = Vector3.zero;
-            rb.AddForce(_throwsetting.ThrowParabolaDirection.normalized * _throwParabolaPower * transform.localScale, ForceMode2D.Impulse);
+            rb.AddForce(_throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale, ForceMode2D.Impulse);
             _throwParabolaPower = 0;
         }
         item.Throwing();
