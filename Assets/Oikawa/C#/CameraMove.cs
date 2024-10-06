@@ -29,6 +29,8 @@ public class CameraMove : MonoBehaviour
         _outPos = _myTra.position;
         if(_target == null)
             _target = GameObject.FindAnyObjectByType<PlayerController>().transform;
+        _myTra.position = _target.position;
+        _outPos = _myTra.position;
     }
 
     void FixedUpdate()

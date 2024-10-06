@@ -1,13 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour
 {
+    AudioManager _audio;
     Rigidbody2D _rb;
     Transform _playerTra;
     SpriteRenderer _spriteRenderer;
@@ -42,7 +40,7 @@ public class Enemy : MonoBehaviour
         /// </summary>
         Boss_Wolf
     }
-    [Tooltip("ç≈ëÂHP"),Space]
+    [Tooltip("ç≈ëÂHP"), Space]
     [SerializeField] int _maxHp;
     [Tooltip("åªç›HP")]
     [SerializeField] int _currentHp;
@@ -58,7 +56,17 @@ public class Enemy : MonoBehaviour
 
     [Space, Tooltip("èÛë‘")]
     [SerializeField] State _state;
-    State _State { get => _state; set { Debug.Log($"ìG{_state}Ç©ÇÁ{value}Ç…à⁄çs"); _state = value; } }
+    State _State
+    {
+        get => _state;
+        set
+        {
+            if (value == _state)
+                return;
+            Debug.Log($"ìG{_state}Ç©ÇÁ{value}Ç…à⁄çs");
+            _state = value;
+        }
+    }
 
     [Tooltip("îÚÇ—âzÇ¶ÇÈ")]
     [SerializeField] bool _jumpOver;
@@ -83,6 +91,7 @@ public class Enemy : MonoBehaviour
     Vector2 _meatPosi;
     float _meatTimer;
     bool _meatEat;
+    bool _canMoveSE;
     enum Direction
     {
         right, left, none
@@ -135,31 +144,47 @@ public class Enemy : MonoBehaviour
         /// </summary>
         Chase,
     }
-
-    void Start()
+    void Start() => Awake();
+    void Awake()
+    {
+        ResetStatus();
+        CacheComponents();
+        MatchGround();
+    }
+    void ResetStatus()
     {
         PhysicsMaterial2D physicsMaterial2D = new PhysicsMaterial2D();
         physicsMaterial2D.friction = 0;
         physicsMaterial2D.bounciness = 0;
         GetComponent<Collider2D>().sharedMaterial = physicsMaterial2D;
+
         _currentHp = _maxHp;
         _currentSpeed = _speed;
         _state = State.Normal;
         _canDamage = true;
 
+        StartCoroutine(WaitAudio());
+        IEnumerator WaitAudio()
+        {
+            _canMoveSE = false;
+            yield return new WaitForSeconds(0.2f);
+            _canMoveSE = true;
+        }
+    }
+    void CacheComponents()
+    {
         _myTra = transform;
-        if (_rb == null)
-            _rb = GetComponent<Rigidbody2D>();
+        _audio = AudioManager.Instance;
+        _rb = _rb ?? GetComponent<Rigidbody2D>();
 
-        if (_spriteRenderer == null)
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = _spriteRenderer ?? GetComponent<SpriteRenderer>();
 
-        if (_playerTra == null)
-            _playerTra = GameObject.FindAnyObjectByType<PlayerController>().transform;
-
-        if(_boxCollider == null)
-            _boxCollider = GetComponent<BoxCollider2D>();
-
+        _playerTra = _playerTra ?? GameObject.FindAnyObjectByType<PlayerController>().transform;
+        _boxCollider = _boxCollider ?? GetComponent<BoxCollider2D>();
+        Debug.Log(_spriteRenderer == null);
+    }
+    void MatchGround()
+    {
         RaycastHit2D hit = Physics2D.BoxCast(_myTra.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
         if (hit)
         {
@@ -221,7 +246,7 @@ public class Enemy : MonoBehaviour
         {
             float x = _meatPosi.x - _myTra.position.x;
             _dir = x <= 0 ? Direction.left : Direction.right;
-            if (Mathf.Abs(x) <= 0.05f)
+            if (Mathf.Abs(x) <= 0.2f) 
             {
                 _dir = Direction.none;
                 if (!_meatEat)
@@ -239,7 +264,12 @@ public class Enemy : MonoBehaviour
         void UpdateChase()
         {
             float x = _playerTra.position.x - _myTra.position.x;
+            float y = _playerTra.position.y - _myTra.position.y;
             _dir = x <= 0 ? Direction.left : Direction.right;
+            if (Mathf.Abs(x) <= Mathf.Min(0.1f, y))
+            {
+                _dir = Direction.none;
+            }
             if (IsJump() && IsGrounded(out _, out _) && _jumpOver)
                 VelocityJump();
             UpdateVelocity();
@@ -436,6 +466,17 @@ public class Enemy : MonoBehaviour
         if (_rb == null)
             _rb = GetComponent<Rigidbody2D>();
         _rb.isKinematic = false;
+        if (_canMoveSE)
+        {
+            _audio.PlaySE(_beast switch
+            {
+                Beast.StrayDog => "strayDog",
+                Beast.Wolf_Normal or Beast.Wolf_Gray => "wolf",
+                Beast.Bear => "bare",
+                _ => ""
+            });
+            _canMoveSE = false;
+        } 
     }
     private void OnDrawGizmos(){if(_alwaysDebug) DebugRendering(); }
     private void OnDrawGizmosSelected() { if (!_alwaysDebug) DebugRendering(); }

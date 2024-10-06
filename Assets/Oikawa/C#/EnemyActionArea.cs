@@ -18,36 +18,21 @@ public class EnemyActionArea : MonoBehaviour
             _enemiesTra[i] = _enemies[i].transform;
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D col) => EnemyFunc(col, true, "“G‚ª“®‚«o‚µ‚½");
+    private void OnTriggerExit2D(Collider2D col) => EnemyFunc(col, false, "“G‚ğ~‚ß‚½");
+    void EnemyFunc(Collider2D col,bool enabled,string logStr)
     {
-        Transform target = collision.transform;
-        if (target.CompareTag("Enemy"))
-        {
-            Debug.Log("“G‚ª“®‚«o‚µ‚½B");
-            for (int i = 0; i < _enemies.Length; i++)
-            {
-                if (target == _enemiesTra[i])
-                {
-                    _enemies[i].enabled = true;
-                    return;
-                }
-            }
-
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        Transform target = collision.transform;
+        Transform target = col.transform;
         if (target.CompareTag("Enemy"))
         {
             for (int i = 0; i < _enemies.Length; i++)
             {
-                if(_enemies[i] == null) 
+                if (_enemies[i] == null)
                     continue;
                 if (target == _enemiesTra[i])
                 {
-                    _enemies[i].enabled = false;
-                    Debug.Log("“G‚ğ~‚ß‚½");
+                    _enemies[i].enabled = enabled;
+                    Debug.Log(logStr);
                     return;
                 }
             }

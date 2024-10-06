@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] GameState _state;
+    public static GameManager instance;
+    AudioManager _audio;
     public GameState State { get => _state; set { Debug.Log($"{_state}‚©‚ç{value}‚ÉˆÚs"); _state = value; } }
     
     [Space,Tooltip("FPS’l‚ğw’è‚·‚é")]
@@ -21,6 +24,9 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        instance = this;
+        _audio = AudioManager.Instance;
+        _audio.PlayBGM(SceneManager.GetActiveScene().name.ToLower());
     }
 
     void Update()

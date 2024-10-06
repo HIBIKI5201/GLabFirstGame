@@ -24,11 +24,9 @@ public class GameOverSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        FieldInfo field = typeof(PlayerController)
-            .GetField("_currentHp", BindingFlags.NonPublic | BindingFlags.Instance);
-        int currentHP = (int)field.GetValue(_playerController);
+        int currentHP = _playerController.CurrentHp;
 
-        field = typeof(Timer)
+        FieldInfo field = typeof(Timer)
             .GetField("_currentTime", BindingFlags.NonPublic | BindingFlags.Instance);
         float currentTime = (float)field.GetValue(_timer);
 
@@ -38,12 +36,13 @@ public class GameOverSystem : MonoBehaviour
             || currentTime <= 0)&&!_called)
         {
             _called = true;
-            Invoke("Load", 2);
+            StartCoroutine(Load());
+            IEnumerator Load()
+            {
+                yield return new WaitForSeconds(4);
+                Debug.Log("ゲームオーバーによるやり直し");
+                _sceneLoader.FadeAndLoadScene();
+            }
         }
-    }
-    public void Load()
-    {
-        Debug.Log("ゲームオーバーによるやり直し");
-        _sceneLoader.FadeAndLoadScene();
     }
 }
