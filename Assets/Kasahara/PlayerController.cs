@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose = new List<GameObject>();
     [SerializeField, Tooltip("プレイヤーの速度の最大値")] public float _maxSpeed;
     [SerializeField, Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
-    [SerializeField, Tooltip("入力がない時の減速度")] public float _maxDeceleration;
+    [SerializeField, Tooltip("入力がない時の減速度")] public float _deceleration;
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
     [SerializeField, Tooltip("落下速度")] float _fallSpeed;
     [SerializeField, Tooltip("プレイヤーの無敵時間")] int _damageCool;
@@ -190,9 +190,10 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                float x = _rb.velocity.x - _maxDeceleration * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
-                if (Mathf.Abs(x) < _maxDeceleration && _rb.velocity.x != 0)
+                float x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
+                if (Mathf.Abs(x) < _deceleration && _rb.velocity.x != 0)
                 {
+                    
                     x = 0;
                 }
                 _rb.velocity = new Vector2(x, _rb.velocity.y);
