@@ -24,7 +24,7 @@ public class Goal : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _clearText.enabled = false;
-        _playerController = GetComponent<PlayerController>();
+        _playerController = GameObject.FindAnyObjectByType < PlayerController >();
         _timer = GameObject.FindAnyObjectByType<Timer>();
     }
 
