@@ -97,88 +97,88 @@ MonoBehaviour:
   - _name: goal
     _clip: {fileID: 8300000, guid: 47d3560ebdd433a419ab6576591bf086, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: stageclear
-    _clip: {fileID: 8300000, guid: dc6ca0c91a4a7754fbc74235d3e3227d, type: 3}
+    _clip: {fileID: 8300000, guid: 4e94422b552e21644b0ab9233cf574d3, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: result
-    _clip: {fileID: 8300000, guid: ca7b38ff8e412744baf6956dcf47764b, type: 3}
+    _clip: {fileID: 8300000, guid: 3fc1eaec0355ae347b997c1d29b09103, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: dead
-    _clip: {fileID: 8300000, guid: 92864dd4344e5ac4a86b06fa87a54787, type: 3}
+    _clip: {fileID: 8300000, guid: 752315268d43c96479ed92d2c5d559c9, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: damaged
-    _clip: {fileID: 8300000, guid: 5436e0f9633bac3488ac7680b58d8abd, type: 3}
+    _clip: {fileID: 8300000, guid: b51502e37cf3d4b4ba7ac781beefa797, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: move
-    _clip: {fileID: 8300000, guid: 7f3df500f0794394f8f1ad3c7832cb98, type: 3}
+    _clip: {fileID: 8300000, guid: 78c3b79d371bfcb4499666764b2cefe5, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: dash
-    _clip: {fileID: 8300000, guid: b62840422cc5c1e42aba5f12be0e23e2, type: 3}
+    _clip: {fileID: 8300000, guid: 5386a3ae3a43c7a40b5baec56e8b0eb9, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: suddenStop
-    _clip: {fileID: 8300000, guid: 27f0a5c1a57855748b4395ca8a540837, type: 3}
+    _clip: {fileID: 8300000, guid: 66921bb4c9de8ea418d49419f62b51b2, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: jump
-    _clip: {fileID: 8300000, guid: 32aae1cfeaddee04980e1223b2aaec35, type: 3}
+    _clip: {fileID: 8300000, guid: 6448d1c1a0e6f2043b1f500cc5c2c8ba, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: damage_enemy
-    _clip: {fileID: 8300000, guid: 8e2b0c65257c9d2448b844c205bae2f0, type: 3}
+    _clip: {fileID: 8300000, guid: a4db7a981ac08c94aa457bde52c0eecf, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: itemGet
-    _clip: {fileID: 8300000, guid: 5880ac0d8b45dd549afbf9c4f6889432, type: 3}
+    _clip: {fileID: 8300000, guid: f4066027f28a6b0488a9a6d05b9bd53f, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: timeLimit
-    _clip: {fileID: 8300000, guid: 8f229da46e7d3b2469eee78c5340dd84, type: 3}
+    _clip: {fileID: 8300000, guid: cbf5e650234c15a4fadfac1fefcd8720, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: stageRelease
-    _clip: {fileID: 8300000, guid: e3d3a4c7031fa424db1b92368d45c3a5, type: 3}
+    _clip: {fileID: 8300000, guid: 0847a4207d8aab345bc90c7adeb86476, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: jump_landing
-    _clip: {fileID: 8300000, guid: 1e115ed9b34144741ba4f91372035a3f, type: 3}
+    _clip: {fileID: 8300000, guid: dfb0bba2cee4c4b499a53e5865c7c264, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: crack
-    _clip: {fileID: 8300000, guid: 43f5802f04487d34f8e0c9df7e1e82ba, type: 3}
+    _clip: {fileID: 8300000, guid: 5c19553264c459443854da9bf6a63dbf, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: meat
-    _clip: {fileID: 8300000, guid: 177a2974c5660c74298d43d43bceb163, type: 3}
+    _clip: {fileID: 8300000, guid: c29ff0a8ca0a65141a4950d676784513, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: throw
-    _clip: {fileID: 8300000, guid: 8fb079ad63d41af41bce703e1c0e4b19, type: 3}
+    _clip: {fileID: 8300000, guid: 116252f0987afd246bb2a60e1a10f0ef, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: openDoor
-    _clip: {fileID: 8300000, guid: a7ca1c41d6b1b5f4285ff6234281326e, type: 3}
+    _clip: {fileID: 8300000, guid: 7491528457781524381740345096fced, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: bare
-    _clip: {fileID: 8300000, guid: ed0e8101f4a33ad4594dbdb5b538c7ea, type: 3}
+    _clip: {fileID: 8300000, guid: ab33432871e355543b9ed8d88d1bf8a5, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: wolf
-    _clip: {fileID: 8300000, guid: e1a88db9540d91c469d0de8acdc6f1fb, type: 3}
+    _clip: {fileID: 8300000, guid: c996bc69621322c4f985417e88af8b47, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: strayDog
-    _clip: {fileID: 8300000, guid: b1b7d71df03a00041b7d75ec01da6b13, type: 3}
+    _clip: {fileID: 8300000, guid: b567da70c51563545ad3aba95235c759, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
   - _name: knock
-    _clip: {fileID: 8300000, guid: 8db6672d98a0c524ea95e2f14ced3279, type: 3}
+    _clip: {fileID: 8300000, guid: 5b7e1af3753028542884d94b92fc3578, type: 3}
     _volume: 1
-    _pitch: 1
+    _pitch: 0
