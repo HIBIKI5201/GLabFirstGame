@@ -8,7 +8,7 @@ public class GoalObject : MonoBehaviour
     void Start()
     {
         if(_gameManager == null)
-            _gameManager = GameObject.FindAnyObjectByType<GameManager>();
+            _gameManager = GameManager.instance;
     }
     void Update()
     {
