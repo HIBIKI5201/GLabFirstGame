@@ -55,19 +55,19 @@ MonoBehaviour:
     _pitch: 1
   - _name: stage1
     _clip: {fileID: 8300000, guid: dfcfb10dfa8430845b9e370a1978c172, type: 3}
-    _volume: 0.9
+    _volume: 0.6
     _pitch: 1
   - _name: stage2
     _clip: {fileID: 8300000, guid: 3df02548e2d9e00479db28ec6a92e407, type: 3}
-    _volume: 0.9
+    _volume: 0.6
     _pitch: 1
   - _name: stage3
     _clip: {fileID: 8300000, guid: d3009d93800bed84ab523c2114fc3d3d, type: 3}
-    _volume: 0.9
+    _volume: 0.6
     _pitch: 1
   - _name: stage4
     _clip: {fileID: 8300000, guid: c82fa21a0952670468fdd1ebed61b444, type: 3}
-    _volume: 0.9
+    _volume: 0.6
     _pitch: 1
   - _name: bossFight
     _clip: {fileID: 8300000, guid: 21be19249870ea94e8febe9a3a52b7f2, type: 3}
