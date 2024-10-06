@@ -144,12 +144,11 @@ public class Enemy : MonoBehaviour
         /// </summary>
         Chase,
     }
-    void Start() => Awake();
+    void Start() {Awake(); MatchGround();}
     void Awake()
     {
         ResetStatus();
         CacheComponents();
-        MatchGround();
     }
     void ResetStatus()
     {
@@ -177,7 +176,7 @@ public class Enemy : MonoBehaviour
         _audio = AudioManager.Instance;
         _rb = _rb ?? GetComponent<Rigidbody2D>();
 
-        _spriteRenderer = _spriteRenderer ?? GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
 
         _playerTra = _playerTra ?? GameObject.FindAnyObjectByType<PlayerController>().transform;
         _boxCollider = _boxCollider ?? GetComponent<BoxCollider2D>();
@@ -266,7 +265,7 @@ public class Enemy : MonoBehaviour
             float x = _playerTra.position.x - _myTra.position.x;
             float y = _playerTra.position.y - _myTra.position.y;
             _dir = x <= 0 ? Direction.left : Direction.right;
-            if (Mathf.Abs(x) <= Mathf.Min(0.1f, y))
+            if (Mathf.Abs(x) <= Mathf.Abs(Mathf.Min(y, 0.1f)))
             {
                 _dir = Direction.none;
             }
@@ -542,7 +541,7 @@ public class Enemy : MonoBehaviour
         _ground._mask = Convert.ToInt32("10000000", 2);
         _ground._rightRayPos.x = size.x / 2f;
         _ground._leftRayPos.x = -size.x / 2f;
-        _ground._rayLong = (size.y / 2f) + 0.1f;
+        _ground._rayLong = (size.y / 2f) + 0.2f;
         _ground._sideRayLong = (size.x / 2f) + 0.1f;
         _ground._jumpRayLong = (size.x / 2f) + 0.2f;
     }

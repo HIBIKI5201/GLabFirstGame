@@ -105,7 +105,8 @@ public class PlayerController : MonoBehaviour
     {
         if (_canAction)
         {
-            Move();
+            //Move();
+            NewMove();
             Jump();
             ChangeItem();
             UseItem();
@@ -145,6 +146,40 @@ public class PlayerController : MonoBehaviour
         _rb.WakeUp();
         _canAction = true;
         _rb.velocity = _pauseVelocity;
+    }
+    float _veloX = 0;
+    float _acce = 1;
+    void NewMove()//Made in Oikawa
+    {
+        _horiInput = Input.GetAxisRaw("Horizontal");
+         float x = _horiInput * Mathf.Round(Mathf.Abs(_horiInput));
+        float times = _isJump ? 0.2f : 1;
+        switch (x) 
+        {
+            case 1:
+                _veloX = Mathf.Lerp(_veloX, _speed, Time.deltaTime * _acce * times);
+                break;
+            case 0:
+                _veloX = Mathf.Lerp(_veloX, 0, Time.deltaTime * _acce * times);
+                break;
+            case -1:
+                _veloX = Mathf.Lerp(_veloX, -_speed, Time.deltaTime * _acce * times);
+                break;
+        }
+
+        Vector2 vector2 = _rb.velocity;
+        vector2.x = _veloX;
+        _rb.velocity = vector2;
+
+        if(!_isJump )
+            if (x < 0)
+            {
+                transform.localScale = new Vector2(-1, 1);
+            }
+            else if (x > 0)
+            {
+                transform.localScale = new Vector2(1, 1);
+            }
     }
     private void Move()
     {
