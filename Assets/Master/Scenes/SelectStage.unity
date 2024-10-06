@@ -495,9 +495,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
-  _newPosition: {x: 0, y: 0}
-  _buttonImage: []
-  _currentImage: {fileID: 0}
+  _newPosition: {x: -10, y: 0}
+  _buttonImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentImage: {fileID: 232290078}
 --- !u!1 &234961691
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,9 +647,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
-  _newPosition: {x: 0, y: 0}
-  _buttonImage: []
-  _currentImage: {fileID: 0}
+  _newPosition: {x: -10, y: 0}
+  _buttonImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentImage: {fileID: 234961694}
 --- !u!1 &289554067
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,9 +894,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
-  _newPosition: {x: 0, y: 0}
-  _buttonImage: []
-  _currentImage: {fileID: 0}
+  _newPosition: {x: -10, y: 0}
+  _buttonImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentImage: {fileID: 308538994}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,8 +1264,10 @@ MonoBehaviour:
   _bigscale: {x: 1.2, y: 1.2, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: -15, y: 0}
-  _buttonImage: []
-  _currentImage: {fileID: 0}
+  _buttonImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentImage: {fileID: 663130225}
 --- !u!1 &724072379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1783,7 +1791,7 @@ SpriteRenderer:
   m_Size: {x: 35.09146, y: 14.65}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1346435347
@@ -2238,9 +2246,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
-  _newPosition: {x: 0, y: 0}
-  _buttonImage: []
-  _currentImage: {fileID: 0}
+  _newPosition: {x: -10, y: 0}
+  _buttonImage:
+  - {fileID: 0}
+  - {fileID: 0}
+  _currentImage: {fileID: 1924097597}
 --- !u!1001 &1943825094
 PrefabInstance:
   m_ObjectHideFlags: 0
