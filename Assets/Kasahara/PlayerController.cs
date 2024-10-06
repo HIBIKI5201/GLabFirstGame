@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose = new List<GameObject>();
     [SerializeField, Tooltip("プレイヤーの速度の最大値")] public float _maxSpeed;
     [SerializeField, Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
-    [SerializeField, Tooltip("入力がない時の減速度")] public float _deceleration;
+    [SerializeField, Tooltip("入力がない時の減速度")] public float _maxDeceleration;
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
     [SerializeField, Tooltip("落下速度")] float _fallSpeed;
     [SerializeField, Tooltip("プレイヤーの無敵時間")] int _damageCool;
@@ -190,8 +190,8 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                float x = _rb.velocity.x - _deceleration * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
-                if (Mathf.Abs(x) < _deceleration && _rb.velocity.x != 0)
+                float x = _rb.velocity.x - _maxDeceleration * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
+                if (Mathf.Abs(x) < _maxDeceleration && _rb.velocity.x != 0)
                 {
                     x = 0;
                 }
@@ -201,7 +201,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             float x = _rb.velocity.x + _movePower * _horiInput * Time.deltaTime;
-            Debug.Log(x);
             if (Mathf.Abs(x) > _maxSpeed)
             {
                 x = _maxSpeed * Mathf.Sign(x);
@@ -249,6 +248,7 @@ public class PlayerController : MonoBehaviour
             if (_isStompEnemy)
             {
                 _isStompEnemy = false;
+                _rb.velocity = new Vector2(_rb.velocity.x, 0);
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 StartCoroutine(GroundingJudge());
             }
@@ -256,6 +256,7 @@ public class PlayerController : MonoBehaviour
         else if (_isStompEnemy)
         {
             Debug.Log("敵を踏んで小ジャンプ");
+            _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
             StartCoroutine(GroundingJudge());
