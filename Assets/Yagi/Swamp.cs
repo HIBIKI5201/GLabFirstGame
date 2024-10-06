@@ -16,7 +16,7 @@ public class Swamp : MonoBehaviour
     private void Start()
     {
         _player = FindAnyObjectByType<PlayerController>();
-        _defaultSpeed = _player._speed;
+        _defaultSpeed = _player._maxSpeed;
         _defaultMove = _player._movePower;
     }
 
@@ -33,16 +33,15 @@ public class Swamp : MonoBehaviour
             {
                 StopAllCoroutines();
             }
-            _player._speed = _defaultSpeed;
+            _player._maxSpeed = _defaultSpeed;
             _player._movePower = _defaultMove;
-            _player._speed *= _speedDown;
+            _player._maxSpeed *= _speedDown;
             _player._movePower *= _speedDown;
         }
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
             _enemy = collision.gameObject.GetComponent<Enemy>();
-            if (_enemy == null) Debug.Log("エネミーは空");
 
             _defaultEnemySpeed = _enemy._currentSpeed;
             _enemy._currentSpeed *= _speedDown;
@@ -74,7 +73,7 @@ public class Swamp : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _player._speed = _defaultSpeed;
+            _player._maxSpeed = _defaultSpeed;
             _player._movePower = _defaultMove;
             //_player.Slow(_speedDown, 2f);
             _coroutine = StartCoroutine(Slow(_speedDown, 2f));
@@ -96,9 +95,9 @@ public class Swamp : MonoBehaviour
         float defaultSpeed = _defaultSpeed;
         float defaultMove = _defaultMove;
         _player._movePower *= down;
-        _player._speed *= down;
+        _player._maxSpeed *= down;
         yield return new WaitForSeconds(time);
         _player._movePower = defaultSpeed;
-        _player._speed = defaultMove;
+        _player._maxSpeed = defaultMove;
     }
 }
