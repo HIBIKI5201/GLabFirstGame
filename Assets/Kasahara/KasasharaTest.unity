@@ -1129,9 +1129,9 @@ MonoBehaviour:
   - {fileID: 581440820}
   - {fileID: 1371536639}
   - {fileID: 1294765930}
-  _speed: 5
+  _maxSpeed: 10
   _movePower: 10
-  _deceleration: 3
+  _deceleration: 0
   _jumpPower: 10
   _fallSpeed: 2
   _damageCool: 0
@@ -1139,27 +1139,29 @@ MonoBehaviour:
   _size: {x: 1, y: 1}
   _angle: 0
   _throwsetting:
-    _throwStraightPower: 10
-    _maxThrowParabolaPower: 20
-    _throwParabolaDirection: {x: 1, y: 1}
-    _throwPos: {x: 0, y: 0}
-    _line: {fileID: 195223071}
-    _simulateFrame: 100
+    ThrowStraightPower: 100
+    MaxThrowParabolaPower: 100
+    ThrowParabolaDirection: {x: 1, y: 1}
+    ThrowPos: {x: 0, y: 0}
+    BulletSimulationLine: {fileID: 195223071}
+    SimulateFrame: 100
   _itemSetting:
-    _maxRockCount: 5
-    _maxBottleCount: 5
-    _maxMeatCount: 5
-    _rockUi: {fileID: 2111337505}
-    _bottleUi: {fileID: 377265758}
-    _meatUi: {fileID: 1984578444}
-    _rockCountText: {fileID: 588666897}
-    _bottleCountText: {fileID: 6336856}
-    _meatCountText: {fileID: 1052903213}
-    _zeroItemColor: {r: 0, g: 0, b: 0, a: 0.4392157}
-    _leafRock: {fileID: 1514275684}
-    _leafBottle: {fileID: 487799873}
-    _leafMeat: {fileID: 601108316}
-    _leafSize: 2
+    MaxRockCount: 11
+    MaxBottleCount: 11
+    MaxMeatCount: 11
+    RockUi: {fileID: 2111337505}
+    BottleUi: {fileID: 377265758}
+    MeatUi: {fileID: 1984578444}
+    RockCountText: {fileID: 588666897}
+    BottleCountText: {fileID: 6336856}
+    MeatCountText: {fileID: 1052903213}
+    ZeroItemColor: {r: 0, g: 0, b: 0, a: 0}
+    LeafRock: {fileID: 487799873}
+    LeafBottle: {fileID: 601108316}
+    LeafMeat: {fileID: 1514275684}
+    LeafSize: 0
+  _isJump: 0
+  _canAction: 1
 --- !u!50 &538153192
 Rigidbody2D:
   serializedVersion: 4

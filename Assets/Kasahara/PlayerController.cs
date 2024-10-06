@@ -558,6 +558,11 @@ public class PlayerController : MonoBehaviour
         //•ú•¨“I‚É“Š‚°‚é
         else
         {
+            if(_throwsetting.BulletSimulationLine==null)
+            {
+                Debug.LogError("LineRenderer‚ªnull‚Å“Š‚°‚ê‚Ü‚¹‚ñ");
+                goto EndCoroutine;
+            }
             while (Input.GetKey(KeyCode.Return))
             {
                 if (Input.GetKey(KeyCode.E))//||Input.GetButton("Cancel"))
