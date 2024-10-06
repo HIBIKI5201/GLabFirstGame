@@ -54,9 +54,13 @@ public class Enemy : MonoBehaviour
     [Space, Tooltip("攻撃力")]
     [SerializeField] int _attack;
 
+
+    [Space, Tooltip("ジャンプ力")]
+    [SerializeField] float _jumpPower;
+
     [Space, Tooltip("状態")]
-    [SerializeField] State _state;
-    State _State
+    [SerializeField] EnemyState _state;
+    EnemyState _enemyState
     {
         get => _state;
         set
@@ -92,9 +96,10 @@ public class Enemy : MonoBehaviour
     float _meatTimer;
     bool _meatEat;
     bool _canMoveSE;
+    bool _canReset;
     enum Direction
     {
-        right, left, none
+        Right, Left, None
     }
     [System.Serializable]
     struct GroundedRay
@@ -117,7 +122,7 @@ public class Enemy : MonoBehaviour
         [Space, Tooltip("飛ぶのを判断するRayの長さ")]
         public float _jumpRayLong;
     }
-    enum State
+    enum EnemyState
     {
         /// <summary>
         /// 通常
@@ -144,22 +149,22 @@ public class Enemy : MonoBehaviour
         /// </summary>
         Chase,
     }
-    void Start() {Awake(); MatchGround();}
     void Awake()
     {
+        _canReset = true;
         ResetStatus();
         CacheComponents();
     }
     void ResetStatus()
     {
-        PhysicsMaterial2D physicsMaterial2D = new PhysicsMaterial2D();
+        PhysicsMaterial2D physicsMaterial2D = new ();
         physicsMaterial2D.friction = 0;
         physicsMaterial2D.bounciness = 0;
         GetComponent<Collider2D>().sharedMaterial = physicsMaterial2D;
 
         _currentHp = _maxHp;
         _currentSpeed = _speed;
-        _state = State.Normal;
+        _state = EnemyState.Normal;
         _canDamage = true;
 
         StartCoroutine(WaitAudio());
@@ -174,12 +179,12 @@ public class Enemy : MonoBehaviour
     {
         _myTra = transform;
         _audio = AudioManager.Instance;
-        _rb = _rb ?? GetComponent<Rigidbody2D>();
+        _rb = (_rb != null) ? _rb : GetComponent<Rigidbody2D>();
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        _playerTra = _playerTra ?? GameObject.FindAnyObjectByType<PlayerController>().transform;
-        _boxCollider = _boxCollider ?? GetComponent<BoxCollider2D>();
+        _playerTra = (_playerTra != null) ? _playerTra : GameObject.FindAnyObjectByType<PlayerController>().transform;
+        _boxCollider = (_boxCollider != null) ? _boxCollider : GetComponent<BoxCollider2D>();
         Debug.Log(_spriteRenderer == null);
     }
     void MatchGround()
@@ -199,24 +204,24 @@ public class Enemy : MonoBehaviour
             Debug.Log("敵死亡");
             Destroy(this.gameObject);
         }
-        _spriteRenderer.flipX = _dir switch { Direction.right => true, Direction.left => false, _ => _spriteRenderer.flipX };
-        switch (_State)
+        _spriteRenderer.flipX = _dir switch { Direction.Right => true, Direction.Left => false, _ => _spriteRenderer.flipX };
+        switch (_enemyState)
         {
-            case State.Faint:
-                _dir = Direction.none;
+            case EnemyState.Faint:
+                _dir = Direction.None;
                 UpdateVelocity();
                 break;
-            case State.Bite:
+            case EnemyState.Bite:
                 UpdateMeat();
                 break;
-            case State.Escape:
+            case EnemyState.Escape:
                 UpdateBottle();
                 break;
-            case State.Chase:
+            case EnemyState.Chase:
                 UpdateChase();
                 break;
 
-            case State.Normal:
+            case EnemyState.Normal:
             default:
                 UpdateReturn();
                 UpdateVelocity();
@@ -225,38 +230,42 @@ public class Enemy : MonoBehaviour
         }
         void UpdateReturn()
         {
-            IsGrounded(out bool isHitRGround, out bool isHitLGround);
-            if (isHitRGround ^ isHitLGround)
+            if (IsFrontGrounded(out bool isRightDir))
             {
-                _dir = isHitRGround ? Direction.right : Direction.left;
+                _dir = isRightDir ? Direction.Right : Direction.Left;
             }
-            if (IsSideTouch())
-            {
-                _dir = (_dir == Direction.right) ? Direction.left : Direction.right;
-            }
+            if(IsSideTouch())
+                _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
         }
         void UpdateBottle()
         {
             float x = _bottlePosi.x - _myTra.position.x;
-            _dir = x >= 0 ? Direction.left : Direction.right;
+            _dir = x >= 0 ? Direction.Left : Direction.Right;
+
             UpdateVelocity();
         }
         void UpdateMeat()
         {
+            //肉との距離
             float x = _meatPosi.x - _myTra.position.x;
-            _dir = x <= 0 ? Direction.left : Direction.right;
+            //肉に向ける
+            _dir = x <= 0 ? Direction.Left : Direction.Right;
+
+            //肉との距離
             if (Mathf.Abs(x) <= 0.2f) 
             {
-                _dir = Direction.none;
+                _dir = Direction.None;
                 if (!_meatEat)
                     _meatTimer = Time.time;
                 _meatEat = true;
             }
+            //肉を見つけてから5秒経過したら
             if (Time.time >= _meatTimer + 5)
             {
-                _State = State.Normal;
+                _enemyState = EnemyState.Normal;
             }
-            if (IsJump() && IsGrounded(out _, out _) && _jumpOver)
+            //ジャンプが必要で 地面にいて　ジャンプができる
+            if (IsJump() && IsGrounded() && _jumpOver)
                 VelocityJump();
             UpdateVelocity();
         }
@@ -264,12 +273,12 @@ public class Enemy : MonoBehaviour
         {
             float x = _playerTra.position.x - _myTra.position.x;
             float y = _playerTra.position.y - _myTra.position.y;
-            _dir = x <= 0 ? Direction.left : Direction.right;
+            _dir = x <= 0 ? Direction.Left : Direction.Right;
             if (Mathf.Abs(x) <= Mathf.Abs(Mathf.Min(y, 0.1f)))
             {
-                _dir = Direction.none;
+                _dir = Direction.None;
             }
-            if (IsJump() && IsGrounded(out _, out _) && _jumpOver)
+            if (IsJump() && IsGrounded() && _jumpOver)
                 VelocityJump();
             UpdateVelocity();
             Search();
@@ -277,7 +286,7 @@ public class Enemy : MonoBehaviour
         void UpdateVelocity()
         {
             Vector2 velo = _rb.velocity;
-            velo.x = _currentSpeed * _dir switch { Direction.right => 1, Direction.left => -1, _ => 0 };
+            velo.x = _currentSpeed * _dir switch { Direction.Right => 1, Direction.Left => -1, _ => 0 };
             _rb.velocity = velo;
         }
         void VelocityJump()
@@ -292,34 +301,44 @@ public class Enemy : MonoBehaviour
                 return;
 
             RaycastHit2D hit = Physics2D.Linecast(_myTra.position, _playerTra.position, _ground._mask);
-            _State = hit ? State.Normal : State.Chase;
+            _enemyState = hit ? EnemyState.Normal : EnemyState.Chase;
         }
-        bool IsGrounded(out bool IsHitR, out bool IsHitL)
+        bool IsFrontGrounded(out bool isRightDir)
         {
+
             Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
             Vector2 lRayPos = _myTra.position + (Vector3)_ground._leftRayPos;
             bool isHitR = Physics2D.Raycast(rRayPos, Vector2.down, _ground._rayLong, _ground._mask);
             bool isHitL = Physics2D.Raycast(lRayPos, Vector2.down, _ground._rayLong, _ground._mask);
-
-            IsHitR = isHitR;
-            IsHitL = isHitL;
-            return isHitR || isHitL;
+            isRightDir = isHitR;
+            return isHitR ^ isHitL;
+            /*Vector2 rayPos = (Vector2)_myTra.position + _dir switch
+            {
+                Direction.Right => _ground._rightRayPos,
+                Direction.Left => _ground._leftRayPos,
+                _ => Vector2.zero
+            };*/
+            //return Physics2D.Raycast(rayPos, Vector2.down, _ground._rayLong, _ground._mask);
+        }
+        bool IsGrounded()
+        {
+            return Physics2D.BoxCast(_myTra.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
         }
         bool IsSideTouch()
         {
-            Vector2 dir = _dir switch { Direction.left => Vector2.left, Direction.right => Vector2.right, _ => Vector2.zero };
+            Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
             return Physics2D.Raycast(_myTra.position, dir, _ground._sideRayLong, _ground._mask);
         }
         bool IsJump()
         {
-            Vector2 dir = _dir switch { Direction.left => Vector2.left, Direction.right => Vector2.right, _ => Vector2.zero };
+            Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
             return Physics2D.Raycast(_myTra.position, dir, _ground._jumpRayLong, _ground._mask);
         }
     }
     Coroutine _reactionCoro = null;
     public void ReactionStone(float stunTime)
     {
-        if (_State == State.Escape || _State == State.Faint)
+        if (_enemyState == EnemyState.Escape || _enemyState == EnemyState.Faint)
             return;
 
         if (_reactionCoro != null)
@@ -328,14 +347,14 @@ public class Enemy : MonoBehaviour
         _reactionCoro = StartCoroutine(Stun());
         IEnumerator Stun()
         {
-            _State = State.Faint;
+            _enemyState = EnemyState.Faint;
             yield return new WaitForSeconds(stunTime);
-            _State = State.Chase;
+            _enemyState = EnemyState.Normal;
         }
     }
     public void ReactionBottle(Vector3 bottlePosi)
     {
-        if (_State == State.Faint)
+        if (_enemyState == EnemyState.Faint)
             return;
 
         if(_reactionCoro != null)
@@ -343,18 +362,18 @@ public class Enemy : MonoBehaviour
         _reactionCoro = StartCoroutine(Bottle());
         IEnumerator Bottle()
         {
-            _State = State.Escape;
+            _enemyState = EnemyState.Escape;
             _bottlePosi = bottlePosi;
             yield return new WaitForSeconds(5);
-            _State = State.Normal;
+            _enemyState = EnemyState.Normal;
         }
     }
     public void ReactionMeat(Vector3 meatPosi)
     {
-        if (_State == State.Bite|| _State == State.Faint)
+        if (_enemyState == EnemyState.Bite|| _enemyState == EnemyState.Faint)
             return;
 
-        _State = State.Bite;
+        _enemyState = EnemyState.Bite;
         _meatEat = false;
         _meatPosi = meatPosi;
         _meatTimer = Time.time;
@@ -403,17 +422,18 @@ public class Enemy : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D col)
     {
-        switch (_State)
+        switch (_enemyState)
         {
-            case State.Faint:
-            case State.Bite:
-            case State.Escape:
+            case EnemyState.Faint:
+            case EnemyState.Bite:
+            case EnemyState.Escape:
                 return;
         }
         if (col.transform.CompareTag("Player"))
         {
             for (int i = 0; i < col.contacts.Length; i++)
                 CollisionPlayer(col.GetContact(i).normal, col.GetContact(i).point);
+
             return;
         }
         for (int i = 0; i < col.contacts.Length; i++)
@@ -423,11 +443,11 @@ public class Enemy : MonoBehaviour
         {
             float x = point.x - _myTra.position.x;
             bool isLeft = x < 0;
-            bool isTrue = _dir switch { Direction.right => !isLeft, Direction.left => isLeft, _ => false };
+            bool isTrue = _dir switch { Direction.Right => !isLeft, Direction.Left => isLeft, _ => false };
             if (Mathf.Abs(normal.y) <= 0.2f)
                 if (isTrue)
                 {
-                    _dir = (_dir == Direction.right) ? Direction.left : Direction.right;
+                    _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
                 }
         }
         void CollisionPlayer(Vector2 normal, Vector2 point)
@@ -436,7 +456,10 @@ public class Enemy : MonoBehaviour
             Vector2 localPosi = point - (Vector2)_myTra.position;
             bool isSteppedOn = (normal.y <= 0.5f) && (localPosi.y >= 0.2f);
             if (!isSteppedOn)
+            {
                 col.transform.GetComponent<PlayerController>().FluctuationLife(-_attack);
+                _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
+            }
         }
     }
     ContactPoint2D[] V;
@@ -462,6 +485,15 @@ public class Enemy : MonoBehaviour
     }
     void OnEnable()
     {
+        if (_canReset)
+        {
+            ResetStatus();
+            CacheComponents();
+            MatchGround();
+            _canReset = false;
+        }
+
+
         if (_rb == null)
             _rb = GetComponent<Rigidbody2D>();
         _rb.isKinematic = false;
@@ -484,7 +516,7 @@ public class Enemy : MonoBehaviour
         _myTra = transform;
         Gizmos.color = Color.yellow;
         Vector3 dirPos = _myTra.position + Vector3.up;
-        Gizmos.DrawLine(dirPos, dirPos + (_dir == Direction.right ? Vector3.right : Vector3.left));
+        Gizmos.DrawLine(dirPos, dirPos + (_dir == Direction.Right ? Vector3.right : Vector3.left));
         Vector2 rayPos = _myTra.position;
         Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
         Vector2 lRayPos = _myTra.position + (Vector3)_ground._leftRayPos;
@@ -501,8 +533,8 @@ public class Enemy : MonoBehaviour
         else
             Gizmos.DrawLine(lRayPos, lRayPos + Vector2.down * _ground._rayLong);
 
-        Vector2 dir = _dir switch { Direction.left => Vector2.left, Direction.right => Vector2.right, _ => Vector2.zero };
-        if (_State == State.Chase)
+        Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
+        if (_enemyState == EnemyState.Chase)
             Gizmos.color = Color.red;
         else
             Gizmos.color = Color.blue;

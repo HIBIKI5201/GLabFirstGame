@@ -33,16 +33,11 @@ public class GameOverSystem : MonoBehaviour
         if (
             (_gameManager.State == GameManager.GameState.GameOver
             || currentHP <= 0
-            || currentTime <= 0)&&!_called)
+            || currentTime <= 0) && !_called)
         {
             _called = true;
-            StartCoroutine(Load());
-            IEnumerator Load()
-            {
-                yield return new WaitForSeconds(4);
-                Debug.Log("ゲームオーバーによるやり直し");
-                _sceneLoader.FadeAndLoadScene();
-            }
+            Debug.Log("ゲームオーバーによるやり直し");
+            _sceneLoader.FadeAndLoadScene();
         }
     }
 }
