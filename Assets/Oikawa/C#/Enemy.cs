@@ -54,13 +54,15 @@ public class Enemy : MonoBehaviour
     [Space, Tooltip("攻撃力")]
     [SerializeField] int _attack;
 
-
     [Space, Tooltip("ジャンプ力")]
     [SerializeField] float _jumpPower;
 
     [Space, Tooltip("状態")]
     [SerializeField] EnemyState _state;
-    EnemyState _enemyState
+    /// <summary>
+    /// デバッグ出すようのStateのプロパティ
+    /// </summary>
+    EnemyState State
     {
         get => _state;
         set
@@ -90,12 +92,39 @@ public class Enemy : MonoBehaviour
     [Tooltip("常にデバッグを表示")]
     [SerializeField] bool _alwaysDebug;
 
+    /// <summary>
+    /// My Transform
+    /// </summary>
     Transform _myTra;
+
+    /// <summary>
+    /// ボトルが落ちた位置
+    /// </summary>
     Vector2 _bottlePosi;
+
+    /// <summary>
+    /// 肉が落ちた位置
+    /// </summary>
     Vector2 _meatPosi;
+
+    /// <summary>
+    /// 肉をあきらめるまでのタイマー
+    /// </summary>
     float _meatTimer;
+
+    /// <summary>
+    /// 肉を食い始めたかのフラグ
+    /// </summary>
     bool _meatEat;
+
+    /// <summary>
+    /// 開始時に再生を防ぐフラグ
+    /// </summary>
     bool _canMoveSE;
+
+    /// <summary>
+    /// 初期化の重複を防ぐフラグ
+    /// </summary>
     bool _canReset;
     enum Direction
     {
@@ -157,9 +186,12 @@ public class Enemy : MonoBehaviour
     }
     void ResetStatus()
     {
-        PhysicsMaterial2D physicsMaterial2D = new ();
-        physicsMaterial2D.friction = 0;
-        physicsMaterial2D.bounciness = 0;
+        //摩擦と反発力を0に設定
+        PhysicsMaterial2D physicsMaterial2D = new()
+        {
+            friction = 0,
+            bounciness = 0,
+        };
         GetComponent<Collider2D>().sharedMaterial = physicsMaterial2D;
 
         _currentHp = _maxHp;
@@ -167,6 +199,7 @@ public class Enemy : MonoBehaviour
         _state = EnemyState.Normal;
         _canDamage = true;
 
+        //実行から0.2秒間効果音を再生させない
         StartCoroutine(WaitAudio());
         IEnumerator WaitAudio()
         {
@@ -205,7 +238,7 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject);
         }
         _spriteRenderer.flipX = _dir switch { Direction.Right => true, Direction.Left => false, _ => _spriteRenderer.flipX };
-        switch (_enemyState)
+        switch (State)
         {
             case EnemyState.Faint:
                 _dir = Direction.None;
@@ -262,7 +295,7 @@ public class Enemy : MonoBehaviour
             //肉を見つけてから5秒経過したら
             if (Time.time >= _meatTimer + 5)
             {
-                _enemyState = EnemyState.Normal;
+                State = EnemyState.Normal;
             }
             //ジャンプが必要で 地面にいて　ジャンプができる
             if (IsJump() && IsGrounded() && _jumpOver)
@@ -301,7 +334,7 @@ public class Enemy : MonoBehaviour
                 return;
 
             RaycastHit2D hit = Physics2D.Linecast(_myTra.position, _playerTra.position, _ground._mask);
-            _enemyState = hit ? EnemyState.Normal : EnemyState.Chase;
+            State = hit ? EnemyState.Normal : EnemyState.Chase;
         }
         bool IsFrontGrounded(out bool isRightDir)
         {
@@ -338,7 +371,7 @@ public class Enemy : MonoBehaviour
     Coroutine _reactionCoro = null;
     public void ReactionStone(float stunTime)
     {
-        if (_enemyState == EnemyState.Escape || _enemyState == EnemyState.Faint)
+        if (State == EnemyState.Escape || State == EnemyState.Faint)
             return;
 
         if (_reactionCoro != null)
@@ -347,14 +380,14 @@ public class Enemy : MonoBehaviour
         _reactionCoro = StartCoroutine(Stun());
         IEnumerator Stun()
         {
-            _enemyState = EnemyState.Faint;
+            State = EnemyState.Faint;
             yield return new WaitForSeconds(stunTime);
-            _enemyState = EnemyState.Normal;
+            State = EnemyState.Normal;
         }
     }
     public void ReactionBottle(Vector3 bottlePosi)
     {
-        if (_enemyState == EnemyState.Faint)
+        if (State == EnemyState.Faint)
             return;
 
         if(_reactionCoro != null)
@@ -362,18 +395,18 @@ public class Enemy : MonoBehaviour
         _reactionCoro = StartCoroutine(Bottle());
         IEnumerator Bottle()
         {
-            _enemyState = EnemyState.Escape;
+            State = EnemyState.Escape;
             _bottlePosi = bottlePosi;
             yield return new WaitForSeconds(5);
-            _enemyState = EnemyState.Normal;
+            State = EnemyState.Normal;
         }
     }
     public void ReactionMeat(Vector3 meatPosi)
     {
-        if (_enemyState == EnemyState.Bite|| _enemyState == EnemyState.Faint)
+        if (State == EnemyState.Bite|| State == EnemyState.Faint)
             return;
 
-        _enemyState = EnemyState.Bite;
+        State = EnemyState.Bite;
         _meatEat = false;
         _meatPosi = meatPosi;
         _meatTimer = Time.time;
@@ -422,7 +455,7 @@ public class Enemy : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D col)
     {
-        switch (_enemyState)
+        switch (State)
         {
             case EnemyState.Faint:
             case EnemyState.Bite:
@@ -517,7 +550,6 @@ public class Enemy : MonoBehaviour
         Gizmos.color = Color.yellow;
         Vector3 dirPos = _myTra.position + Vector3.up;
         Gizmos.DrawLine(dirPos, dirPos + (_dir == Direction.Right ? Vector3.right : Vector3.left));
-        Vector2 rayPos = _myTra.position;
         Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
         Vector2 lRayPos = _myTra.position + (Vector3)_ground._leftRayPos;
 
@@ -534,7 +566,7 @@ public class Enemy : MonoBehaviour
             Gizmos.DrawLine(lRayPos, lRayPos + Vector2.down * _ground._rayLong);
 
         Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
-        if (_enemyState == EnemyState.Chase)
+        if (State == EnemyState.Chase)
             Gizmos.color = Color.red;
         else
             Gizmos.color = Color.blue;

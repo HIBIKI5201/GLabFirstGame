@@ -154,7 +154,7 @@ Rigidbody2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -178,6 +178,7 @@ MonoBehaviour:
   _chaseSpeed: 9.900001
   _currentSpeed: 0
   _attack: 1
+  _jumpPower: 0
   _state: 0
   _jumpOver: 1
   _canChase: 1
