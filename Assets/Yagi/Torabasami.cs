@@ -5,7 +5,7 @@ using System.Collections;
 
 public class Torabasami : MonoBehaviour
 {
-    [Header("ê∂ê¨Ç∑ÇÈì˜"),SerializeField] GameObject _meat;
+    [SerializeField, Header("ê∂ê¨Ç∑ÇÈì˜")] GameObject _meat;
     [SerializeField] GameObject _player;
     [SerializeField] float _stopTime;
     PlayerController _controller;
@@ -18,31 +18,38 @@ public class Torabasami : MonoBehaviour
 
     private void Update()
     {
-        if (_isTrap) _player.transform.position = new Vector2(transform.position.x,_player.transform.position.y);
+        if (_isTrap)
+        {
+            _player.transform.position = new Vector2(transform.position.x, _player.transform.position.y);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             StartCoroutine(TrapTime(_stopTime));
             _controller.FluctuationLife(-1);
             _controller.StopAction(_stopTime);
         }
 
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             Destroy(collision.gameObject);
-            if (_meat)Instantiate(_meat);
+            if (_meat)
+            {
+                Instantiate(_meat);
+            }
         }
+
+        IEnumerator TrapTime(float time)
+        {
+            _isTrap = true;
+            yield return new WaitForSeconds(time);
+            _isTrap = false;
+        }
+
+
     }
-
-    IEnumerator TrapTime(float time)
-    {
-        _isTrap = true;
-        yield return new WaitForSeconds(time);
-        _isTrap = false;
-    }
-
-
 }
+

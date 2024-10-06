@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Collections;
-using TMPro;
 
 public class StartImage : MonoBehaviour
 {
@@ -20,7 +19,6 @@ public class StartImage : MonoBehaviour
         _firstImage.color = new Color(fc.r, fc.g, fc.b, 0);
         var sc = _secondImage.color;
         _secondImage.color = new Color(sc.r, sc.g, sc.b, 0);
-
     }
     void Start()
     {
@@ -31,11 +29,13 @@ public class StartImage : MonoBehaviour
     }
     private void Update()
     {
+        //キーやマウスボタンを押したとき演出をスキップする
         if (Input.anyKeyDown) Skip();
     }
     private void Second()
     {
         StartCoroutine(FadeInterval(_secondImage, _indicationTime));
+        //タイトルのフェードイン
         Invoke(nameof(TitleFade), (_fadeinTime + _indicationTime + _fadeoutTime));
     }
 

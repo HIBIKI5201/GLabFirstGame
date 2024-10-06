@@ -27,7 +27,7 @@ public class Swamp : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             if (_coroutine != null)
             {
@@ -39,7 +39,7 @@ public class Swamp : MonoBehaviour
             _player._movePower *= _speedDown;
         }
 
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             _enemy = collision.gameObject.GetComponent<Enemy>();
             if (_enemy == null) Debug.Log("エネミーは空");
@@ -52,7 +52,7 @@ public class Swamp : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             if (_timer > 1)
             {
@@ -61,7 +61,7 @@ public class Swamp : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             if (_enemyTimer > 1)
             {
@@ -72,7 +72,7 @@ public class Swamp : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             _player._speed = _defaultSpeed;
             _player._movePower = _defaultMove;
@@ -80,7 +80,7 @@ public class Swamp : MonoBehaviour
             _coroutine = StartCoroutine(Slow(_speedDown, 2f));
         }
 
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             _enemy._currentSpeed = _defaultEnemySpeed;
             _enemy.SlowDownScale(_speedDown, 2);
@@ -98,7 +98,7 @@ public class Swamp : MonoBehaviour
         _player._movePower *= down;
         _player._speed *= down;
         yield return new WaitForSeconds(time);
-        _player._movePower =  defaultSpeed;
+        _player._movePower = defaultSpeed;
         _player._speed = defaultMove;
     }
 }

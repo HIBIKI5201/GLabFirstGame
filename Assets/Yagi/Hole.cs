@@ -12,7 +12,7 @@ public class Hole : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             _gameManager.State = GameManager.GameState.GameOver;
         }
@@ -20,6 +20,6 @@ public class Hole : MonoBehaviour
         {
             Destroy(collision.gameObject);
         }
-         
+
     }
 }

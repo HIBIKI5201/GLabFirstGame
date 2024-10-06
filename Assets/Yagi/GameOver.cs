@@ -16,6 +16,11 @@ public class GameOver : MonoBehaviour
 
     void Update()
     {
+        IsGameOver();
+    }
+
+    private void IsGameOver()
+    {
         if (_gameManager.State == GameManager.GameState.GameOver)
         {
             _redObject.SetActive(true);
