@@ -659,9 +659,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 227266689702009053, guid: 408bca2df67bb5c45a391722cf367601, type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6371399216721938812, guid: 408bca2df67bb5c45a391722cf367601, type: 3}
       propertyPath: m_Name
       value: Stage4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6371399216721938812, guid: 408bca2df67bb5c45a391722cf367601, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7597043939744377532, guid: 408bca2df67bb5c45a391722cf367601, type: 3}
       propertyPath: m_LocalPosition.x
@@ -777,10 +785,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 955323414812484934, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1982527221207180391, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
       propertyPath: _gameManager
       value: 
@@ -832,10 +836,6 @@ PrefabInstance:
     - target: {fileID: 4001412698565215189, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
       propertyPath: m_Name
       value: Stage1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4001412698565215189, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
