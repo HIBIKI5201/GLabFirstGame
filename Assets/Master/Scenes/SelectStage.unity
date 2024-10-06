@@ -433,7 +433,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1918890374}
         m_TargetAssemblyTypeName: ButtonClick, Assembly-CSharp
-        m_MethodName: SelectStage
+        m_MethodName: SelectStage4
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -496,6 +496,8 @@ MonoBehaviour:
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: 0, y: 0}
+  _buttonImage: []
+  _currentImage: {fileID: 0}
 --- !u!1 &234961691
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +583,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1918890374}
         m_TargetAssemblyTypeName: ButtonClick, Assembly-CSharp
-        m_MethodName: SelectStage
+        m_MethodName: SelectStage1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -644,6 +646,8 @@ MonoBehaviour:
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: 0, y: 0}
+  _buttonImage: []
+  _currentImage: {fileID: 0}
 --- !u!1 &289554067
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,7 +828,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1918890374}
         m_TargetAssemblyTypeName: ButtonClick, Assembly-CSharp
-        m_MethodName: SelectStage
+        m_MethodName: SelectStage3
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -887,6 +891,8 @@ MonoBehaviour:
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: 0, y: 0}
+  _buttonImage: []
+  _currentImage: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1252,6 +1258,8 @@ MonoBehaviour:
   _bigscale: {x: 1.2, y: 1.2, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: -15, y: 0}
+  _buttonImage: []
+  _currentImage: {fileID: 0}
 --- !u!1 &724072379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1775,7 +1783,7 @@ SpriteRenderer:
   m_Size: {x: 35.09146, y: 14.65}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1346435347
@@ -2168,7 +2176,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1918890374}
         m_TargetAssemblyTypeName: ButtonClick, Assembly-CSharp
-        m_MethodName: SelectStage
+        m_MethodName: SelectStage2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2231,6 +2239,8 @@ MonoBehaviour:
   _bigscale: {x: 1.1, y: 1.1, z: 1}
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: 0, y: 0}
+  _buttonImage: []
+  _currentImage: {fileID: 0}
 --- !u!1001 &1943825094
 PrefabInstance:
   m_ObjectHideFlags: 0
