@@ -13,14 +13,23 @@ public class CameraMove : MonoBehaviour
     [SerializeField] Vector2 _offset;
 
     [Header("カメラの移動できる範囲")]
+    [Tooltip("カメラの移動範囲の制限をするか")]
     [SerializeField] bool _clampEnabled;
+
+    [Tooltip("移動範囲の左下端の位置")]
     [SerializeField] Vector2 _minClamp;
+
+    [Tooltip("移動範囲の右上の位置")]
     [SerializeField] Vector2 _maxClamp;
     Vector2 _outPos;
 
     [Header("手ブレ")]
-    [SerializeField] float _shakeSpeed;
-    [SerializeField] float _shakePower;
+    [Tooltip("手ブレできるか")]
+    [SerializeField] bool _canShake;
+    [Tooltip("手ブレ速度")]
+    [SerializeField] float _shakeSpeed = 0.05f;
+    [Tooltip("手ブレの強さ")]
+    [SerializeField] float _shakePower = 0.4f;
 
     Transform _myTra;
     void Start()
@@ -43,9 +52,13 @@ public class CameraMove : MonoBehaviour
         }
         _outPos = Vector3.Lerp(_outPos, targetPos, Time.deltaTime * _speed);
 
-        Vector2 blur = new(
+        Vector2 blur = Vector2.zero;
+        if (_canShake)
+        {
+            blur = new(
             Mathf.Sin(Time.unscaledTime * 5 * _shakeSpeed) * _shakePower,
             Mathf.Sin(Time.unscaledTime * 6 * _shakeSpeed) * _shakePower);
+        }
 
         Vector3 outPos = _outPos + blur;
         outPos.z = -20;
