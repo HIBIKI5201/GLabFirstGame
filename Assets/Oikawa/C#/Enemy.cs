@@ -214,11 +214,10 @@ public class Enemy : MonoBehaviour
         _audio = AudioManager.Instance;
         _rb = (_rb != null) ? _rb : GetComponent<Rigidbody2D>();
 
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = (_spriteRenderer != null) ? _spriteRenderer : GetComponent<SpriteRenderer>();
 
         _playerTra = (_playerTra != null) ? _playerTra : GameObject.FindAnyObjectByType<PlayerController>().transform;
         _boxCollider = (_boxCollider != null) ? _boxCollider : GetComponent<BoxCollider2D>();
-        Debug.Log(_spriteRenderer == null);
     }
     void MatchGround()
     {
@@ -518,10 +517,10 @@ public class Enemy : MonoBehaviour
     }
     void OnEnable()
     {
+        CacheComponents();
         if (_canReset)
         {
             ResetStatus();
-            CacheComponents();
             MatchGround();
             _canReset = false;
         }
@@ -537,7 +536,7 @@ public class Enemy : MonoBehaviour
                 Beast.StrayDog => "strayDog",
                 Beast.Wolf_Normal or Beast.Wolf_Gray => "wolf",
                 Beast.Bear => "bare",
-                _ => ""
+                _ => "strayDog"
             });
             _canMoveSE = false;
         } 

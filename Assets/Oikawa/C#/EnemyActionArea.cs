@@ -29,6 +29,8 @@ public class EnemyActionArea : MonoBehaviour
             {
                 if (_enemies[i] == null)
                     continue;
+                if (_enemiesTra[i] == null)
+                    continue;
                 if (target == _enemiesTra[i])
                 {
                     _enemies[i].enabled = enabled;

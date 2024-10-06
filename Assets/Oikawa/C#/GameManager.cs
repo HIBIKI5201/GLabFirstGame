@@ -6,9 +6,20 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] GameState _state;
+    [SerializeField] FadeOut _fadeOut;
     public static GameManager instance;
     AudioManager _audio;
-    public GameState State { get => _state; set { Debug.Log($"{_state}から{value}に移行"); _state = value; } }
+    public GameState State 
+    { 
+        get => _state; 
+        set 
+        {
+            if (_state == value)
+                return;
+            Debug.Log($"{_state}から{value}に移行"); 
+            _state = value;
+        } 
+    }
     
     [Space,Tooltip("FPS値を指定する")]
     [SerializeField] bool _settingFPS;
