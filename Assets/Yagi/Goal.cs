@@ -11,7 +11,9 @@ public class Goal : MonoBehaviour
     PlayerController _playerController;
     [SerializeField] Text _clearText;
     [SerializeField] Text _timerTxt;
+    [SerializeField,Header("現在のステージ")] int _nowStage;
     Rigidbody2D _rb;
+    IsClear _isClear;
     Timer _timer;
     bool _wark;
 
@@ -22,6 +24,7 @@ public class Goal : MonoBehaviour
 
     private void Start()
     {
+        _isClear = FindAnyObjectByType<IsClear>();
         _rb = GetComponent<Rigidbody2D>();
         _clearText.enabled = false;
         _playerController = GameObject.FindAnyObjectByType < PlayerController >();
@@ -52,6 +55,7 @@ public class Goal : MonoBehaviour
     {
         _clearText.enabled = true;
         _timerTxt.rectTransform.position = _clearText.rectTransform.position - new Vector3(0, 50, 0);
+        _isClear.StageClear(_nowStage);
     }
 
     IEnumerator Work(float time)
