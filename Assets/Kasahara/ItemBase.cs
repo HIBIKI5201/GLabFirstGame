@@ -23,6 +23,7 @@ public abstract class ItemBase : MonoBehaviour
     public ThrowType Throw => _throwType;
     bool _isThrowing;
     public bool IsThrowing => _isThrowing;
+    public bool Landing { get; set; }
     public GameObject Player { get; private set; }
     PauseManager _pauseManager;
     /// <summary>
@@ -52,7 +53,7 @@ public abstract class ItemBase : MonoBehaviour
     Vector2 _keepVelocity;
     private void Pause()
     {
-        if(gameObject.TryGetComponent(out Rigidbody2D rb))
+        if (gameObject.TryGetComponent(out Rigidbody2D rb))
         {
             _keepVelocity = rb.velocity;
             rb.Sleep();
@@ -81,15 +82,12 @@ public abstract class ItemBase : MonoBehaviour
                 {
                     AudioSource.PlayClipAtPoint(_sound, Camera.main.transform.position);
                 }
-
-
-                    // 見えない所に移動する
-                    this.transform.position = Camera.main.transform.position;
-                    // コライダーを無効にする
-                    GetComponent<Collider2D>().enabled = false;
-                    // プレイヤーにアイテムを渡す
-                    collision.gameObject.GetComponent<PlayerController>().GetItem(this);
-                
+                // 見えない所に移動する
+                this.transform.position = Camera.main.transform.position;
+                // コライダーを無効にする
+                GetComponent<Collider2D>().enabled = false;
+                // プレイヤーにアイテムを渡す
+                collision.gameObject.GetComponent<PlayerController>().GetItem(this);
             }
         }
     }

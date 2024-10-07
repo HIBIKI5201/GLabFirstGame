@@ -29,11 +29,12 @@ public class PlayerController : MonoBehaviour
     {
         [Tooltip("まっすぐ投げる強さ")] public float ThrowStraightPower;
         [Tooltip("放物的に投げる強さ")] public float MaxThrowParabolaPower;
-        [Tooltip("前後に動くやつの増加率")] public float ThrowRate; 
+        [Tooltip("前後に動くやつの増加率")] public float ThrowRate;
         [Tooltip("放物的に投げる方向")] public Vector2 ThrowParabolaDirection;
         [Tooltip("アイテムを投げる位置")] public Vector2 ThrowPos;
         [Tooltip("弾道予測線")] public LineRenderer BulletSimulationLine;
-        public int SimulateFrame;
+        [Tooltip("弾道予測線の長さ")] public int SimulateFrame;
+        [Tooltip("床のオブジェクトをまとめたやつ")] public GameObject Platform;
     }
     /// <summary>アイテムの設定</summary>
     [System.Serializable]
@@ -91,6 +92,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         CreatePhysicsScene();
+        var platform = Instantiate(_throwsetting.Platform);
+        SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         CurrentHp = _maxHp;
@@ -445,14 +448,22 @@ public class PlayerController : MonoBehaviour
         ghost.GetComponent<Renderer>().enabled = false;
         SceneManager.MoveGameObjectToScene(ghost.gameObject, m_simulationScene);
         ghost.GetComponent<Rigidbody2D>().AddForce(velocity, ForceMode2D.Impulse);
-
         _throwsetting.BulletSimulationLine.positionCount = _throwsetting.SimulateFrame;
-
-        for (int i = 0; i < _throwsetting.SimulateFrame; i++)
+        for (int i = 0; i < _throwsetting.SimulateFrame && !ghost.GetComponent<ItemBase>().Landing; i++)
         {
             m_physicsScene.Simulate(Time.fixedDeltaTime);
+            var hit = Physics2D.OverlapCircleAll(ghost.transform.position, .1f);
             _throwsetting.BulletSimulationLine.SetPosition(i, ghost.transform.position);
+            foreach (var item in hit)
+            {
+                if(item.CompareTag("Ground"))
+                {
+                    _throwsetting.BulletSimulationLine.positionCount = i;
+                    goto ColliderHit;
+                }
+            }
         }
+        ColliderHit:
         Destroy(ghost.gameObject);
     }
     /// <summary>
