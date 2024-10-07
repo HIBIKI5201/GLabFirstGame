@@ -6,11 +6,11 @@ using System.Collections;
 public class StartImage : MonoBehaviour
 {
     [SerializeField] Image _startImage;
-    [Header("一枚目のイメージ"), SerializeField] Image _firstImage;
-    [Header("二枚目のイメージ"), SerializeField] Image _secondImage;
+    [SerializeField, Header("一枚目のイメージ")] Image _firstImage;
+    [SerializeField, Header("二枚目のイメージ")] Image _secondImage;
     [SerializeField] float _fadeinTime;
     [SerializeField] float _fadeoutTime;
-    [Header("表示時間"), SerializeField] float _indicationTime;
+    [SerializeField, Header("表示時間")] float _indicationTime;
 
     private void Awake()
     {
@@ -48,14 +48,16 @@ public class StartImage : MonoBehaviour
 
     private void TitleFade()
     {
-        _startImage.DOFade(0,_fadeinTime);
+        _startImage.DOFade(0, _fadeinTime);
     }
 
     private void Skip()
     {
         StopAllCoroutines();
-        Destroy(_startImage);
-        Destroy(_firstImage);
-        Destroy(_secondImage);
+        _startImage.enabled = false;
+        _firstImage.enabled = false;
+        var sc = _secondImage.color;
+        _secondImage.color = new Color(sc.r, sc.g, sc.b, 1);
+        _secondImage.DOFade(0, _fadeinTime);
     }
 }

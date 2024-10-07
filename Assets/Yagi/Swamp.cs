@@ -51,14 +51,14 @@ public class Swamp : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (_timer > 1)
-            {
-                PlayerDamage();
-                _timer = 0;
-            }
-        }
+        //if (collision.gameObject.CompareTag("Player"))
+        //{
+        //    if (_timer > 1)
+        //    {
+        //        PlayerDamage();
+        //        _timer = 0;
+        //    }
+        //}
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
