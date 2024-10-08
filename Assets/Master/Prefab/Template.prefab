@@ -1299,6 +1299,85 @@ MonoBehaviour:
   - {fileID: 21300000, guid: eeea5e12dd968f14d97c7aaf6c981d94, type: 3}
   - {fileID: 21300000, guid: 83cc884890827ad4ab8732233d2e9607, type: 3}
   _currentImage: {fileID: 335131446548783825}
+--- !u!1 &8278749638795592497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7626897396285111581}
+  - component: {fileID: 679282621385410150}
+  - component: {fileID: 6755593083439065773}
+  m_Layer: 5
+  m_Name: Text (Legacy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7626897396285111581
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278749638795592497}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2064050965571944973}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -812.4275, y: -525}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &679282621385410150
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278749638795592497}
+  m_CullTransparentMesh: 1
+--- !u!114 &6755593083439065773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278749638795592497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: New Text
 --- !u!1 &8531283538307141643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,6 +1639,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2373005727387336363, guid: 8ab5b3e000396e947b41a8fc16fd1067, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5850029463812658625}
+    - targetCorrespondingSourceObject: {fileID: 2373005727387336363, guid: 8ab5b3e000396e947b41a8fc16fd1067, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7626897396285111581}
     - targetCorrespondingSourceObject: {fileID: 4847920523140385270, guid: 8ab5b3e000396e947b41a8fc16fd1067, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7923102637753137499}
@@ -1731,6 +1813,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 2758658429717762690}
     m_Modifications:
     - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _point.y
+      value: -0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _maxSpeed
       value: 6
       objectReference: {fileID: 0}
@@ -1815,6 +1901,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _throwsetting.SimulateFrame
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _itemSetting.BottleCountText
       value: 
       objectReference: {fileID: 3291150743254513891}
@@ -1833,6 +1923,26 @@ PrefabInstance:
     - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _itemSetting.ZeroItemColor.r
       value: 0.5320754
+      objectReference: {fileID: 0}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _throwsetting.ThrowStraightPower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _throwsetting.BulletSimulationLine
+      value: 
+      objectReference: {fileID: 9066503393725289246}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _throwsetting.MaxThrowParabolaPower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _throwsetting.ThrowParabolaDirection.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _throwsetting.ThrowParabolaDirection.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1921708120991849701, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1878,6 +1988,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5081243653824690662, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _timerTxt
+      value: 
+      objectReference: {fileID: 6755593083439065773}
+    - target: {fileID: 5081243653824690662, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
+      propertyPath: _clearText
+      value: 
+      objectReference: {fileID: 6755593083439065773}
     - target: {fileID: 5081243653824690662, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _fadeImage
       value: 
