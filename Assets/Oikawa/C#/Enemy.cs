@@ -355,7 +355,7 @@ public class Enemy : MonoBehaviour
         void VelocityJump()
         {
             Vector2 velo = _rb.velocity;
-            velo.y = 5;
+            velo.y = _jumpPower;
             _rb.velocity = velo;
         }
         void Search()
@@ -393,7 +393,7 @@ public class Enemy : MonoBehaviour
         }
         bool IsGrounded()
         {
-            return Physics2D.BoxCast(_myTra.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
+            return Physics2D.BoxCast(_myTra.position, _boxCollider.size - new Vector2(0.1f,0.1f), 0, Vector2.down, 0.2f, _ground._mask);
         }
         bool IsSideTouch(out bool playerHit)
         {
