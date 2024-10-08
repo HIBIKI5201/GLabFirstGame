@@ -7,6 +7,7 @@ public class Meat : ItemBase
     [SerializeField, Header("ê⁄ínîªíËÇÃëÂÇ´Ç≥")] Vector2 _size;
     [SerializeField, Header("ê⁄ínîªíËÇÃäpìx")] float _angle;
     bool _effected;
+    Rigidbody2D _rb;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
@@ -35,6 +36,7 @@ public class Meat : ItemBase
                 if (!_effected)
                 {
                     var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+                    _rb = GetComponent<Rigidbody2D>();
                     foreach (var obj in hit)
                     {
                         if (obj.gameObject.CompareTag("Enemy"))
@@ -43,11 +45,14 @@ public class Meat : ItemBase
                             obj.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position, ActivatetTime);
                         }
                     }
-                    gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                    gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-                    gameObject.GetComponent<Collider2D>().enabled = false;
                     Destroy(gameObject, ActivatetTime);
                     _effected = true;
+                }
+                if (_effected && _rb.velocity.y == 0)
+                {
+                    _rb.velocity = Vector2.zero;
+                    _rb.bodyType = RigidbodyType2D.Kinematic;
+                    gameObject.GetComponent<Collider2D>().enabled = false;
                 }
             }
         }
