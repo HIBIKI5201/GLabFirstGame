@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 4471043681205350746}
   - component: {fileID: 607212381471825759}
   - component: {fileID: 4628700171233902132}
-  m_Layer: 0
+  - component: {fileID: 5081243653824690662}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -128,36 +129,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHp: 4
   _rose: []
-  _speed: 9
+  _maxSpeed: 5
   _movePower: 5
+  _deceleration: 0
   _jumpPower: 9.5
   _fallSpeed: 4
   _damageCool: 0
-  _point: {x: 0, y: -0.7}
-  _size: {x: 1, y: 1}
+  _point: {x: 0, y: -0.85}
+  _size: {x: 0.8, y: 1}
   _angle: 0
   _throwsetting:
-    _throwStraightPower: 10
-    _maxThrowParabolaPower: 20
-    _throwParabolaDirection: {x: 1, y: 1}
-    _throwPos: {x: 0, y: 0}
-    _line: {fileID: 0}
-    _simulateFrame: 100
+    ThrowStraightPower: 0
+    MaxThrowParabolaPower: 0
+    ThrowRate: 0
+    ThrowParabolaDirection: {x: 0, y: 0}
+    ThrowPos: {x: 0, y: 0}
+    BulletSimulationLine: {fileID: 0}
+    SimulateFrame: 0
+    Platform: {fileID: 0}
   _itemSetting:
-    _maxRockCount: 5
-    _maxBottleCount: 5
-    _maxMeatCount: 5
-    _rockUi: {fileID: 0}
-    _bottleUi: {fileID: 0}
-    _meatUi: {fileID: 0}
-    _rockCountText: {fileID: 0}
-    _bottleCountText: {fileID: 0}
-    _meatCountText: {fileID: 0}
-    _zeroItemColor: {r: 0, g: 0, b: 0, a: 0}
-    _leafRock: {fileID: 0}
-    _leafBottle: {fileID: 0}
-    _leafMeat: {fileID: 0}
-    _leafSize: 0
+    MaxRockCount: 0
+    MaxBottleCount: 0
+    MaxMeatCount: 0
+    RockUi: {fileID: 0}
+    BottleUi: {fileID: 0}
+    MeatUi: {fileID: 0}
+    RockCountText: {fileID: 0}
+    BottleCountText: {fileID: 0}
+    MeatCountText: {fileID: 0}
+    ZeroItemColor: {r: 0, g: 0, b: 0, a: 0}
+    LeafRock: {fileID: 0}
+    LeafBottle: {fileID: 0}
+    LeafMeat: {fileID: 0}
+    LeafSize: 0
+  _isJump: 0
+  _canAction: 1
 --- !u!70 &4628700171233902132
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -167,7 +173,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 3989625297304483414}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 43c94a06f0bdd2d4eaf4524ac6cedc24, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -193,3 +199,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.09}
   m_Size: {x: 1, y: 2.17}
   m_Direction: 0
+--- !u!114 &5081243653824690662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989625297304483414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7927f936efe3d4eb0848d73979f629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameManager: {fileID: 0}
+  _fadeImage: {fileID: 0}
+  _clearText: {fileID: 0}
+  _timerTxt: {fileID: 0}
+  _nowStage: 0

@@ -178,7 +178,8 @@ MonoBehaviour:
   _chaseSpeed: 9.900001
   _currentSpeed: 0
   _attack: 1
-  _jumpPower: 0
+  _attackRate: 1
+  _jumpPower: 5
   _state: 0
   _jumpOver: 1
   _canChase: 1
@@ -187,9 +188,12 @@ MonoBehaviour:
     _mask:
       serializedVersion: 2
       m_Bits: 128
+    _sideMask:
+      serializedVersion: 2
+      m_Bits: 384
     _rightRayPos: {x: 1.199, y: 0}
     _leftRayPos: {x: -1.199, y: 0}
-    _rayLong: 0.7325
+    _rayLong: 0.8325
     _sideRayLong: 1.299
     _jumpRayLong: 1.399
   _dir: 1

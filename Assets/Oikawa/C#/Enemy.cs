@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     Transform _playerTra;
     SpriteRenderer _spriteRenderer;
     BoxCollider2D _boxCollider;
+    PlayerController _player;
 
     [Tooltip("“®•¨‚Ìí—Ş")]
     [SerializeField] Beast _beast;
@@ -53,6 +54,8 @@ public class Enemy : MonoBehaviour
 
     [Space, Tooltip("UŒ‚—Í")]
     [SerializeField] int _attack;
+    [Tooltip("“G‚ªƒvƒŒƒCƒ„[‚ÉU‚ê‚½ó‘Ô‚Å‚Ì1•bŠÔ‚ÉUŒ‚‚Å‚«‚é‰ñ”")]
+    [SerializeField] float _attackRate;
 
     [Space, Tooltip("ƒWƒƒƒ“ƒv—Í")]
     [SerializeField] float _jumpPower;
@@ -126,6 +129,11 @@ public class Enemy : MonoBehaviour
     /// ‰Šú‰»‚Ìd•¡‚ğ–h‚®ƒtƒ‰ƒO
     /// </summary>
     bool _canReset;
+
+    /// <summary>
+    /// ƒvƒŒƒCƒ„[‚ğÅŒã‚ÉUŒ‚‚µ‚½ŠÔ
+    /// </summary>
+    float _attackedTimer;
     enum Direction
     {
         Right, Left, None
@@ -133,8 +141,11 @@ public class Enemy : MonoBehaviour
     [System.Serializable]
     struct GroundedRay
     {
-        [Tooltip("Ray‚ª”½‰‚·‚éLayer")]
+        [Tooltip("Ray‚ª”½‰‚·‚éLayerMask")]
         public LayerMask _mask;
+
+        [Tooltip("‰¡‚ÌRay‚ª”½‰‚·‚éLayerMask")]
+        public LayerMask _sideMask;
 
         [Tooltip("‰E‘¤‚ÌŠR‚ğ”»’f‚·‚éRay‚Ì’†S")]
         public Vector2 _rightRayPos;
@@ -240,8 +251,9 @@ public class Enemy : MonoBehaviour
         switch (State)
         {
             case EnemyState.Faint:
-                _dir = Direction.None;
-                UpdateVelocity();
+                Vector2 velo = _rb.velocity;
+                velo.x = 0;
+                _rb.velocity = velo;
                 break;
             case EnemyState.Bite:
                 UpdateMeat();
@@ -266,8 +278,12 @@ public class Enemy : MonoBehaviour
             {
                 _dir = isRightDir ? Direction.Right : Direction.Left;
             }
-            if(IsSideTouch())
+            if(IsSideTouch(out bool playerHit))
+            {
                 _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
+                if (playerHit)
+                    AttackToPlayer();
+            }
         }
         void UpdateBottle()
         {
@@ -312,12 +328,20 @@ public class Enemy : MonoBehaviour
             }
             if (IsJump() && IsGrounded() && _jumpOver)
                 VelocityJump();
+
+            if (Time.time >= _attackedTimer + 1)
+                if (IsSideTouch(out bool playerHit))
+                    if (playerHit)
+                        AttackToPlayer();
             UpdateVelocity();
             Search();
         }
         void UpdateVelocity()
         {
             Vector2 velo = _rb.velocity;
+            if (!_jumpOver||!_canChase)
+                velo.y = velo.y > 0.01f ? 0.01f : velo.y;
+
             velo.x = _currentSpeed * _dir switch { Direction.Right => 1, Direction.Left => -1, _ => 0 };
             _rb.velocity = velo;
         }
@@ -334,6 +358,14 @@ public class Enemy : MonoBehaviour
 
             RaycastHit2D hit = Physics2D.Linecast(_myTra.position, _playerTra.position, _ground._mask);
             State = hit ? EnemyState.Normal : EnemyState.Chase;
+        }
+        void AttackToPlayer()
+        {
+            _player = _player != null ? _player : FindAnyObjectByType<PlayerController>();
+            if (Time.time <= _attackedTimer + 1f / _attackRate)
+                return;
+            _attackedTimer = Time.time;
+            _player.FluctuationLife(-_attack);
         }
         bool IsFrontGrounded(out bool isRightDir)
         {
@@ -356,10 +388,14 @@ public class Enemy : MonoBehaviour
         {
             return Physics2D.BoxCast(_myTra.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
         }
-        bool IsSideTouch()
+        bool IsSideTouch(out bool playerHit)
         {
             Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
-            return Physics2D.Raycast(_myTra.position, dir, _ground._sideRayLong, _ground._mask);
+            RaycastHit2D hit = Physics2D.Raycast(_myTra.position, dir, _ground._sideRayLong, _ground._sideMask);
+            playerHit = false;
+            if (hit)
+                playerHit = hit.transform.CompareTag("Player");
+            return hit;
         }
         bool IsJump()
         {
@@ -461,13 +497,14 @@ public class Enemy : MonoBehaviour
             case EnemyState.Escape:
                 return;
         }
-        if (col.transform.CompareTag("Player"))
+        /*if (col.transform.CompareTag("Player"))
         {
+            Debug.Log("PlayerTouch");
             for (int i = 0; i < col.contacts.Length; i++)
                 CollisionPlayer(col.GetContact(i).normal, col.GetContact(i).point);
 
             return;
-        }
+        }*/
         for (int i = 0; i < col.contacts.Length; i++)
             CollisionReturn(col.GetContact(i).normal, col.GetContact(i).point);
 
@@ -482,7 +519,7 @@ public class Enemy : MonoBehaviour
                     _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
                 }
         }
-        void CollisionPlayer(Vector2 normal, Vector2 point)
+        /*void CollisionPlayer(Vector2 normal, Vector2 point)
         {
             Debug.Log("Enemy Hit Player");
             Vector2 localPosi = point - (Vector2)_myTra.position;
@@ -493,6 +530,7 @@ public class Enemy : MonoBehaviour
                 _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
             }
         }
+        */
     }
     ContactPoint2D[] V;
     private void OnCollisionStay2D(Collision2D collision) => V = collision.contacts;
@@ -602,6 +640,7 @@ public class Enemy : MonoBehaviour
 
         Vector2 size = _boxCollider.size * transform.localScale;
         _ground._mask = Convert.ToInt32("10000000", 2);
+        _ground._sideMask = Convert.ToInt32("110000000", 2);
         _ground._rightRayPos.x = size.x / 2f;
         _ground._leftRayPos.x = -size.x / 2f;
         _ground._rayLong = (size.y / 2f) + 0.2f;
