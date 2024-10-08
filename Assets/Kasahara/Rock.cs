@@ -19,7 +19,7 @@ public class Rock : ItemBase
                 if (obj.gameObject.CompareTag("Enemy"))
                 {
                     //“G‚ğƒXƒ^ƒ“‚³‚¹‚éˆ—
-                    obj.gameObject.GetComponent<Enemy>().ReactionStone(ActivateTtime);
+                    obj.gameObject.GetComponent<Enemy>().ReactionStone(ActivatetTime);
                     Destroy(gameObject,0.3f);
                 }
             }

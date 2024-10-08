@@ -6,6 +6,7 @@ public class Bottle : ItemBase
 {
     [SerializeField, Header("Ú’n”»’è‚Ì‘å‚«‚³")] Vector2 _size;
     [SerializeField, Header("Ú’n”»’è‚ÌŠp“x")] float _angle;
+    bool _effected;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
@@ -31,16 +32,20 @@ public class Bottle : ItemBase
             }
             else
             {
-                var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
-                foreach (var obj in hit)
+                if (!_effected)
                 {
-                    if (obj.CompareTag("Enemy"))
+                    var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+                    foreach (var obj in hit)
                     {
-                        //“G‚ª“¦‚°‚éˆ—
-                        obj.gameObject.GetComponent<Enemy>().ReactionBottle(transform.position);
+                        if (obj.CompareTag("Enemy"))
+                        {
+                            //“G‚ª“¦‚°‚éˆ—
+                            obj.gameObject.GetComponent<Enemy>().ReactionBottle(transform.position, ActivatetTime);
+                        }
                     }
+                    Destroy(gameObject, ActivatetTime);
+                    _effected = true;
                 }
-                Destroy(gameObject);
             }
 
         }
