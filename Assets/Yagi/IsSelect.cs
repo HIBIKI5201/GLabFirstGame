@@ -1,4 +1,3 @@
-using Unity.Burst;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +42,7 @@ public class IsSelect : MonoBehaviour
     public void ResetGame()
     {
         IsClear._stagesCleared = 0;
+        PlayerPrefs.SetInt("nowStage", IsClear._stagesCleared);
         IsClear._concealed = false;
         Debug.Log(IsClear._stagesCleared);
     }
