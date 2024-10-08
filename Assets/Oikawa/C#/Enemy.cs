@@ -317,6 +317,7 @@ public class Enemy : MonoBehaviour
             if (Time.time >= _meatTimer + _meatTime)
             {
                 State = EnemyState.Normal;
+                _dir = _spriteRenderer.flipX ? Direction.Right : Direction.Left;
             }
             //ジャンプが必要で 地面にいて　ジャンプができる
             if (IsJump() && IsGrounded() && _jumpOver)
@@ -427,6 +428,7 @@ public class Enemy : MonoBehaviour
             State = EnemyState.Normal;
         }
     }
+    public void ReactionBottle(Vector3 bottlePosi) => ReactionBottle(bottlePosi, 5);
     public void ReactionBottle(Vector3 bottlePosi,float effectTime)
     {
         if (State == EnemyState.Faint)
@@ -443,6 +445,7 @@ public class Enemy : MonoBehaviour
             State = EnemyState.Normal;
         }
     }
+    public void ReactionMeat(Vector3 meatPosi) => ReactionMeat(meatPosi, 5);
     public void ReactionMeat(Vector3 meatPosi, float effectTime)
     {
         if (State == EnemyState.Bite|| State == EnemyState.Faint)
