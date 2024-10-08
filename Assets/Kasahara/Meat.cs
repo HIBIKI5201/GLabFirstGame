@@ -43,6 +43,9 @@ public class Meat : ItemBase
                             obj.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position, ActivatetTime);
                         }
                     }
+                    gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+                    gameObject.GetComponent<Collider2D>().enabled = false;
                     Destroy(gameObject, ActivatetTime);
                     _effected = true;
                 }
