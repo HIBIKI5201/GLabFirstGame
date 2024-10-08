@@ -566,8 +566,7 @@ public class PlayerController : MonoBehaviour
             //アイテムをプレイヤーの位置に持ってくる
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.gravityScale = 0;
-            _throwsetting.ThrowStraightPower *= transform.localScale.x;
-            rb.AddForce(new Vector2(_throwsetting.ThrowStraightPower, 0), ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(_throwsetting.ThrowStraightPower *= transform.localScale.x, 0), ForceMode2D.Impulse);
         }
         //放物的に投げる
         else
