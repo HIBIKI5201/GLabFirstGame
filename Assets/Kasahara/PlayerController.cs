@@ -93,7 +93,6 @@ public class PlayerController : MonoBehaviour
     {
         CreatePhysicsScene();
         var platform = Instantiate(_throwsetting.Platform);
-        platform.GetComponentInChildren<Renderer>().enabled = false;
         SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -505,6 +504,12 @@ public class PlayerController : MonoBehaviour
         }
         Debug.Log($"Playerの体力:{CurrentHp}");
     }
+    IEnumerator Invincible()
+    {
+        _isInvincible = true;
+        yield return new WaitForSeconds(_damageCool);
+        _isInvincible = false;
+    }
     /// <summary>
     /// プレイヤーの速度を調整する
     /// </summary>
@@ -591,7 +596,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _throwParabolaPower += 0.1f;
                 }
-                throwParabolaPower = Mathf.Sin(t) * _throwParabolaPower + _throwsetting.MaxThrowParabolaPower;
+                throwParabolaPower = Mathf.Sin(t) * _throwParabolaPower;
                 t += _throwsetting.ThrowRate * Time.deltaTime;
                 ThrowLineSimulate(item.gameObject, transform.position, _throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale);
                 yield return new WaitForEndOfFrame();
