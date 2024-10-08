@@ -54,8 +54,6 @@ public class Enemy : MonoBehaviour
 
     [Space, Tooltip("攻撃力")]
     [SerializeField] int _attack;
-    [Tooltip("敵がプレイヤーに振れた状態での1秒間に攻撃できる回数")]
-    [SerializeField] float _attackRate;
 
     [Space, Tooltip("ジャンプ力")]
     [SerializeField] float _jumpPower;
@@ -116,6 +114,11 @@ public class Enemy : MonoBehaviour
     float _meatTimer;
 
     /// <summary>
+    /// 肉をあきらめるまでの長さ
+    /// </summary>
+    float _meatTime;
+
+    /// <summary>
     /// 肉を食い始めたかのフラグ
     /// </summary>
     bool _meatEat;
@@ -146,6 +149,9 @@ public class Enemy : MonoBehaviour
 
         [Tooltip("横のRayが反応するLayerMask")]
         public LayerMask _sideMask;
+
+        [Tooltip("壁や敵、プレイヤーを判断する")]
+        public Vector2 _sideRayPos;
 
         [Tooltip("右側の崖を判断するRayの中心")]
         public Vector2 _rightRayPos;
@@ -308,7 +314,7 @@ public class Enemy : MonoBehaviour
                 _meatEat = true;
             }
             //肉を見つけてから5秒経過したら
-            if (Time.time >= _meatTimer + 5)
+            if (Time.time >= _meatTimer + _meatTime)
             {
                 State = EnemyState.Normal;
             }
@@ -329,7 +335,7 @@ public class Enemy : MonoBehaviour
             if (IsJump() && IsGrounded() && _jumpOver)
                 VelocityJump();
 
-            if (Time.time >= _attackedTimer + 1)
+            if (Time.time >= _attackedTimer + 0.1f)
                 if (IsSideTouch(out bool playerHit))
                     if (playerHit)
                         AttackToPlayer();
@@ -362,7 +368,7 @@ public class Enemy : MonoBehaviour
         void AttackToPlayer()
         {
             _player = _player != null ? _player : FindAnyObjectByType<PlayerController>();
-            if (Time.time <= _attackedTimer + 1f / _attackRate)
+            if (Time.time <= _attackedTimer + 0.1f)
                 return;
             _attackedTimer = Time.time;
             _player.FluctuationLife(-_attack);
@@ -391,6 +397,7 @@ public class Enemy : MonoBehaviour
         bool IsSideTouch(out bool playerHit)
         {
             Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
+
             RaycastHit2D hit = Physics2D.Raycast(_myTra.position, dir, _ground._sideRayLong, _ground._sideMask);
             playerHit = false;
             if (hit)
@@ -420,7 +427,7 @@ public class Enemy : MonoBehaviour
             State = EnemyState.Normal;
         }
     }
-    public void ReactionBottle(Vector3 bottlePosi)
+    public void ReactionBottle(Vector3 bottlePosi,float effectTime)
     {
         if (State == EnemyState.Faint)
             return;
@@ -432,11 +439,11 @@ public class Enemy : MonoBehaviour
         {
             State = EnemyState.Escape;
             _bottlePosi = bottlePosi;
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(effectTime);
             State = EnemyState.Normal;
         }
     }
-    public void ReactionMeat(Vector3 meatPosi)
+    public void ReactionMeat(Vector3 meatPosi, float effectTime)
     {
         if (State == EnemyState.Bite|| State == EnemyState.Faint)
             return;
@@ -445,6 +452,7 @@ public class Enemy : MonoBehaviour
         _meatEat = false;
         _meatPosi = meatPosi;
         _meatTimer = Time.time;
+        _meatTime = effectTime;
     }
 
     Coroutine coroutine = null;
@@ -626,9 +634,9 @@ public class Enemy : MonoBehaviour
     [ContextMenu("TestReactionStone")]
     void TestReactionStone() => ReactionStone(5);
     [ContextMenu("TestReactionBottle")]
-    void TestReactionBottle() => ReactionBottle(Vector2.zero);
+    void TestReactionBottle() => ReactionBottle(Vector2.zero, 5);
     [ContextMenu("TestReactionMeat")]
-    void TestReactionMeat() => ReactionMeat(Vector2.zero);
+    void TestReactionMeat() => ReactionMeat(Vector2.zero,5);
     [ContextMenu("InitializeGroundedRay(自動設定)")]
     void InitializeGroundedRay()
     {
