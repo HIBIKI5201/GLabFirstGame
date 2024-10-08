@@ -295,7 +295,7 @@ public class PlayerController : MonoBehaviour
                 else if (obj.gameObject.CompareTag("Enemy"))
                 {
                     _isStompEnemy = true;
-                    obj.gameObject.GetComponent<Enemy>().LifeFluctuation(-1);
+                    FluctuationLife(-1);
                     //_rb.velocity = new Vector2(_rb.velocity.x, 0);
                     _rb.gravityScale = 1;
                     yield break;
