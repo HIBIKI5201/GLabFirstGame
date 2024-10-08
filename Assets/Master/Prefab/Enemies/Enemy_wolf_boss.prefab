@@ -112,7 +112,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &1095736613008268256
 MonoBehaviour:
@@ -133,8 +133,7 @@ MonoBehaviour:
   _chaseSpeed: 10.8
   _currentSpeed: 0
   _attack: 2
-  _attackRate: 0
-  _jumpPower: 0
+  _jumpPower: 5
   _state: 0
   _jumpOver: 1
   _canChase: 1
@@ -146,6 +145,7 @@ MonoBehaviour:
     _sideMask:
       serializedVersion: 2
       m_Bits: 128
+    _sideRayPos: {x: 0, y: 0}
     _rightRayPos: {x: 1.833333, y: 0}
     _leftRayPos: {x: -1.833333, y: 0}
     _rayLong: 1.141667
