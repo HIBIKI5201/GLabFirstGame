@@ -483,6 +483,7 @@ public class PlayerController : MonoBehaviour
                     Destroy(_rose[0]);
                     _rose.RemoveAt(0);
                 }
+                StartCoroutine(Invincible());
             }
             if (CurrentHp <= 0)
             {
@@ -596,7 +597,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _throwParabolaPower += 0.1f;
                 }
-                throwParabolaPower = Mathf.Sin(t) * _throwParabolaPower;
+                throwParabolaPower = (Mathf.Sin(t)+1) * _throwParabolaPower;
                 t += _throwsetting.ThrowRate * Time.deltaTime;
                 ThrowLineSimulate(item.gameObject, transform.position, _throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale);
                 yield return new WaitForEndOfFrame();
