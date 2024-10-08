@@ -11,6 +11,7 @@ public class StartImage : MonoBehaviour
     [SerializeField] float _fadeinTime;
     [SerializeField] float _fadeoutTime;
     [SerializeField, Header("表示時間")] float _indicationTime;
+    private bool _isSkip = true;
 
     private void Awake()
     {
@@ -22,28 +23,29 @@ public class StartImage : MonoBehaviour
     }
     void Start()
     {
-        //一つ目のフェード
-        StartCoroutine(FadeInterval(_firstImage, _indicationTime));
-        //二つ目のフェード
-        Invoke(nameof(Second), _fadeinTime + _indicationTime + _fadeoutTime);
+        //フェード開始
+        StartCoroutine(FadeInterval(_firstImage, _secondImage, _indicationTime, _fadeinTime));
     }
     private void Update()
     {
-        //キーやマウスボタンを押したとき演出をスキップする
-        if (Input.anyKeyDown) Skip();
-    }
-    private void Second()
-    {
-        StartCoroutine(FadeInterval(_secondImage, _indicationTime));
-        //タイトルのフェードイン
-        Invoke(nameof(TitleFade), (_fadeinTime + _indicationTime + _fadeoutTime));
+        if (_isSkip)
+        {
+            //キーやマウスボタンを押したとき演出をスキップする
+            if (Input.anyKeyDown) Skip();
+        }
     }
 
-    IEnumerator FadeInterval(Image image, float time)
+    IEnumerator FadeInterval(Image image, Image image2, float time, float time2)
     {
         image.DOFade(1f, _fadeinTime);
         yield return new WaitForSeconds(time);
         image.DOFade(0f, _fadeoutTime);
+        yield return new WaitForSeconds(time2);
+        image2.DOFade(1f, _fadeinTime);
+        yield return new WaitForSeconds(time);
+        image2.DOFade(0f, _fadeoutTime);
+        yield return new WaitForSeconds(_fadeoutTime);
+        TitleFade();
     }
 
     private void TitleFade()
@@ -59,5 +61,6 @@ public class StartImage : MonoBehaviour
         var sc = _secondImage.color;
         _secondImage.color = new Color(sc.r, sc.g, sc.b, 1);
         _secondImage.DOFade(0, _fadeinTime);
+        _isSkip = false;
     }
 }
