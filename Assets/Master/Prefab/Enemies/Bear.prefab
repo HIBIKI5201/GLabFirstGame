@@ -190,7 +190,7 @@ MonoBehaviour:
       m_Bits: 128
     _sideMask:
       serializedVersion: 2
-      m_Bits: 384
+      m_Bits: 128
     _rightRayPos: {x: 1.335, y: 0}
     _leftRayPos: {x: -1.335, y: 0}
     _rayLong: 1.165
