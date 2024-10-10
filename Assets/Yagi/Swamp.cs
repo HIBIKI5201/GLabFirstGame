@@ -97,7 +97,7 @@ public class Swamp : MonoBehaviour
         _player._movePower *= down;
         _player._maxSpeed *= down;
         yield return new WaitForSeconds(time);
-        _player._movePower = defaultSpeed;
-        _player._maxSpeed = defaultMove;
+        _player._movePower = defaultMove; 
+        _player._maxSpeed = defaultSpeed;
     }
 }
