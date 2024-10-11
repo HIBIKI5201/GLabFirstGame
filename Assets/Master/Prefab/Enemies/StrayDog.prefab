@@ -186,7 +186,7 @@ MonoBehaviour:
   _ground:
     _mask:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 1152
     _sideMask:
       serializedVersion: 2
       m_Bits: 384

@@ -84,8 +84,10 @@ public class Enemy : MonoBehaviour
     [Tooltip("ダメージ受けれる")]
     [SerializeField] bool _canDamage;
 
+    [Space]
     [Tooltip("地面や障害物の設定")]
     [SerializeField] GroundedRay _ground;
+    [Space]
 
     [Tooltip("進行方向")]
     [SerializeField] Direction _dir;
@@ -329,7 +331,7 @@ public class Enemy : MonoBehaviour
             float x = _playerTra.position.x - _myTra.position.x;
             float y = _playerTra.position.y - _myTra.position.y;
             _dir = x <= 0 ? Direction.Left : Direction.Right;
-            if (Mathf.Abs(x) <= Mathf.Abs(Mathf.Min(y, 0.1f)))
+            if (Mathf.Abs(x) <= 0.1f)
             {
                 _dir = Direction.None;
             }
@@ -499,23 +501,17 @@ public class Enemy : MonoBehaviour
             _canDamage = true;
         }
     }
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnCollisionStay2D(Collision2D col)
     {
         switch (State)
         {
             case EnemyState.Faint:
             case EnemyState.Bite:
             case EnemyState.Escape:
+            case EnemyState.Chase:
                 return;
         }
-        /*if (col.transform.CompareTag("Player"))
-        {
-            Debug.Log("PlayerTouch");
-            for (int i = 0; i < col.contacts.Length; i++)
-                CollisionPlayer(col.GetContact(i).normal, col.GetContact(i).point);
 
-            return;
-        }*/
         for (int i = 0; i < col.contacts.Length; i++)
             CollisionReturn(col.GetContact(i).normal, col.GetContact(i).point);
 
@@ -530,21 +526,9 @@ public class Enemy : MonoBehaviour
                     _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
                 }
         }
-        /*void CollisionPlayer(Vector2 normal, Vector2 point)
-        {
-            Debug.Log("Enemy Hit Player");
-            Vector2 localPosi = point - (Vector2)_myTra.position;
-            bool isSteppedOn = (normal.y <= 0.5f) && (localPosi.y >= 0.2f);
-            if (!isSteppedOn)
-            {
-                col.transform.GetComponent<PlayerController>().FluctuationLife(-_attack);
-                _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
-            }
-        }
-        */
     }
     ContactPoint2D[] V;
-    private void OnCollisionStay2D(Collision2D collision) => V = collision.contacts;
+    //private void OnCollisionStay2D(Collision2D collision) => V = collision.contacts;
     public void LifeFluctuation(int value)
     {
         if (!_canDamage&&value < 0)
@@ -650,7 +634,7 @@ public class Enemy : MonoBehaviour
         }
 
         Vector2 size = _boxCollider.size * transform.localScale;
-        _ground._mask = Convert.ToInt32("10000000", 2);
+        _ground._mask = Convert.ToInt32("10010000000", 2);
         _ground._sideMask = Convert.ToInt32("110000000", 2);
         _ground._rightRayPos.x = size.x / 2f;
         _ground._leftRayPos.x = -size.x / 2f;

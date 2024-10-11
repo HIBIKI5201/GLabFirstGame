@@ -141,16 +141,16 @@ MonoBehaviour:
   _ground:
     _mask:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 1152
     _sideMask:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 384
     _sideRayPos: {x: 0, y: 0}
-    _rightRayPos: {x: 1.833333, y: 0}
-    _leftRayPos: {x: -1.833333, y: 0}
-    _rayLong: 1.141667
-    _sideRayLong: 1.933333
-    _jumpRayLong: 2.033333
+    _rightRayPos: {x: 1.8333334, y: 0}
+    _leftRayPos: {x: -1.8333334, y: 0}
+    _rayLong: 1.2416667
+    _sideRayLong: 1.9333334
+    _jumpRayLong: 2.0333333
   _dir: 1
   _alwaysDebug: 0
 --- !u!61 &6421892462430893437

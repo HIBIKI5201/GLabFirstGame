@@ -186,15 +186,15 @@ MonoBehaviour:
   _ground:
     _mask:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 1152
     _sideMask:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 384
     _sideRayPos: {x: 0, y: 0}
     _rightRayPos: {x: 1.335, y: 0}
     _leftRayPos: {x: -1.335, y: 0}
     _rayLong: 1.165
-    _sideRayLong: 1.435
-    _jumpRayLong: 1.535
+    _sideRayLong: 1.4350001
+    _jumpRayLong: 1.5350001
   _dir: 1
   _alwaysDebug: 0

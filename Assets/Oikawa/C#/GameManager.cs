@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameState _state;
     [SerializeField] FadeOut _fadeOut;
     public static GameManager instance;
-    AudioManager _audio;
     public GameState State 
     { 
         get => _state; 
@@ -36,8 +35,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         instance = this;
-        _audio = AudioManager.Instance;
-        _audio.PlayBGM(SceneManager.GetActiveScene().name.ToLower());
     }
 
     void Update()
