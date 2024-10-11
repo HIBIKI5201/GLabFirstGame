@@ -236,7 +236,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 0
   _effectRange: 1
-  _activateTime: 0
 --- !u!58 &90817852
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -753,7 +752,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 1
   _effectRange: 1
-  _activateTime: 0
   _size: {x: 1, y: 1}
   _angle: 0
 --- !u!70 &370472653
@@ -968,7 +966,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 0
   _effectRange: 1
-  _activateTime: 0
 --- !u!58 &411814386
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1264,7 +1261,7 @@ MonoBehaviour:
   _deceleration: 0
   _jumpPower: 10
   _fallSpeed: 2
-  _damageCool: 0
+  _damageCool: 1
   _point: {x: 0, y: -0.71}
   _size: {x: 1, y: 1}
   _angle: 0
@@ -2038,7 +2035,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 0
   _effectRange: 1
-  _activateTime: 0
 --- !u!61 &868486230
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2185,7 +2181,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 1
   _effectRange: 1
-  _activateTime: 0
   _size: {x: 1, y: 1}
   _angle: 0
 --- !u!212 &909986788
@@ -2403,7 +2398,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 0
   _effectRange: 1
-  _activateTime: 0
 --- !u!58 &1063839222
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3060,7 +3054,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 0
   _effectRange: 1
-  _activateTime: 0
   _recoverLife: 1
 --- !u!58 &1549878340
 CircleCollider2D:
@@ -3198,7 +3191,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 0
   _effectRange: 1
-  _activateTime: 0
 --- !u!58 &1584461399
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3669,7 +3661,6 @@ MonoBehaviour:
   _sound: {fileID: 0}
   _throwType: 0
   _effectRange: 1
-  _activateTime: 0
 --- !u!58 &1901030323
 CircleCollider2D:
   m_ObjectHideFlags: 0

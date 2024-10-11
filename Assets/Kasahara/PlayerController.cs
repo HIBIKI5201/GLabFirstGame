@@ -91,10 +91,10 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
+        _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
         var platform = Instantiate(_throwsetting.Platform);
         SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
-        _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         CurrentHp = _maxHp;
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };

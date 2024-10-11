@@ -51,7 +51,6 @@ public class Bottle : ItemBase
                 if(_effected && _rb.velocity.y == 0)
                 {
                     _rb.velocity = Vector2.zero;
-                    _rb.angularVelocity = 0;
                     _rb.bodyType = RigidbodyType2D.Kinematic;
                     gameObject.GetComponent<Collider2D>().enabled = false;
                 }
