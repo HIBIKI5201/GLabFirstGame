@@ -48,8 +48,6 @@ public class Torabasami : MonoBehaviour
             yield return new WaitForSeconds(time);
             _isTrap = false;
         }
-
-
     }
 }
 

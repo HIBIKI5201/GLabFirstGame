@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class RedImage : MonoBehaviour
 {
-    [Header("赤くする時間"), SerializeField] public float _fadeTime;
-    [Header("フェードアウトするイメージオブジェクト"), SerializeField] GameObject _fadeOutObject;
+    [SerializeField, Header("赤くする時間")] public float _fadeTime;
+    [SerializeField, Header("フェードアウトするイメージオブジェクト")] GameObject _fadeOutObject;
     Image _image;
 
     private void Awake()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
     void Start()
     {

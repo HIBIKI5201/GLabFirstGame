@@ -1,13 +1,24 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class IsClear : MonoBehaviour
 {
+    [SerializeField,Header("SelectStageが設定されているSceaneLoderオブジェクト")] SceneLoader _load;
     public static int _stagesCleared = 0;
     public static bool _concealed = false;
+    bool _isbool;
+    Timer time;
 
     private void Start()
     {
+        time = GetComponent<Timer>();
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Update()
+    {
+        AnotherClear();
     }
 
     /// <summary>
@@ -15,7 +26,12 @@ public class IsClear : MonoBehaviour
     /// </summary>
     public void AnotherClear()
     {
-        _concealed = true;
+        if (_isbool)
+        {
+            if (time._currentTime <= 0)
+            _concealed = true;
+            _load.FadeAndLoadScene();
+        }
     }
 
     /// <summary>
