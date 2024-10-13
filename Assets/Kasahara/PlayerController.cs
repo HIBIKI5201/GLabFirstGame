@@ -483,6 +483,7 @@ public class PlayerController : MonoBehaviour
                     Destroy(_rose[0]);
                     _rose.RemoveAt(0);
                 }
+                FindAnyObjectByType<DamageCamera>().Shake();
                 StartCoroutine(Invincible());
             }
             if (CurrentHp <= 0)
