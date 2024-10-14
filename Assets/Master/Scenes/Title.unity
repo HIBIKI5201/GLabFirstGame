@@ -889,6 +889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebc7202fe105ba40a6ea7086c5980d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _load: {fileID: 0}
 --- !u!4 &1326647007
 Transform:
   m_ObjectHideFlags: 0
@@ -1645,6 +1646,7 @@ GameObject:
   - component: {fileID: 1768080548}
   - component: {fileID: 1768080547}
   - component: {fileID: 1768080546}
+  - component: {fileID: 1768080549}
   m_Layer: 0
   m_Name: Logo
   m_TagString: Untagged
@@ -1724,6 +1726,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1768080544}
   m_CullTransparentMesh: 1
+--- !u!114 &1768080549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768080544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542e69e0980df634d8050a403ff123d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _distance: 0.1
 --- !u!1 &1821948368
 GameObject:
   m_ObjectHideFlags: 0
@@ -1874,9 +1889,9 @@ MonoBehaviour:
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: 0, y: 0}
   _buttonImage:
-  - {fileID: 0}
-  - {fileID: 0}
-  _currentImage: {fileID: 0}
+  - {fileID: 21300000, guid: 870751221f76caf4aa1611b2f3c9f431, type: 3}
+  - {fileID: 21300000, guid: d4ef75c4f602e454f99dc582a13b87a5, type: 3}
+  _currentImage: {fileID: 1821948371}
 --- !u!1 &1834716695
 GameObject:
   m_ObjectHideFlags: 0
