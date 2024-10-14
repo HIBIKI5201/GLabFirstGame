@@ -133,11 +133,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.79
+      value: 225.7
       objectReference: {fileID: 0}
     - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.78
+      value: -4.1
       objectReference: {fileID: 0}
     - target: {fileID: 2713661338995360478, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_Name
@@ -185,11 +185,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4953143955142307075, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.79
+      value: -1.24
       objectReference: {fileID: 0}
     - target: {fileID: 4953143955142307075, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.78
+      value: -5.76
       objectReference: {fileID: 0}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _throwsetting.Platform
