@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// デバッグ出すようのStateのプロパティ
     /// </summary>
-    EnemyState State
+    public EnemyState State
     {
         get => _state;
         set
@@ -170,7 +170,7 @@ public class Enemy : MonoBehaviour
         [Space, Tooltip("飛ぶのを判断するRayの長さ")]
         public float _jumpRayLong;
     }
-    enum EnemyState
+    public enum EnemyState
     {
         /// <summary>
         /// 通常
