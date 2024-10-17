@@ -25,10 +25,7 @@ public class GameOverSystem : MonoBehaviour
     void Update()
     {
         int currentHP = _playerController.CurrentHp;
-
-        FieldInfo field = typeof(Timer)
-            .GetField("_currentTime", BindingFlags.NonPublic | BindingFlags.Instance);
-        float currentTime = (float)field.GetValue(_timer);
+        float currentTime = _timer._currentTime;
 
         if (
             (_gameManager.State == GameManager.GameState.GameOver
