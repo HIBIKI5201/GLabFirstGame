@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("接地判定の位置")] Vector2 _point;
     [SerializeField, Tooltip("接地判定の大きさ")] Vector2 _size;
     [SerializeField, Tooltip("接地判定の角度")] float _angle;
+    [SerializeField, Tooltip("ダッシュの音")] AudioClip _dash;
+    [SerializeField, Tooltip("歩いてる音")] AudioClip _walk;
     [SerializeField, Tooltip("<アイテムを投げる設定>")] Throwsetting _throwsetting;
     [SerializeField, Tooltip("<アイテムの設定>")] ItemSetting _itemSetting;
     [System.Serializable]
@@ -76,6 +78,8 @@ public class PlayerController : MonoBehaviour
     Vector3[] _afterItemPos2 = new Vector3[3];
     float _horiInput = 0;
     PauseManager _pauseManager;
+    AudioManager _audioManager;
+    AudioSource _audioSource;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
@@ -83,6 +87,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Awake()
     {
+        _audioManager = FindAnyObjectByType<AudioManager>();
         _pauseManager = FindAnyObjectByType<PauseManager>();
         if (_pauseManager != null)
             _pauseManager.OnPauseResume += PauseAction;
@@ -97,6 +102,7 @@ public class PlayerController : MonoBehaviour
         SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         _spriteRenderer = GetComponent<SpriteRenderer>();
         CurrentHp = _maxHp;
+        _audioSource = GetComponent<AudioSource>();
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
         //_afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
         //_afterItemPos1 = new Vector3[] { _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position };
@@ -209,6 +215,23 @@ public class PlayerController : MonoBehaviour
             if (Mathf.Abs(x) > _maxSpeed)
             {
                 x = _maxSpeed * Mathf.Sign(x);
+                if (!_isJump && _audioSource.clip != _dash)
+                {
+                    _audioSource.clip = _dash;
+                    _audioSource.Play();
+                }
+            }
+            else if(Mathf.Abs(x) > 0.1f)
+            {
+                if (!_isJump && _audioSource.clip != _walk)
+                {
+                    _audioSource.clip = _walk;
+                    _audioSource.Play();
+                }
+            }
+            else
+            {
+                _audioSource.Stop();
             }
             _rb.velocity = new Vector2(x, _rb.velocity.y);
         }
@@ -228,18 +251,24 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    IEnumerator _jumpEnumerator;
     private void Jump()
     {
-        if (_rb.velocity.y < -0.2f)
+        if (_rb.velocity.y < -3f)
         {
             _isJump = true;
-            StartCoroutine(GroundingJudge());
+            if (_jumpEnumerator == null)
+            {
+                _jumpEnumerator = GroundingJudge();
+                StartCoroutine(_jumpEnumerator);
+            }
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (!_isJump)
             {
                 Debug.Log("ジャンプした");
+                AudioManager.Instance.PlaySE("jump");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
             }
@@ -255,7 +284,6 @@ public class PlayerController : MonoBehaviour
                 _isStompEnemy = false;
                 _rb.velocity = new Vector2(_rb.velocity.x, 0);
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
-                StartCoroutine(GroundingJudge());
             }
         }
         else if (_isStompEnemy)
@@ -264,7 +292,6 @@ public class PlayerController : MonoBehaviour
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
-            StartCoroutine(GroundingJudge());
         }
         else if (_rb.velocity.y > 0)
         {
@@ -285,17 +312,19 @@ public class PlayerController : MonoBehaviour
             var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + _point, _size, _angle);
             foreach (var obj in hit)
             {
-                //Debug.Log(obj);
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;
                     _rb.gravityScale = 1;
+                    AudioManager.Instance.PlaySE("jump_landing");
+                    //コルーチンを連続で起動させないために待つ
+                    yield return new WaitForSeconds(0.3f);
+                    _jumpEnumerator = null;
+                    break;
                 }
                 else if (obj.gameObject.CompareTag("Enemy"))
                 {
                     _isStompEnemy = true;
-                    FluctuationLife(-1);
-                    //_rb.velocity = new Vector2(_rb.velocity.x, 0);
                     _rb.gravityScale = 1;
                     yield break;
                 }
@@ -457,14 +486,14 @@ public class PlayerController : MonoBehaviour
             _throwsetting.BulletSimulationLine.SetPosition(i, ghost.transform.position);
             foreach (var item in hit)
             {
-                if(item.CompareTag("Ground"))
+                if (item.CompareTag("Ground"))
                 {
                     _throwsetting.BulletSimulationLine.positionCount = i;
                     goto ColliderHit;
                 }
             }
         }
-        ColliderHit:
+    ColliderHit:
         Destroy(ghost.gameObject);
     }
     /// <summary>
@@ -483,11 +512,13 @@ public class PlayerController : MonoBehaviour
                     Destroy(_rose[0]);
                     _rose.RemoveAt(0);
                 }
+                AudioManager.Instance.PlaySE("damaged");
                 FindAnyObjectByType<DamageCamera>().Shake();
                 StartCoroutine(Invincible());
             }
             if (CurrentHp <= 0)
             {
+                Debug.Log(_playerStatus);
                 _playerStatus = PlayerStatus.Death;
             }
             else
@@ -598,7 +629,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _throwParabolaPower += 0.1f;
                 }
-                throwParabolaPower = (Mathf.Sin(t)+1) * _throwParabolaPower;
+                throwParabolaPower = (Mathf.Sin(t) + 1) * _throwParabolaPower;
                 t += _throwsetting.ThrowRate * Time.deltaTime;
                 ThrowLineSimulate(item.gameObject, transform.position, _throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale);
                 yield return new WaitForEndOfFrame();
@@ -644,6 +675,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
             }
         }
+        AudioManager.Instance.PlaySE("throw");
     EndCoroutine:
         yield return new WaitForEndOfFrame();
         _pauseManager.OnComplete(enumerator);

@@ -7,9 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public abstract class ItemBase : MonoBehaviour
 {
-    /// <summary>アイテムを取った時に鳴る効果音</summary>
-    [Tooltip("アイテムを取った時に鳴らす効果音")]
-    [SerializeField] AudioClip _sound = default;
     /// <summary>アイテムをどう投げるか/summary>
     [Tooltip("Straight まっすぐ、Parabola 放物的")]
     [SerializeField] ThrowType _throwType = ThrowType.Straight;
@@ -78,10 +75,7 @@ public abstract class ItemBase : MonoBehaviour
             if (collision.gameObject.tag.Equals("Player"))
             {
                 Player = collision.gameObject;
-                if (_sound)
-                {
-                    AudioSource.PlayClipAtPoint(_sound, Camera.main.transform.position);
-                }
+                AudioManager.Instance.PlaySE("itemGet");
                 // 見えない所に移動する
                 this.transform.position = Camera.main.transform.position;
                 // コライダーを無効にする

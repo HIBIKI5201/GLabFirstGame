@@ -20,6 +20,8 @@ public class Rock : ItemBase
                 {
                     //“G‚ğƒXƒ^ƒ“‚³‚¹‚éˆ—
                     obj.gameObject.GetComponent<Enemy>().ReactionStone(ActivatetTime);
+                    if(obj.gameObject.GetComponent<Enemy>().State != Enemy.EnemyState.Faint)
+                    AudioManager.Instance.PlaySE("damage_enemy");
                     Destroy(gameObject,0.3f);
                 }
             }
