@@ -32,6 +32,7 @@ public class GameOverSystem : MonoBehaviour
             || currentHP <= 0
             || currentTime <= 0) && !_called)
         {
+            _gameManager.State = GameManager.GameState.GameOver; 
             _called = true;
             Debug.Log("ゲームオーバーによるやり直し");
             _sceneLoader.FadeAndLoadScene();

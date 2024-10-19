@@ -133,11 +133,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 225.7
+      value: -1.24
       objectReference: {fileID: 0}
     - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.1
+      value: -5.76
       objectReference: {fileID: 0}
     - target: {fileID: 2713661338995360478, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_Name
@@ -192,6 +192,10 @@ PrefabInstance:
       value: -5.76
       objectReference: {fileID: 0}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _damageCool
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _throwsetting.Platform
       value: 
       objectReference: {fileID: 1805939698}
@@ -240,6 +244,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1203089279149596881, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideMask.m_Bits
+      value: 384
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222032285703063993, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _speed
+      value: 5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222032285703063993, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _jumpOver
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222032285703063993, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _chaseSpeed
+      value: 6.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222032285703063993, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._jumpRayLong
+      value: 1.399
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222032285703063993, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideRayLong
+      value: 1.299
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222032285703063993, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._leftRayPos.x
+      value: -1.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 1222032285703063993, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._rightRayPos.x
+      value: 1.199
+      objectReference: {fileID: 0}
     - target: {fileID: 2034024158115051724, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -284,9 +320,93 @@ PrefabInstance:
       propertyPath: _gameManager
       value: 
       objectReference: {fileID: 1876642809}
+    - target: {fileID: 3924690340621963115, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideMask.m_Bits
+      value: 384
+      objectReference: {fileID: 0}
     - target: {fileID: 4001412698565215189, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
       propertyPath: m_Name
       value: Stage1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4110035820441640795, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideMask.m_Bits
+      value: 384
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750905534358454163, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideMask.m_Bits
+      value: 384
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132950384960224448, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _speed
+      value: 5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132950384960224448, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _chaseSpeed
+      value: 6.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132950384960224448, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._jumpRayLong
+      value: 1.399
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132950384960224448, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideRayLong
+      value: 1.299
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132950384960224448, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._leftRayPos.x
+      value: -1.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132950384960224448, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._rightRayPos.x
+      value: 1.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706713482543825404, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _speed
+      value: 5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706713482543825404, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _chaseSpeed
+      value: 6.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706713482543825404, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._jumpRayLong
+      value: 1.399
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706713482543825404, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideRayLong
+      value: 1.299
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706713482543825404, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._leftRayPos.x
+      value: -1.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 7706713482543825404, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._rightRayPos.x
+      value: 1.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 7843566310975992473, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _speed
+      value: 5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7843566310975992473, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _chaseSpeed
+      value: 6.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7843566310975992473, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._jumpRayLong
+      value: 1.399
+      objectReference: {fileID: 0}
+    - target: {fileID: 7843566310975992473, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._sideRayLong
+      value: 1.299
+      objectReference: {fileID: 0}
+    - target: {fileID: 7843566310975992473, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._leftRayPos.x
+      value: -1.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 7843566310975992473, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
+      propertyPath: _ground._rightRayPos.x
+      value: 1.199
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

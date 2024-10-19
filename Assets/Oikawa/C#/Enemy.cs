@@ -280,6 +280,9 @@ public class Enemy : MonoBehaviour
                 Search();
                 break;
         }
+        if(GameManager.instance.State == GameManager.GameState.GameOver)
+            this.enabled = false;
+
         void UpdateReturn()
         {
             if (IsFrontGrounded(out bool isRightDir))
