@@ -98,11 +98,27 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
-        var platform = Instantiate(_throwsetting.Platform);
-        SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
+        GameObject platform;
+        if (_throwsetting.Platform != null)
+        {
+            platform = Instantiate(_throwsetting.Platform);
+            SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
+        }
+        else
+        {
+            Debug.LogError("_throwsetting.Platformに地面のオブジェクトをセットしてください");
+        }
         _spriteRenderer = GetComponent<SpriteRenderer>();
         CurrentHp = _maxHp;
         _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null)
+        {
+            Debug.LogError("AudioSourseがありません");
+        }
+        else
+        {
+            Debug.Log(_audioSource);
+        }
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
         //_afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
         //_afterItemPos1 = new Vector3[] { _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position };
@@ -215,15 +231,15 @@ public class PlayerController : MonoBehaviour
             if (Mathf.Abs(x) > _maxSpeed)
             {
                 x = _maxSpeed * Mathf.Sign(x);
-                if (!_isJump && _audioSource.clip != _dash)
+                if (!_isJump && _dash != null && _audioSource.clip != _dash)
                 {
                     _audioSource.clip = _dash;
                     _audioSource.Play();
                 }
             }
-            else if(Mathf.Abs(x) > 0.1f)
+            else if (Mathf.Abs(x) > 0.1f)
             {
-                if (!_isJump && _audioSource.clip != _walk)
+                if (!_isJump && _walk != null && _audioSource.clip != _walk)
                 {
                     _audioSource.clip = _walk;
                     _audioSource.Play();
@@ -254,12 +270,13 @@ public class PlayerController : MonoBehaviour
     IEnumerator _jumpEnumerator;
     private void Jump()
     {
-        if (_rb.velocity.y < -3f)
+        if (_rb.velocity.y < -1f)
         {
-            _isJump = true;
             if (_jumpEnumerator == null)
             {
-                _jumpEnumerator = GroundingJudge();
+                _isJump = true;
+                _jumpEnumerator = GroundingJudge(_jumpEnumerator);
+                //Debug.Log("StartCoroutine");
                 StartCoroutine(_jumpEnumerator);
             }
         }
@@ -271,6 +288,9 @@ public class PlayerController : MonoBehaviour
                 AudioManager.Instance.PlaySE("jump");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
+                _jumpEnumerator = GroundingJudge(_jumpEnumerator);
+                //Debug.Log("StartCoroutine");
+                StartCoroutine(_jumpEnumerator);
             }
             else
             {
@@ -303,8 +323,12 @@ public class PlayerController : MonoBehaviour
     /// 着地を検知する
     /// </summary>
     /// <returns></returns>
-    IEnumerator GroundingJudge()
+    IEnumerator GroundingJudge(IEnumerator enumerator)
     {
+        while (_rb.velocity.y > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
         _rb.gravityScale = _fallSpeed;
         while (_isJump)
         {
@@ -312,21 +336,23 @@ public class PlayerController : MonoBehaviour
             var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + _point, _size, _angle);
             foreach (var obj in hit)
             {
+                Debug.Log(obj.name);
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;
                     _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
+                    //Debug.Log("着地");
                     //コルーチンを連続で起動させないために待つ
-                    yield return new WaitForSeconds(0.3f);
+                    yield return new WaitForSeconds(0.5f);
+                    //Debug.Log("コルーチン終了");
                     _jumpEnumerator = null;
-                    break;
+                    yield break;
                 }
                 else if (obj.gameObject.CompareTag("Enemy"))
                 {
                     _isStompEnemy = true;
                     _rb.gravityScale = 1;
-                    yield break;
                 }
             }
         }
@@ -512,9 +538,9 @@ public class PlayerController : MonoBehaviour
                     Destroy(_rose[0]);
                     _rose.RemoveAt(0);
                 }
+                StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
                 FindAnyObjectByType<DamageCamera>().Shake();
-                StartCoroutine(Invincible());
             }
             if (CurrentHp <= 0)
             {
