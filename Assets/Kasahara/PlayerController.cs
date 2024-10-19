@@ -284,7 +284,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                Debug.Log("ジャンプした");
+                //Debug.Log("ジャンプした");
                 AudioManager.Instance.PlaySE("jump");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
@@ -294,7 +294,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.Log("ジャンプできなかった");
+                //Debug.Log("ジャンプできなかった");
             }
         }
         if (Input.GetKey(KeyCode.Space))
@@ -308,7 +308,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (_isStompEnemy)
         {
-            Debug.Log("敵を踏んで小ジャンプ");
+            //Debug.Log("敵を踏んで小ジャンプ");
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
@@ -336,7 +336,6 @@ public class PlayerController : MonoBehaviour
             var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + _point, _size, _angle);
             foreach (var obj in hit)
             {
-                Debug.Log(obj.name);
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;
