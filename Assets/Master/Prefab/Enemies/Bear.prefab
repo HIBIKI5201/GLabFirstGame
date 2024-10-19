@@ -194,7 +194,7 @@ MonoBehaviour:
     _rightRayPos: {x: 1.335, y: 0}
     _leftRayPos: {x: -1.335, y: 0}
     _rayLong: 1.165
-    _sideRayLong: 1.4350001
-    _jumpRayLong: 1.5350001
+    _sideRayLong: 1.435
+    _jumpRayLong: 1.535
   _dir: 1
   _alwaysDebug: 0
