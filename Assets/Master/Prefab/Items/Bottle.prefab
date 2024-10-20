@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.4735316, y: -6.966997, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.7, y: 17.7}
+  m_Size: {x: 1.3428571, y: 5.0571427}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _throwType: 1
   _effectRange: 5
-  _size: {x: 0, y: 0}
+  _size: {x: 0.48, y: 2.14}
   _angle: 0
 --- !u!61 &5674996106818450506
 BoxCollider2D:
@@ -139,7 +139,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1.3428571, y: 5.0571427}
-    newSize: {x: 4.7, y: 17.7}
+    newSize: {x: 1.3428571, y: 5.0571427}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
