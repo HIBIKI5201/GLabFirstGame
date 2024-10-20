@@ -15,6 +15,8 @@ public class Checkpoint : MonoBehaviour
 
     public Vector2 _checkpoint { get; set; }
 
+    public bool _isCheck = false;
+
     private void Start()
     {
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
@@ -25,6 +27,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            _isCheck = true;
             _checkpoint = _player.transform.position;
             _capsuleCollider.enabled = false;
             if (_changeSprite) _spriteRenderer.sprite = _changeSprite;

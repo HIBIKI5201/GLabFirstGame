@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class GameOver : MonoBehaviour
 {
-    [SerializeField,Header("RedImage‚ð“ü‚ê‚é")] GameObject _redObject;
+    [SerializeField, Header("RedImage‚ð“ü‚ê‚é")] GameObject _redObject;
     GameManager _gameManager;
     public static Vector2 position;
-    Checkpoint _checkpoint;
+    Checkpoint _point;
 
-    
+
     void Start()
     {
         _gameManager = FindAnyObjectByType<GameManager>();
-        _checkpoint = FindAnyObjectByType<Checkpoint>();
+        _point = FindAnyObjectByType<Checkpoint>();      
     }
 
     void Update()
@@ -24,7 +24,11 @@ public class GameOver : MonoBehaviour
         if (_gameManager.State == GameManager.GameState.GameOver)
         {
             _redObject.SetActive(true);
-            if (_checkpoint._checkpoint != null) position = _checkpoint._checkpoint;
+            if (_point != null)
+            {
+                Debug.Log("’Ê‰ß");
+                position = _point._checkpoint;
+            }
         }
     }
 }
