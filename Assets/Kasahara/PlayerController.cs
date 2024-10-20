@@ -369,6 +369,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (obj.gameObject.CompareTag("Enemy"))
                 {
+                    FluctuationLife(-1);
                     _isStompEnemy = true;
                     _rb.gravityScale = 1;
                 }
