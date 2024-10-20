@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Collections;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class StartImage : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class StartImage : MonoBehaviour
     [SerializeField] float _fadeinTime;
     [SerializeField] float _fadeoutTime;
     [SerializeField, Header("•\Ž¦ŽžŠÔ")] float _indicationTime;
+    [SerializeField] Volume _volume;
+    private ColorAdjustments _colorAdjustments;
     private bool _isSkip = true;
 
     private void Awake()
@@ -20,6 +24,9 @@ public class StartImage : MonoBehaviour
         _firstImage.color = new Color(fc.r, fc.g, fc.b, 0);
         var sc = _secondImage.color;
         _secondImage.color = new Color(sc.r, sc.g, sc.b, 0);
+
+        _volume.profile.TryGet(out _colorAdjustments);
+        _colorAdjustments.postExposure.Override(0);
     }
     void Start()
     {
@@ -51,6 +58,7 @@ public class StartImage : MonoBehaviour
     private void TitleFade()
     {
         _startImage.DOFade(0, _fadeinTime);
+        _colorAdjustments.postExposure.Override(0.99f);
     }
 
     private void Skip()
@@ -61,6 +69,7 @@ public class StartImage : MonoBehaviour
         var sc = _secondImage.color;
         _secondImage.color = new Color(sc.r, sc.g, sc.b, 1);
         _secondImage.DOFade(0, _fadeinTime);
+        _colorAdjustments.postExposure.Override(0.99f);
         _isSkip = false;
     }
 }
