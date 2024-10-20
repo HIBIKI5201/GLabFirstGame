@@ -6,7 +6,8 @@ using System.Collections;
 public class Torabasami : MonoBehaviour
 {
     [SerializeField, Header("生成する肉")] GameObject _meat;
-    [SerializeField] GameObject _player;
+    [SerializeField, Header("閉じたトラバサミのイラスト")] Sprite _closedTorabasami;
+    SpriteRenderer _torabasamiSprite;
     [SerializeField] float _stopTime;
     PlayerController _controller;
     bool _isTrap;
@@ -14,13 +15,15 @@ public class Torabasami : MonoBehaviour
     void Start()
     {
         _controller = GameObject.Find("Player").GetComponent<PlayerController>();
+        _torabasamiSprite = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
         if (_isTrap)
         {
-            _player.transform.position = new Vector2(transform.position.x, _player.transform.position.y);
+            _torabasamiSprite.sprite = _closedTorabasami;
+            _controller.transform.position = new Vector2(transform.position.x, _controller.transform.position.y);
         }
     }
 
