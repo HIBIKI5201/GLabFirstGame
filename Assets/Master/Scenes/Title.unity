@@ -444,7 +444,9 @@ MonoBehaviour:
   _fadeinTime: 0.5
   _fadeoutTime: 1
   _indicationTime: 4
-  _button: []
+  _button:
+  - {fileID: 1364357195}
+  - {fileID: 2051364720}
   _volume: {fileID: 1698313029}
 --- !u!4 &487238228
 Transform:
@@ -1263,7 +1265,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 509988276}
         m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
-        m_MethodName: FadeOutBGM
+        m_MethodName: FadeBGM
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1690,6 +1692,7 @@ GameObject:
   - component: {fileID: 1763163552}
   - component: {fileID: 1763163557}
   - component: {fileID: 1763163556}
+  - component: {fileID: 1763163558}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1817,6 +1820,18 @@ MonoBehaviour:
   - {fileID: 2051364722}
   _creditButton: {fileID: 1821948370}
   credit: {fileID: 1834716695}
+--- !u!114 &1763163558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763163551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406e27ad90e27b5489b479d0e01e2629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1768080544
 GameObject:
   m_ObjectHideFlags: 0
