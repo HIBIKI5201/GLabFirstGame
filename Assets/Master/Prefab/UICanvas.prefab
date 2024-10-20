@@ -244,6 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerTxt: {fileID: 1049857812858565123}
   _startTime: 150
+  _currentTime: 0
 --- !u!1 &1380038720512714167
 GameObject:
   m_ObjectHideFlags: 0
