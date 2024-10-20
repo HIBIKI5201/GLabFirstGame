@@ -13,6 +13,7 @@ public class StartImage : MonoBehaviour
     [SerializeField] float _fadeinTime;
     [SerializeField] float _fadeoutTime;
     [SerializeField, Header("表示時間")] float _indicationTime;
+    [SerializeField, Header("全てのボタンを入れる")] GameObject[] _button;
     [SerializeField] Volume _volume;
     private ColorAdjustments _colorAdjustments;
     private bool _isSkip = true;
@@ -24,9 +25,12 @@ public class StartImage : MonoBehaviour
         _firstImage.color = new Color(fc.r, fc.g, fc.b, 0);
         var sc = _secondImage.color;
         _secondImage.color = new Color(sc.r, sc.g, sc.b, 0);
-
         _volume.profile.TryGet(out _colorAdjustments);
         _colorAdjustments.postExposure.Override(0);
+        foreach(var b in _button)
+        {
+            b.SetActive(false);
+        }
     }
     void Start()
     {
@@ -59,6 +63,10 @@ public class StartImage : MonoBehaviour
     {
         _startImage.DOFade(0, _fadeinTime);
         _colorAdjustments.postExposure.Override(0.99f);
+        foreach (var b in _button)
+        {
+            b.SetActive(true);
+        }
     }
 
     private void Skip()
@@ -71,5 +79,9 @@ public class StartImage : MonoBehaviour
         _secondImage.DOFade(0, _fadeinTime);
         _colorAdjustments.postExposure.Override(0.99f);
         _isSkip = false;
+        foreach (var b in _button)
+        {
+            b.SetActive(true);
+        }
     }
 }
