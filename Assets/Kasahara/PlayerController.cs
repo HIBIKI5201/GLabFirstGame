@@ -224,7 +224,7 @@ public class PlayerController : MonoBehaviour
             if (!_isJump)
             {
                 float x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
-                if (Mathf.Abs(x) < _deceleration && _rb.velocity.x != 0)
+                if (Mathf.Abs(x) < 0.2 && _rb.velocity.x != 0)
                 {
                     x = 0;
                     _audioSource.Stop();
@@ -603,6 +603,8 @@ public class PlayerController : MonoBehaviour
     public void StopAction(float time)
     {
         //StartCoroutine(StoppingAction(time));
+        _audioSource.Stop();
+        _animator.SetFloat("isWalk", 0);
         _pauseManager.BeginCoroutine(StoppingAction(time));
     }
     IEnumerator StoppingAction(float time)
