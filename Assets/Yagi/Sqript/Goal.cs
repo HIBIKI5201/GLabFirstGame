@@ -10,6 +10,7 @@ public class Goal : MonoBehaviour
     PlayerController _playerController;
     [SerializeField] Text _clearText;
     [SerializeField] Text _timerTxt;
+    [SerializeField] Text _clearTime;
     Animator _animator;
     [SerializeField, Header("現在のステージ")] int _nowStage;
     Rigidbody2D _rb;
@@ -17,7 +18,7 @@ public class Goal : MonoBehaviour
     [SerializeField, Header("歩くアニメーションの名前")] string _anime;
     IsClear _isClear;
     Timer _timer;
-    bool _wark;
+    bool _walk;
 
     private void Awake()
     {
@@ -26,17 +27,18 @@ public class Goal : MonoBehaviour
 
     private void Start()
     {
-        _animator = GetComponent<Animator>();
+        _animator = GetComponentInChildren<Animator>();
         _isClear = FindAnyObjectByType<IsClear>();
         _rb = GetComponent<Rigidbody2D>();
         _clearText.enabled = false;
+        _clearTime.enabled = false;
         _playerController = GameObject.FindAnyObjectByType<PlayerController>();
         _timer = GameObject.FindAnyObjectByType<Timer>();
     }
 
     void Update()
     {
-        if (_wark) this.transform.position = new Vector2(transform.position.x + Time.deltaTime * 2, transform.position.y);
+        if (_walk) this.transform.position = new Vector2(transform.position.x + Time.deltaTime * 2, transform.position.y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -47,7 +49,7 @@ public class Goal : MonoBehaviour
             {
                 _rb.Sleep();
                 _playerController.StopAction(_warkTime + 10f);
-                StartCoroutine(Wark(_warkTime));
+                StartCoroutine(Walk(_warkTime));
                 Invoke(nameof(Clear), _warkTime);
                 _timer.enabled = false;
             }
@@ -57,16 +59,20 @@ public class Goal : MonoBehaviour
     private void Clear()
     {
         _clearText.enabled = true;
-        _timerTxt.rectTransform.position = _clearText.rectTransform.position - new Vector3(0, 50, 0);
+        _timerTxt.enabled = false;
+        _clearTime.enabled = true;
+        int min = Mathf.FloorToInt(_timer._currentTime / 60);
+        int sec = Mathf.FloorToInt(_timer._currentTime % 60);
+        _clearText.text = string.Format("{0:00}:{1:00}", min, sec);
         _isClear.StageClear(_nowStage);
     }
 
-    IEnumerator Wark(float time)
+    IEnumerator Walk(float time)
     {
-        _wark = true;
+        _walk = true;
         if (_anime != null) _animator.Play(_anime);
         yield return new WaitForSeconds(time);
-        _wark = false;
+        _walk = false;
         StartCoroutine(Image(2f));
     }
 
