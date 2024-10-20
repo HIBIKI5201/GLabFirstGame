@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>接地判定</summary>
     [SerializeField] bool _isJump;
     /// <summary>敵を踏んだ判定</summary>
-    bool _isStompEnemy;
+    [SerializeField] bool _isStompEnemy;
     /// <summary>無敵時間中かどうか</summary>
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour
     Vector3[] _afterItemPos1 = new Vector3[3];
     Vector3[] _afterItemPos2 = new Vector3[3];
     float _horiInput = 0;
+    DamageCamera _damageCamera;
     PauseManager _pauseManager;
     AudioManager _audioManager;
     AudioSource _audioSource;
@@ -110,6 +111,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("_throwsetting.Platformに地面のオブジェクトをセットしてください");
         }
+        _damageCamera = FindAnyObjectByType<DamageCamera>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
@@ -125,6 +127,10 @@ public class PlayerController : MonoBehaviour
         {
             _animator = GetComponentInChildren<Animator>();
             Debug.LogError("Animatorがありません");
+        }
+        if(_damageCamera == null)
+        {
+            Debug.LogError("DamageCameraがありません");
         }
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
         //_afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
@@ -286,6 +292,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator _jumpEnumerator;
     private void Jump()
     {
+        Debug.Log($"_jumpEnumerator:{_jumpEnumerator}");
         if (_rb.velocity.y < -1f)
         {
             if (_jumpEnumerator == null)
@@ -300,7 +307,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                //Debug.Log("ジャンプした");
+                Debug.Log("ジャンプした");
                 AudioManager.Instance.PlaySE("jump");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
@@ -317,6 +324,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_isStompEnemy)
             {
+                Debug.Log("敵を踏んで大ジャンプ");
                 _isStompEnemy = false;
                 _rb.velocity = new Vector2(_rb.velocity.x, 0);
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
@@ -324,7 +332,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (_isStompEnemy)
         {
-            //Debug.Log("敵を踏んで小ジャンプ");
+            Debug.Log("敵を踏んで小ジャンプ");
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
@@ -332,6 +340,7 @@ public class PlayerController : MonoBehaviour
         else if (_rb.velocity.y > 0)
         {
             _rb.velocity = new Vector2(_rb.velocity.x, _rb.velocity.y * 0.99f);
+            Debug.Log("上昇中");
         }
         //Debug.Log(_isJump);
     }
@@ -342,28 +351,33 @@ public class PlayerController : MonoBehaviour
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
         _animator.SetBool("isJump", true);
+        Debug.Log("ジャンプしたかも");
         _audioSource.Stop();
         while (_rb.velocity.y > 0)
         {
+            Debug.Log("接地判定中?");
             yield return new WaitForEndOfFrame();
         }
+        Debug.Log("下降");
         _rb.gravityScale = _fallSpeed;
         while (_isJump)
         {
+            Debug.Log("接地判定中");
             yield return new WaitForEndOfFrame();
             var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + _point, _size, _angle);
             foreach (var obj in hit)
             {
+                Debug.Log(obj.name);
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;
                     _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
                     _animator.SetBool("isJump", false);
-                    //Debug.Log("着地");
+                    Debug.Log("着地");
                     //コルーチンを連続で起動させないために待つ
                     yield return new WaitForSeconds(0.5f);
-                    //Debug.Log("コルーチン終了");
+                    Debug.Log("コルーチン終了");
                     _jumpEnumerator = null;
                     yield break;
                 }
@@ -375,6 +389,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        _jumpEnumerator = null;
     }
     /// <summary>
     /// プレイヤーがアイテムを入手したときに呼ぶメソッド
@@ -559,11 +574,15 @@ public class PlayerController : MonoBehaviour
                 }
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
-                FindAnyObjectByType<DamageCamera>().Shake();
+                
+                if (_damageCamera != null)
+                {
+                    _damageCamera.Shake();
+                } 
             }
             if (CurrentHp <= 0)
             {
-                Debug.Log(_playerStatus);
+                //Debug.Log(_playerStatus);
                 _playerStatus = PlayerStatus.Death;
             }
             else
@@ -580,7 +599,7 @@ public class PlayerController : MonoBehaviour
         {
             CurrentHp = _maxHp;
         }
-        Debug.Log($"Playerの体力:{CurrentHp}");
+        //Debug.Log($"Playerの体力:{CurrentHp}");
     }
     IEnumerator Invincible()
     {
@@ -669,15 +688,10 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("ThrowCancel");
                     _throwsetting.BulletSimulationLine.positionCount = 0;
-                    _throwParabolaPower = 0;
                     goto EndCoroutine;
                 }
-                if (_throwParabolaPower < _throwsetting.MaxThrowParabolaPower)
-                {
-                    _throwParabolaPower += 0.1f;
-                }
-                throwParabolaPower = (Mathf.Sin(t) + 1) * _throwParabolaPower;
-                t += _throwsetting.ThrowRate * Time.deltaTime;
+                    t += _throwsetting.ThrowRate * Time.deltaTime;
+                throwParabolaPower = (Mathf.Sin(t) + 1) * _throwsetting.MaxThrowParabolaPower;
                 ThrowLineSimulate(item.gameObject, transform.position, _throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale);
                 yield return new WaitForEndOfFrame();
             }
