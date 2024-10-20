@@ -24,7 +24,9 @@ public class AudioManager : MonoBehaviour
     private AudioSource _bgmSource;
     private AudioSource _seSource;
 
-    
+    float _fadeSpeed;
+    float _fadeTime;
+    float _startVolume;
     //AwakeでInstanceに保存＆一生壊されない処理
     void Awake()
     {
@@ -44,7 +46,11 @@ public class AudioManager : MonoBehaviour
         _seSource = gameObject.AddComponent<AudioSource>();
     }
 
-    
+    private void Start()
+    {
+        _startVolume = _bgmSource.volume;
+        _fadeSpeed = _startVolume / _fadeTime;
+    }
     //以下管理用メソッド。使うときは「Audiomanager.Instance.○○○()」
     public void PlayBGM(string name)
     {
@@ -59,9 +65,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void StopBGM()
+    public void FadeOutBGM()
     {
-        _bgmSource.Stop();
+        if(_bgmSource.volume > 0)
+        {
+            _bgmSource.volume -= 
+        }
     }
 
     public void PlaySE(string name)
