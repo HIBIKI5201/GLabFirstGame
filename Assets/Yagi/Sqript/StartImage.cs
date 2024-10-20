@@ -61,6 +61,7 @@ public class StartImage : MonoBehaviour
 
     private void TitleFade()
     {
+        _isSkip = false;
         _startImage.DOFade(0, _fadeinTime);
         _colorAdjustments.postExposure.Override(0.99f);
         foreach (var b in _button)
