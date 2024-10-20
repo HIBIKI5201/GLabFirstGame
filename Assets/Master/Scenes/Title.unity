@@ -251,11 +251,50 @@ MonoBehaviour:
   _moveTime: 5
   _distance: 0.1
   _scale: 1.05
---- !u!1 &206900010 stripped
+--- !u!1 &273627358
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 6627785688674288675, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
-  m_PrefabInstance: {fileID: 509988275}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 273627359}
+  - component: {fileID: 273627360}
+  m_Layer: 0
+  m_Name: SoundCtrl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &273627359
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 273627358}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -11.093013, y: 7.380715, z: -9109.778}
+  m_LocalScale: {x: 108, y: 108, z: 108}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1763163555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &273627360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 273627358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d59e8455ada44214d96151e66d29fba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &295627031 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7837231613573585402, guid: adba3c69e64e1204499edd859522a6d2, type: 3}
@@ -387,7 +426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebc7202fe105ba40a6ea7086c5980d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _load: {fileID: 487238225}
 --- !u!114 &487238227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,34 +515,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6627785688674288675, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 509988277}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
---- !u!114 &509988276 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 362787573228770603, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
-  m_PrefabInstance: {fileID: 509988275}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206900010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c311b1b78d8e2544b5017c3b36d0206, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &509988277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206900010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59e8455ada44214d96151e66d29fba9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,8 +1249,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 509988276}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+      - m_Target: {fileID: 1763163558}
+        m_TargetAssemblyTypeName: FadeOutBgm, Assembly-CSharp
         m_MethodName: FadeBGM
         m_Mode: 1
         m_Arguments:
@@ -1666,6 +1678,7 @@ GameObject:
   - component: {fileID: 1763163552}
   - component: {fileID: 1763163557}
   - component: {fileID: 1763163556}
+  - component: {fileID: 1763163558}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1755,6 +1768,7 @@ RectTransform:
   - {fileID: 295627031}
   - {fileID: 1834716696}
   - {fileID: 2039207275}
+  - {fileID: 273627359}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1792,6 +1806,18 @@ MonoBehaviour:
   - {fileID: 2051364722}
   _creditButton: {fileID: 1821948370}
   credit: {fileID: 1834716695}
+--- !u!114 &1763163558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763163551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406e27ad90e27b5489b479d0e01e2629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1768080544
 GameObject:
   m_ObjectHideFlags: 0
