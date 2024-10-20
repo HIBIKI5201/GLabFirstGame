@@ -99,6 +99,14 @@ public class PlayerController : MonoBehaviour
             _pauseManager.OnPauseResume += PauseAction;
         else
             Debug.LogError("Ç±ÇÃÉVÅ[ÉìÇ…PauseManagerÇ™ë∂ç›ÇµÇ‹ÇπÇÒ");
+        if (_animator == null)
+        {
+            _animator = GetComponentInChildren<Animator>();
+            if (_animator == null)
+            {
+                Debug.LogError("AnimatorÇ™Ç†ÇËÇ‹ÇπÇÒ");
+            }
+        }
     }
     void Start()
     {
@@ -123,14 +131,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.Log(_audioSource);
-        }
-        if (_animator == null)
-        {
-            _animator = GetComponentInChildren<Animator>();
-            if (_animator == null)
-            {
-                Debug.LogError("AnimatorÇ™Ç†ÇËÇ‹ÇπÇÒ");
-            }
         }
         if (_damageCamera == null)
         {
