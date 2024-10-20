@@ -1437,7 +1437,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 870751221f76caf4aa1611b2f3c9f431, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 674cb87d8b9efc94284e0bb439ff6fe3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1471,8 +1471,8 @@ MonoBehaviour:
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: -15, y: 0}
   _buttonImage:
-  - {fileID: 21300000, guid: 870751221f76caf4aa1611b2f3c9f431, type: 3}
-  - {fileID: 21300000, guid: d4ef75c4f602e454f99dc582a13b87a5, type: 3}
+  - {fileID: 21300000, guid: 674cb87d8b9efc94284e0bb439ff6fe3, type: 3}
+  - {fileID: 21300000, guid: f8e8323d30b3f8744a57b63aea116e8b, type: 3}
   _currentImage: {fileID: 663130225}
 --- !u!1 &672646130
 GameObject:
@@ -1743,7 +1743,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 870751221f76caf4aa1611b2f3c9f431, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 674cb87d8b9efc94284e0bb439ff6fe3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1777,8 +1777,8 @@ MonoBehaviour:
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: 0, y: 0}
   _buttonImage:
-  - {fileID: 21300000, guid: 870751221f76caf4aa1611b2f3c9f431, type: 3}
-  - {fileID: 21300000, guid: d4ef75c4f602e454f99dc582a13b87a5, type: 3}
+  - {fileID: 21300000, guid: 674cb87d8b9efc94284e0bb439ff6fe3, type: 3}
+  - {fileID: 21300000, guid: f8e8323d30b3f8744a57b63aea116e8b, type: 3}
   _currentImage: {fileID: 724072382}
 --- !u!1 &728062089
 GameObject:
