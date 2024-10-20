@@ -444,6 +444,9 @@ MonoBehaviour:
   _fadeinTime: 0.5
   _fadeoutTime: 1
   _indicationTime: 4
+  _button:
+  - {fileID: 1364357195}
+  - {fileID: 2051364720}
   _volume: {fileID: 1698313029}
 --- !u!4 &487238228
 Transform:
