@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 607212381471825759}
   - component: {fileID: 4628700171233902132}
   - component: {fileID: 5081243653824690662}
+  - component: {fileID: 2876446638051849357}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -131,26 +132,28 @@ MonoBehaviour:
   _rose: []
   _maxSpeed: 5
   _movePower: 5
-  _deceleration: 0
+  _deceleration: 0.2
   _jumpPower: 9.5
   _fallSpeed: 4
-  _damageCool: 0
+  _damageCool: 2
   _point: {x: 0, y: -0.85}
   _size: {x: 0.8, y: 1}
   _angle: 0
+  _dash: {fileID: 8300000, guid: 5386a3ae3a43c7a40b5baec56e8b0eb9, type: 3}
+  _walk: {fileID: 8300000, guid: 78c3b79d371bfcb4499666764b2cefe5, type: 3}
   _throwsetting:
-    ThrowStraightPower: 0
-    MaxThrowParabolaPower: 0
-    ThrowRate: 0
-    ThrowParabolaDirection: {x: 0, y: 0}
+    ThrowStraightPower: 10
+    MaxThrowParabolaPower: 5
+    ThrowRate: 2.5
+    ThrowParabolaDirection: {x: 1, y: 1}
     ThrowPos: {x: 0, y: 0}
     BulletSimulationLine: {fileID: 0}
-    SimulateFrame: 0
+    SimulateFrame: 100
     Platform: {fileID: 0}
   _itemSetting:
-    MaxRockCount: 0
-    MaxBottleCount: 0
-    MaxMeatCount: 0
+    MaxRockCount: 3
+    MaxBottleCount: 3
+    MaxMeatCount: 3
     RockUi: {fileID: 0}
     BottleUi: {fileID: 0}
     MeatUi: {fileID: 0}
@@ -161,7 +164,7 @@ MonoBehaviour:
     LeafRock: {fileID: 0}
     LeafBottle: {fileID: 0}
     LeafMeat: {fileID: 0}
-    LeafSize: 0
+    LeafSize: 2
   _isJump: 0
   _canAction: 1
 --- !u!70 &4628700171233902132
@@ -216,3 +219,101 @@ MonoBehaviour:
   _clearText: {fileID: 0}
   _timerTxt: {fileID: 0}
   _nowStage: 0
+  _warkTime: 0
+  _anime: 
+--- !u!82 &2876446638051849357
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989625297304483414}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

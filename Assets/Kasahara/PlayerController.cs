@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
     PauseManager _pauseManager;
     AudioManager _audioManager;
     AudioSource _audioSource;
+    Animator _animator;
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
@@ -96,6 +97,7 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
+        CurrentHp = _maxHp;
         _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
         GameObject platform;
@@ -109,8 +111,8 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("_throwsetting.Platformに地面のオブジェクトをセットしてください");
         }
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        CurrentHp = _maxHp;
         _audioSource = GetComponent<AudioSource>();
+        _animator = GetComponent<Animator>();
         if (_audioSource == null)
         {
             Debug.LogError("AudioSourseがありません");
@@ -118,6 +120,11 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.Log(_audioSource);
+        }
+        if (_animator == null)
+        {
+            _animator = GetComponentInChildren<Animator>();
+            Debug.LogError("Animatorがありません");
         }
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
         //_afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
@@ -219,10 +226,16 @@ public class PlayerController : MonoBehaviour
                 float x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
                 if (Mathf.Abs(x) < _deceleration && _rb.velocity.x != 0)
                 {
-
                     x = 0;
+                    _audioSource.Stop();
+                }
+                else if (_walk != null && _audioSource.clip != _walk)
+                {
+                    _audioSource.clip = _walk;
+                    _audioSource.Play();
                 }
                 _rb.velocity = new Vector2(x, _rb.velocity.y);
+                _animator.SetFloat("isWalk", Mathf.Abs(x));
             }
         }
         else
@@ -237,17 +250,20 @@ public class PlayerController : MonoBehaviour
                     _audioSource.Play();
                 }
             }
-            else if (Mathf.Abs(x) > 0.1f)
-            {
-                if (!_isJump && _walk != null && _audioSource.clip != _walk)
-                {
-                    _audioSource.clip = _walk;
-                    _audioSource.Play();
-                }
-            }
             else
             {
-                _audioSource.Stop();
+                if (!_isJump)
+                {
+                    if (_walk != null && _audioSource.clip != _walk)
+                    {
+                        _audioSource.clip = _walk;
+                        _audioSource.Play();
+                    }
+                    if (_animator != null)
+                    {
+                        _animator.SetFloat("isWalk", Mathf.Abs(x));
+                    }
+                }
             }
             _rb.velocity = new Vector2(x, _rb.velocity.y);
         }
@@ -325,6 +341,8 @@ public class PlayerController : MonoBehaviour
     /// <returns></returns>
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
+        _animator.SetBool("isJump", true);
+        _audioSource.Stop();
         while (_rb.velocity.y > 0)
         {
             yield return new WaitForEndOfFrame();
@@ -341,6 +359,7 @@ public class PlayerController : MonoBehaviour
                     _isJump = false;
                     _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
+                    _animator.SetBool("isJump", false);
                     //Debug.Log("着地");
                     //コルーチンを連続で起動させないために待つ
                     yield return new WaitForSeconds(0.5f);
