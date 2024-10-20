@@ -8,7 +8,7 @@ public class Goal : MonoBehaviour
     [SerializeField] GameManager _gameManager;
     [Header("フェードアウトするイメージ"), SerializeField] GameObject _fadeImage;
     PlayerController _playerController;
-    [SerializeField] Text _clearText;
+    [SerializeField] GameObject _clearText;
     [SerializeField] Text _timerTxt;
     [SerializeField] Text _clearTime;
     Animator _animator;
@@ -30,7 +30,7 @@ public class Goal : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _isClear = FindAnyObjectByType<IsClear>();
         _rb = GetComponent<Rigidbody2D>();
-        _clearText.enabled = false;
+        _clearText.SetActive(false);
         _clearTime.enabled = false;
         _playerController = GameObject.FindAnyObjectByType<PlayerController>();
         _timer = GameObject.FindAnyObjectByType<Timer>();
@@ -58,12 +58,12 @@ public class Goal : MonoBehaviour
 
     private void Clear()
     {
-        _clearText.enabled = true;
+        _clearText.SetActive(true);
         _timerTxt.enabled = false;
         _clearTime.enabled = true;
         int min = Mathf.FloorToInt(_timer._currentTime / 60);
         int sec = Mathf.FloorToInt(_timer._currentTime % 60);
-        _clearText.text = string.Format("{0:00}:{1:00}", min, sec);
+        _clearTime.text = $"クリア時間 {min}:{sec}";
         _isClear.StageClear(_nowStage);
     }
 
