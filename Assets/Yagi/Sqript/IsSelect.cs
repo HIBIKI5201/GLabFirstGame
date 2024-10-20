@@ -32,12 +32,6 @@ public class IsSelect : MonoBehaviour
         IsClear._stagesCleared = 0;
         PlayerPrefs.SetInt("nowStage", IsClear._stagesCleared);
         IsClear._concealed = false;
-        Debug.Log($"Œ»İ‚ÌƒNƒŠƒAó‹µ{IsClear._stagesCleared}");
-        foreach (var stage in _stage)
-        {
-            stage.enabled = false;
-            stage.image.color = Color.gray;
-        }
-        ClearCheck();
+        Debug.Log(IsClear._stagesCleared);
     }
 }

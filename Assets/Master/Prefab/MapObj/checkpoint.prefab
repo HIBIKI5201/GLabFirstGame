@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5929876427792507272}
   - component: {fileID: 6986069896180631589}
   - component: {fileID: 152071835069407725}
-  - component: {fileID: 5567764886104529117}
+  - component: {fileID: 4693991227872601223}
   m_Layer: 0
   m_Name: checkpoint
   m_TagString: Untagged
@@ -75,12 +75,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 649f57ecf9af45f4bb646f600ecdbaa3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bc780f2b4db099940912dfa22b81cdcb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.87, y: 11.5}
+  m_Size: {x: 6.11, y: 11.87}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -100,10 +100,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 0}
   _player: {fileID: 0}
-  _changeSprite: {fileID: 21300000, guid: 3ccd63fe4237d9548960dbf9d5d8ffd3, type: 3}
-  _isCheck: 0
---- !u!70 &5567764886104529117
-CapsuleCollider2D:
+--- !u!61 &4693991227872601223
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -135,5 +133,15 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 2.28, y: 4.79}
-  m_Direction: 0
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3.055, y: 5.935}
+    newSize: {x: 6.11, y: 11.87}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.33, y: 5.935}
+  m_EdgeRadius: 0
