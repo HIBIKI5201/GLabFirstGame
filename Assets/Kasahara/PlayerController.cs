@@ -127,7 +127,10 @@ public class PlayerController : MonoBehaviour
         if (_animator == null)
         {
             _animator = GetComponentInChildren<Animator>();
-            Debug.LogError("Animator‚ª‚ ‚è‚Ü‚¹‚ñ");
+            if (_animator == null)
+            {
+                Debug.LogError("Animator‚ª‚ ‚è‚Ü‚¹‚ñ");
+            }
         }
         if (_damageCamera == null)
         {
