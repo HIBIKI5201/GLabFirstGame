@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Tooltip("プレイヤーの速度の最大値")] public float _maxSpeed;
     [SerializeField, Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
     [SerializeField, Tooltip("入力がない時の減速度")] public float _deceleration;
+    [SerializeField, Tooltip("着地時に慣性を適用する")] bool _landingInertia;
     [SerializeField, Tooltip("プレイヤーのジャンプ力")] float _jumpPower;
     [SerializeField, Tooltip("落下速度")] float _fallSpeed;
     [SerializeField, Tooltip("プレイヤーの無敵時間")] int _damageCool;
@@ -128,7 +129,7 @@ public class PlayerController : MonoBehaviour
             _animator = GetComponentInChildren<Animator>();
             Debug.LogError("Animatorがありません");
         }
-        if(_damageCamera == null)
+        if (_damageCamera == null)
         {
             Debug.LogError("DamageCameraがありません");
         }
@@ -366,6 +367,10 @@ public class PlayerController : MonoBehaviour
                     _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
                     _animator.SetBool("isJump", false);
+                    if (_landingInertia && _horiInput == 0)
+                    {
+                        _rb.velocity = new Vector2(0, _rb.velocity.y);
+                    }
                     //コルーチンを連続で起動させないために待つ
                     yield return new WaitForSeconds(0.5f);
                     _jumpEnumerator = null;
@@ -564,11 +569,11 @@ public class PlayerController : MonoBehaviour
                 }
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
-                
+
                 if (_damageCamera != null)
                 {
                     _damageCamera.Shake();
-                } 
+                }
             }
             if (CurrentHp <= 0)
             {
@@ -680,7 +685,7 @@ public class PlayerController : MonoBehaviour
                     _throwsetting.BulletSimulationLine.positionCount = 0;
                     goto EndCoroutine;
                 }
-                    t += _throwsetting.ThrowRate * Time.deltaTime;
+                t += _throwsetting.ThrowRate * Time.deltaTime;
                 throwParabolaPower = (Mathf.Sin(t) + 1) * _throwsetting.MaxThrowParabolaPower;
                 ThrowLineSimulate(item.gameObject, transform.position, _throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale);
                 yield return new WaitForEndOfFrame();
