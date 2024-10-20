@@ -9,7 +9,6 @@ public class ButtonClick : MonoBehaviour
     public void StartGame()
     {
         AudioManager.Instance.PlaySE("determination");
-        StartFadeOutBGM();
     }
 
     public void OpenCreditPanel()

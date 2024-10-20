@@ -25,7 +25,7 @@ public class AudioManager : MonoBehaviour
     private AudioSource _seSource;
 
     float _fadeSpeed;
-    float _fadeTime;
+    float _fadeTime = 2f;
     float _startVolume;
     //Awake‚ÅInstance‚É•Û‘¶•ˆê¶‰ó‚³‚ê‚È‚¢ˆ—
     void Awake()
@@ -65,14 +65,28 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void FadeOutBGM()
+    public void Update()
     {
-        if(_bgmSource.volume > 0)
+        if (FadeSys._isFading)
         {
-            _bgmSource.volume -= 
+            if (_bgmSource.volume > 0)
+            {
+                _bgmSource.volume -= _fadeSpeed * Time.deltaTime;
+
+                if (_bgmSource.volume <= 0)
+                {
+                    _bgmSource.volume = 0;
+                    _bgmSource.Stop();
+                    FadeSys._isFading = false;
+                }
+            }
         }
     }
 
+    public void FadeBGM()
+    {
+        FadeSys._isFading = true;
+    }
     public void PlaySE(string name)
     {
         Sound s = _seSounds.Find(sound => sound._name == name);
@@ -81,4 +95,8 @@ public class AudioManager : MonoBehaviour
             _seSource.PlayOneShot(s._clip, s._volume);
         }
     }
+}
+public class FadeSys
+{
+    public static bool _isFading = false;
 }
