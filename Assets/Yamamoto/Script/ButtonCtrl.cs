@@ -9,7 +9,7 @@ public class ButtonCtrl : MonoBehaviour
     [SerializeField] Button[] _buttons;
     [SerializeField] Button _creditButton;
     private int _index = -1;
-    private int _creIndex = -1;
+    static public bool _openCredit = false;
     private bool _isSelected = false;
 
     [SerializeField] GameObject credit;
@@ -35,7 +35,7 @@ public class ButtonCtrl : MonoBehaviour
                 _isSelected = true;
             }
 
-            else if (!credit.activeSelf)
+            else if (!_openCredit)
             {
                 if (Input.GetKeyDown(KeyCode.W))
                 {
@@ -58,7 +58,7 @@ public class ButtonCtrl : MonoBehaviour
                 SelectButton(_index);
             }
 
-            else
+            else if(_openCredit)
             {
                 if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S))
                 {
