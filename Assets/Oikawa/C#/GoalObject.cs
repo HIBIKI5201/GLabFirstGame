@@ -5,6 +5,7 @@ using UnityEngine;
 public class GoalObject : MonoBehaviour
 {
     [SerializeField] GameManager _gameManager;
+    [SerializeField] GameObject _rightEnd;
     void Start()
     {
         if(_gameManager == null)
@@ -19,6 +20,7 @@ public class GoalObject : MonoBehaviour
         if (collision.transform.CompareTag("Player"))
         {
             _gameManager.State = GameManager.GameState.StageClear;
+            Destroy(_rightEnd);
         }
     }
 }
