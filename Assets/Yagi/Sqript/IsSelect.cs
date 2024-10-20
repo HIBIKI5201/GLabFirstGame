@@ -11,11 +11,7 @@ public class IsSelect : MonoBehaviour
         foreach (var stage in _stage)
         {
             stage.enabled = false;
-        }
-
-        if (_another)
-        {
-            _another.enabled = false;
+            stage.image.color = Color.gray;
         }
         ClearCheck();
     }
@@ -25,14 +21,7 @@ public class IsSelect : MonoBehaviour
         for (var i = 0; i <= IsClear._stagesCleared; i++)
         {
             _stage[i].enabled = true;
-        }
-
-        if (_another)
-        {
-            if (IsClear._concealed == true)
-            {
-                _another.enabled = true;
-            }
+            _stage[i].image.color = Color.white;
         }
     }
 
