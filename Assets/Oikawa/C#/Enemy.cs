@@ -78,6 +78,9 @@ public class Enemy : MonoBehaviour
     [Tooltip("îÚÇ—âzÇ¶ÇÈ")]
     [SerializeField] bool _jumpOver;
 
+    [Tooltip("íiç∑Çç~ÇËÇÍÇÈ")]
+    [SerializeField] bool _goDown;
+
     [Tooltip("í«Ç¢Ç©ÇØÇÁÇÍÇÈ")]
     [SerializeField] bool _canChase;
 
@@ -338,6 +341,20 @@ public class Enemy : MonoBehaviour
             {
                 _dir = Direction.None;
             }
+            if(!_goDown)
+                if(IsFrontGrounded(out bool right))
+                    switch (_dir)
+                    {
+                        case Direction.Left:
+                            if(right)
+                                _dir = Direction.None;
+                            break;
+                        case Direction.Right:
+                            if (!right)
+                                _dir = Direction.None;
+                            break;
+                    }
+
             if (IsJump() && IsGrounded() && _jumpOver)
                 VelocityJump();
 
@@ -661,6 +678,7 @@ public class Enemy : MonoBehaviour
                 _chaseSpeed = pSpeed * 0.7f;
                 _jumpOver = false;
                 _canChase = false;
+                _goDown = false;
                 break;
             case Beast.Wolf_Normal:
                 _maxHp = 3;
@@ -669,6 +687,7 @@ public class Enemy : MonoBehaviour
                 _chaseSpeed = pSpeed * 1.1f;
                 _jumpOver = false;
                 _canChase = true;
+                _goDown = false;
                 break;
             case Beast.Wolf_Gray:
                 _maxHp = 3;
@@ -677,6 +696,7 @@ public class Enemy : MonoBehaviour
                 _chaseSpeed = pSpeed * 1.1f;
                 _jumpOver = true;
                 _canChase = true;
+                _goDown = true;
                 break;
             case Beast.Bear:
                 _maxHp = 4;
@@ -685,6 +705,7 @@ public class Enemy : MonoBehaviour
                 _chaseSpeed = pSpeed * 1.1f;
                 _jumpOver = false;
                 _canChase = false;
+                _goDown = false;
                 break;
             case Beast.Boss_Wolf:
                 _maxHp = 6;
@@ -693,6 +714,7 @@ public class Enemy : MonoBehaviour
                 _chaseSpeed = pSpeed * 1.2f;
                 _jumpOver = true;
                 _canChase = true;
+                _goDown = true;
                 break;
             default:
                 Debug.LogError("ë∂ç›ÇµÇ»Ç¢BeastÇéQè∆ÇµÇƒÇ¢ÇÈ");
