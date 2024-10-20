@@ -4,36 +4,20 @@ using UnityEngine.SceneManagement;
 
 public class IsClear : MonoBehaviour
 {
-    [SerializeField,Header("SelectStageが設定されているSceaneLoderオブジェクト")] SceneLoader _load;
     public static int _stagesCleared = 0;
     public static bool _concealed = false;
+    /// <summary>
+    /// ゲームを一周クリアしたかのフラグ
+    /// </summary>
+    public static bool _gameAllClear = false;
     bool _isbool;
     Timer time;
 
     private void Start()
     {
-        time = GetComponent<Timer>();
         DontDestroyOnLoad(gameObject);
     }
-
-    private void Update()
-    {
-        AnotherClear();
-    }
-
-    /// <summary>
-    /// 隠しルートでゴールしたかの判定
-    /// </summary>
-    public void AnotherClear()
-    {
-        if (_isbool)
-        {
-            if (time._currentTime <= 0)
-            _concealed = true;
-            _load.FadeAndLoadScene();
-        }
-    }
-
+    
     /// <summary>
     /// ステージを開放するかどうかの判定
     /// </summary>
@@ -43,6 +27,10 @@ public class IsClear : MonoBehaviour
         if (_stagesCleared < stage)
         {
             _stagesCleared = stage;
+            if (_stagesCleared == 3)
+            {
+                _gameAllClear = true;
+            }
             PlayerPrefs.SetInt("nowStage", _stagesCleared);
         }
     }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AnothorPass : MonoBehaviour
@@ -8,6 +6,9 @@ public class AnothorPass : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        _anotherClearCheck._isPast = true;
+        if (collision.CompareTag("Player"))
+        {
+            _anotherClearCheck._isPast = true;
+        }
     }
 }
