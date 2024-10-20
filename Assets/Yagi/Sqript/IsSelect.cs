@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class IsSelect : MonoBehaviour
 {
     [SerializeField, Header("ステージのボタンを１から順番に入れてください")] Button[] _stage = { };
-    [SerializeField, Header("隠しステージのボタン")] Button _another;
 
     void Start()
     {
