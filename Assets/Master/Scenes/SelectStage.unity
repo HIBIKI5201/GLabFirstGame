@@ -580,8 +580,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1943825095}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+      - m_Target: {fileID: 1918890375}
+        m_TargetAssemblyTypeName: FadeOutBgm, Assembly-CSharp
         m_MethodName: FadeBGM
         m_Mode: 1
         m_Arguments:
@@ -768,8 +768,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1943825095}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+      - m_Target: {fileID: 1918890375}
+        m_TargetAssemblyTypeName: FadeOutBgm, Assembly-CSharp
         m_MethodName: FadeBGM
         m_Mode: 1
         m_Arguments:
@@ -1439,8 +1439,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1943825095}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+      - m_Target: {fileID: 1918890375}
+        m_TargetAssemblyTypeName: FadeOutBgm, Assembly-CSharp
         m_MethodName: FadeBGM
         m_Mode: 1
         m_Arguments:
@@ -3029,6 +3029,7 @@ GameObject:
   - component: {fileID: 1918890369}
   - component: {fileID: 1918890374}
   - component: {fileID: 1918890373}
+  - component: {fileID: 1918890375}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3160,6 +3161,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 0}
+--- !u!114 &1918890375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918890368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406e27ad90e27b5489b479d0e01e2629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1924097594
 GameObject:
   m_ObjectHideFlags: 0
@@ -3279,8 +3292,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1943825095}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+      - m_Target: {fileID: 1918890375}
+        m_TargetAssemblyTypeName: FadeOutBgm, Assembly-CSharp
         m_MethodName: FadeBGM
         m_Mode: 1
         m_Arguments:
@@ -3405,17 +3418,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
---- !u!114 &1943825095 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 362787573228770603, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
-  m_PrefabInstance: {fileID: 1943825094}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c311b1b78d8e2544b5017c3b36d0206, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2094876022
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -387,7 +387,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebc7202fe105ba40a6ea7086c5980d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _load: {fileID: 487238225}
 --- !u!114 &487238227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,17 +481,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 509988277}
   m_SourcePrefab: {fileID: 100100000, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
---- !u!114 &509988276 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 362787573228770603, guid: 60379bdb3ec1a3c4aa595269da00ae45, type: 3}
-  m_PrefabInstance: {fileID: 509988275}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206900010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c311b1b78d8e2544b5017c3b36d0206, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &509988277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1237,8 +1225,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 509988276}
-        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+      - m_Target: {fileID: 1763163558}
+        m_TargetAssemblyTypeName: FadeOutBgm, Assembly-CSharp
         m_MethodName: FadeBGM
         m_Mode: 1
         m_Arguments:
@@ -1666,6 +1654,7 @@ GameObject:
   - component: {fileID: 1763163552}
   - component: {fileID: 1763163557}
   - component: {fileID: 1763163556}
+  - component: {fileID: 1763163558}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1792,6 +1781,18 @@ MonoBehaviour:
   - {fileID: 2051364722}
   _creditButton: {fileID: 1821948370}
   credit: {fileID: 1834716695}
+--- !u!114 &1763163558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763163551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406e27ad90e27b5489b479d0e01e2629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1768080544
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,12 +21,9 @@ public class AudioManager : MonoBehaviour
     public List<Sound> _bgmSounds;
     public List<Sound> _seSounds;
 
-    private AudioSource _bgmSource;
+    static public AudioSource _bgmSource;
     private AudioSource _seSource;
 
-    float _fadeSpeed;
-    float _fadeTime = 2f;
-    float _startVolume;
     //AwakeでInstanceに保存＆一生壊されない処理
     void Awake()
     {
@@ -46,11 +43,6 @@ public class AudioManager : MonoBehaviour
         _seSource = gameObject.AddComponent<AudioSource>();
     }
 
-    private void Start()
-    {
-        _startVolume = _bgmSource.volume;
-        _fadeSpeed = _startVolume / _fadeTime;
-    }
     //以下管理用メソッド。使うときは「Audiomanager.Instance.○○○()」
     public void PlayBGM(string name)
     {
@@ -64,29 +56,6 @@ public class AudioManager : MonoBehaviour
             _bgmSource.Play();
         }
     }
-
-    public void Update()
-    {
-        if (FadeSys._isFading)
-        {
-            if (_bgmSource.volume > 0)
-            {
-                _bgmSource.volume -= _fadeSpeed * Time.deltaTime;
-
-                if (_bgmSource.volume <= 0)
-                {
-                    _bgmSource.volume = 0;
-                    _bgmSource.Stop();
-                    FadeSys._isFading = false;
-                }
-            }
-        }
-    }
-
-    public void FadeBGM()
-    {
-        FadeSys._isFading = true;
-    }
     public void PlaySE(string name)
     {
         Sound s = _seSounds.Find(sound => sound._name == name);
@@ -96,7 +65,4 @@ public class AudioManager : MonoBehaviour
         }
     }
 }
-public class FadeSys
-{
-    public static bool _isFading = false;
-}
+
