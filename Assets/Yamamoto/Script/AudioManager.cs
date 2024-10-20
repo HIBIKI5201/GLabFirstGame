@@ -68,20 +68,24 @@ public class AudioManager : MonoBehaviour
             _seSource.PlayOneShot(s._clip, s._volume);
         }
     }
-    public void FadeBGM()
+    public IEnumerator FadeBGM(float _fadeTime)
     {
-        _startVolume = _bgmSource.volume;
-        _fadeSpeed = _startVolume / _fadeTime;
-        _bgmSource.volume -= _fadeSpeed * Time.deltaTime;
+        Debug.Log("hatudou");
+        float _startVolume = _bgmSource.volume;
 
-
-        if (_bgmSource.volume <= 0)
+        for(float t = 0; t < _fadeTime; t += Time.deltaTime)
         {
-            _bgmSource.volume = 0;
-            _bgmSource.Stop();
-            _bgmSource.volume = _startVolume;
-            Debug.Log(_bgmSource.volume);
+            _bgmSource.volume = Mathf.Lerp(_startVolume,0,t/_fadeTime);
+            yield return null;
         }
+        _bgmSource.volume = _startVolume;
+
+    }
+
+    public void FadeOutBGM()
+    {
+        Debug.Log("”­“®");
+        StartCoroutine(FadeBGM(2f));
     }
 }
 
