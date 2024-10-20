@@ -1,0 +1,743 @@
+fileFormatVersion: 2
+guid: 56e00b6fdc529d14493137532ea1316f
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 360
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: mapchip (1)_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1440
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b45be8eb28c29d64aadbd5117adb8c40
+      internalID: -1983473856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_1
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 1440
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5479d502f34fc7b4b8f64f3bd842810d
+      internalID: -25290300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_2
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 1440
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4072a18c5836fa94c82171cd1425e7c3
+      internalID: 1848322556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_3
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 1440
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f09954a99c00f043b4089dfc8b7e39b
+      internalID: 438480750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_4
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 1440
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce3f761ee75fe094488a4b50f4f911a0
+      internalID: -1940988983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_5
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1440
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ca45e98ad2455d4cb0adbc1ea7f0b7d
+      internalID: 1337882658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1080
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c01962fdd7e6db140b09b6362400f7f6
+      internalID: 699315579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_7
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 1080
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77d63a228c760b5419f1b08230856a69
+      internalID: 1893572861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_8
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 1080
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c03b4cee2affba240a42869a1576375b
+      internalID: 1781122719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_9
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 1080
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b89c360355534540ba25893d0b28063
+      internalID: 964976616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_10
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 1080
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de0311b1c88a44b45a36fe5324746407
+      internalID: -2016207018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_11
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1080
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 891db0c72af288c42a2890cb9bc8a4ce
+      internalID: 1374367113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 720
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e66430e25b655894aa46b0121f68bc7d
+      internalID: 1810526584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_13
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 720
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4f60d1a74156044aa5a7bd1713fdae
+      internalID: 449706554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_14
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 720
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14eda8a6875ad234691c3c7ccc57dc11
+      internalID: 1325562807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_15
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 720
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0dd6ce4ab8b17c46a066d974ba36ac4
+      internalID: 1854887827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_16
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 720
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2a602c92d1392443a436b70dfe75212
+      internalID: -1176978678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_17
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 360
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a117faab4e4cf534eb3c62b530d87264
+      internalID: 924874627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_18
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 360
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8ac35cb715e32a44ac725ae1d256e82
+      internalID: -2130061148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_19
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 360
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64e65290756293a46b262cfafaa07954
+      internalID: -178006088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_20
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 360
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfaa9649e9b5ecc40b9061aa5e4bfc28
+      internalID: -1575914185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_21
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 360
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77f4727af9c0f584c99c4ec9257e42f5
+      internalID: 555177450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_22
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eeec815ed5585a14f943849f7d2aac29
+      internalID: 1100707399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_23
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8c710feadf31ec4e81e26311d856b36
+      internalID: -1700523646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_24
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84666d1fc149c1046bae116606549a7c
+      internalID: 702731530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_25
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fec036d21800f5949954f8f61b7ccd2f
+      internalID: 838950646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_26
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 052569dfc6f60c64a9f76c66d6352387
+      internalID: -1503027533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mapchip (1)_27
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 0
+        width: 360
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af8db1bc0d97a3d40893f6180182eadb
+      internalID: 1438420258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      mapchip (1)_0: -1983473856
+      mapchip (1)_1: -25290300
+      mapchip (1)_10: -2016207018
+      mapchip (1)_11: 1374367113
+      mapchip (1)_12: 1810526584
+      mapchip (1)_13: 449706554
+      mapchip (1)_14: 1325562807
+      mapchip (1)_15: 1854887827
+      mapchip (1)_16: -1176978678
+      mapchip (1)_17: 924874627
+      mapchip (1)_18: -2130061148
+      mapchip (1)_19: -178006088
+      mapchip (1)_2: 1848322556
+      mapchip (1)_20: -1575914185
+      mapchip (1)_21: 555177450
+      mapchip (1)_22: 1100707399
+      mapchip (1)_23: -1700523646
+      mapchip (1)_24: 702731530
+      mapchip (1)_25: 838950646
+      mapchip (1)_26: -1503027533
+      mapchip (1)_27: 1438420258
+      mapchip (1)_3: 438480750
+      mapchip (1)_4: -1940988983
+      mapchip (1)_5: 1337882658
+      mapchip (1)_6: 699315579
+      mapchip (1)_7: 1893572861
+      mapchip (1)_8: 1781122719
+      mapchip (1)_9: 964976616
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
