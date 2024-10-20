@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] GameState _state;
-    [SerializeField] FadeOut _fadeOut;
     public static GameManager instance;
     public GameState State 
     { 
