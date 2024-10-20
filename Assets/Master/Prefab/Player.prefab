@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4628700171233902132}
   - component: {fileID: 5081243653824690662}
   - component: {fileID: 2876446638051849357}
+  - component: {fileID: 5215226295752310641}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -134,6 +135,7 @@ MonoBehaviour:
   _maxSpeed: 5
   _movePower: 5
   _deceleration: 0.2
+  _landingInertia: 0
   _jumpPower: 9.5
   _fallSpeed: 4
   _damageCool: 2
@@ -167,6 +169,7 @@ MonoBehaviour:
     LeafMeat: {fileID: 0}
     LeafSize: 2
   _isJump: 0
+  _isStompEnemy: 0
   _canAction: 1
 --- !u!70 &4628700171233902132
 CapsuleCollider2D:
@@ -219,6 +222,7 @@ MonoBehaviour:
   _fadeImage: {fileID: 0}
   _clearText: {fileID: 0}
   _timerTxt: {fileID: 0}
+  _clearTime: {fileID: 0}
   _nowStage: 0
   _warkTime: 0
   _anime: 
@@ -318,6 +322,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5215226295752310641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989625297304483414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e12736113cd86643b0111fb57dc74e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &636050959518985300
 PrefabInstance:
   m_ObjectHideFlags: 0
