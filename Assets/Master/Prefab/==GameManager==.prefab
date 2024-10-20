@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8720984371906042246}
   - component: {fileID: 6137959432642280803}
   - component: {fileID: 6208238465189826764}
-  - component: {fileID: -9092240858582865113}
+  - component: {fileID: 173168629995687400}
   m_Layer: 0
   m_Name: ==GameManager==
   m_TagString: Untagged
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _state: 0
+  _fadeOut: {fileID: 0}
   _settingFPS: 0
   _targetFPS: 10
 --- !u!114 &6137959432642280803
@@ -83,7 +84,7 @@ MonoBehaviour:
   _fadePanel: {fileID: 0}
   _color: {r: 0, g: 0, b: 0, a: 0}
   _fadeTime: 0
---- !u!114 &-9092240858582865113
+--- !u!114 &173168629995687400
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,6 +93,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8285528669498667913}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7e69238a09bce740a3f013e8806e15e, type: 3}
+  m_Script: {fileID: 11500000, guid: 417e99097e19027418ddf89039a7f503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
