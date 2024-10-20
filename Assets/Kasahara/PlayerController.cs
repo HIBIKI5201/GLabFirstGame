@@ -90,6 +90,9 @@ public class PlayerController : MonoBehaviour
     }
     private void Awake()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _audioSource = GetComponent<AudioSource>();
+        _animator = GetComponent<Animator>();
         _audioManager = FindAnyObjectByType<AudioManager>();
         _pauseManager = FindAnyObjectByType<PauseManager>();
         if (_pauseManager != null)
@@ -113,9 +116,6 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("_throwsetting.Platformに地面のオブジェクトをセットしてください");
         }
         _damageCamera = FindAnyObjectByType<DamageCamera>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _audioSource = GetComponent<AudioSource>();
-        _animator = GetComponent<Animator>();
         if (_audioSource == null)
         {
             Debug.LogError("AudioSourseがありません");
