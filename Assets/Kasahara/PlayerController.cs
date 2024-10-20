@@ -292,7 +292,6 @@ public class PlayerController : MonoBehaviour
     IEnumerator _jumpEnumerator;
     private void Jump()
     {
-        Debug.Log($"_jumpEnumerator:{_jumpEnumerator}");
         if (_rb.velocity.y < -1f)
         {
             if (_jumpEnumerator == null)
@@ -307,7 +306,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                Debug.Log("ジャンプした");
+                //Debug.Log("ジャンプした");
                 AudioManager.Instance.PlaySE("jump");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
@@ -324,7 +323,6 @@ public class PlayerController : MonoBehaviour
         {
             if (_isStompEnemy)
             {
-                Debug.Log("敵を踏んで大ジャンプ");
                 _isStompEnemy = false;
                 _rb.velocity = new Vector2(_rb.velocity.x, 0);
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
@@ -332,7 +330,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (_isStompEnemy)
         {
-            Debug.Log("敵を踏んで小ジャンプ");
+            //Debug.Log("敵を踏んで小ジャンプ");
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
@@ -340,7 +338,6 @@ public class PlayerController : MonoBehaviour
         else if (_rb.velocity.y > 0)
         {
             _rb.velocity = new Vector2(_rb.velocity.x, _rb.velocity.y * 0.99f);
-            Debug.Log("上昇中");
         }
         //Debug.Log(_isJump);
     }
@@ -351,33 +348,26 @@ public class PlayerController : MonoBehaviour
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
         _animator.SetBool("isJump", true);
-        Debug.Log("ジャンプしたかも");
         _audioSource.Stop();
         while (_rb.velocity.y > 0)
         {
-            Debug.Log("接地判定中?");
             yield return new WaitForEndOfFrame();
         }
-        Debug.Log("下降");
         _rb.gravityScale = _fallSpeed;
         while (_isJump)
         {
-            Debug.Log("接地判定中");
             yield return new WaitForEndOfFrame();
             var hit = Physics2D.OverlapBoxAll((Vector2)transform.position + _point, _size, _angle);
             foreach (var obj in hit)
             {
-                Debug.Log(obj.name);
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;
                     _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
                     _animator.SetBool("isJump", false);
-                    Debug.Log("着地");
                     //コルーチンを連続で起動させないために待つ
                     yield return new WaitForSeconds(0.5f);
-                    Debug.Log("コルーチン終了");
                     _jumpEnumerator = null;
                     yield break;
                 }
