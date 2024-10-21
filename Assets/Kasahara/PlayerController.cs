@@ -233,8 +233,12 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                float x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
-                if (Mathf.Abs(x) < 0.2 && _rb.velocity.x != 0)
+                float x = 0;
+                if(_rb.velocity.x != 0)
+                {
+                    x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
+                }
+                if (Mathf.Abs(x) < 0.2)
                 {
                     x = 0;
                     _audioSource.Stop();
