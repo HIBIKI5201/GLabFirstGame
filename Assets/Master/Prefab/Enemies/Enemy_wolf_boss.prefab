@@ -129,14 +129,14 @@ MonoBehaviour:
   _beast: 4
   _maxHp: 6
   _currentHp: 10
-  _speed: 7.2
-  _chaseSpeed: 7.2
+  _speed: 7.2000003
+  _chaseSpeed: 7.2000003
   _currentSpeed: 0
   _attack: 2
   _jumpPower: 5
   _state: 0
   _jumpOver: 1
-  _goDown: 0
+  _goDown: 1
   _canChase: 1
   _canDamage: 0
   _ground:
@@ -147,11 +147,11 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 384
     _sideRayPos: {x: 0, y: 0}
-    _rightRayPos: {x: 1.833333, y: 0}
-    _leftRayPos: {x: -1.833333, y: 0}
-    _rayLong: 1.241667
-    _sideRayLong: 1.933333
-    _jumpRayLong: 2.033333
+    _rightRayPos: {x: 1.8333334, y: 0}
+    _leftRayPos: {x: -1.8333334, y: 0}
+    _rayLong: 1.2416667
+    _sideRayLong: 1.9333334
+    _jumpRayLong: 2.0333333
   _dir: 1
   _alwaysDebug: 0
 --- !u!61 &6421892462430893437

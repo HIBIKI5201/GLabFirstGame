@@ -193,11 +193,11 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 384
     _sideRayPos: {x: 0, y: 0}
-    _rightRayPos: {x: 1.045, y: 0}
-    _leftRayPos: {x: -1.045, y: 0}
-    _rayLong: 0.8325
-    _sideRayLong: 1.145
-    _jumpRayLong: 1.245
+    _rightRayPos: {x: 0.95, y: 0}
+    _leftRayPos: {x: -0.95, y: 0}
+    _rayLong: 0.88
+    _sideRayLong: 1.05
+    _jumpRayLong: 1.15
   _dir: 1
   _alwaysDebug: 0
 --- !u!1001 &3712896906065297146
