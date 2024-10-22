@@ -13,6 +13,10 @@ public class IsSelect : MonoBehaviour
             stage.enabled = false;
             stage.image.color = Color.gray;
         }
+        foreach (var clearObj in _clearObj)
+        {
+            clearObj.SetActive(false);
+        }
         ClearCheck();
     }
 
@@ -22,6 +26,11 @@ public class IsSelect : MonoBehaviour
         {
             _stage[i].enabled = true;
             _stage[i].image.color = Color.white;
+        }
+
+        for (var i = 1; i <= IsClear._stagesCleared; i++)
+        {
+            _clearObj[i - 1].SetActive(true);
         }
     }
 
@@ -33,6 +42,16 @@ public class IsSelect : MonoBehaviour
         IsClear._stagesCleared = 0;
         PlayerPrefs.SetInt("nowStage", IsClear._stagesCleared);
         IsClear._concealed = false;
+        foreach (var stage in _stage)
+        {
+            stage.enabled = false;
+            stage.image.color = Color.gray;
+        }
+        foreach (var clearObj in _clearObj)
+        {
+            clearObj.SetActive(false);
+        }
+        ClearCheck();
         Debug.Log(IsClear._stagesCleared);
     }
 }
