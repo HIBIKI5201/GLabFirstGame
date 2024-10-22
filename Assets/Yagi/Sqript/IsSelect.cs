@@ -24,6 +24,7 @@ public class IsSelect : MonoBehaviour
     {
         for (var i = 0; i <= IsClear._stagesCleared; i++)
         {
+            if(IsClear._stagesCleared == 3)break;
             _stage[i].enabled = true;
             _stage[i].image.color = Color.white;
         }
