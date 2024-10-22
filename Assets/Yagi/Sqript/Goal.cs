@@ -7,6 +7,7 @@ public class Goal : MonoBehaviour
 {
     [SerializeField] GameManager _gameManager;
     [Header("フェードアウトするイメージ"), SerializeField] GameObject _fadeImage;
+    [SerializeField] SceneLoader _sceneLoader;
     PlayerController _playerController;
     [SerializeField] GameObject _clearText;
     [SerializeField] Text _timerTxt;
@@ -87,6 +88,6 @@ public class Goal : MonoBehaviour
     IEnumerator LoadScene(float time)
     {
         yield return new WaitForSeconds(time);
-        SceneManager.LoadScene("SelectStage");
+        _sceneLoader.FadeAndLoadScene();
     }
 }
