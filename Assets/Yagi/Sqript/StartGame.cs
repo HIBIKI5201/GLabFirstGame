@@ -4,12 +4,14 @@ using System.Collections;
 public class StartGame : MonoBehaviour
 {
     PlayerController _player;
-    GameManager gameManager;
+    GameManager _gameManager;
     Timer _timer;
+    GameOverSystem _gameOver;
     void Start()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        gameManager.State = GameManager.GameState.Playing;
+        _gameManager = FindAnyObjectByType<GameManager>();
+        _gameOver = FindAnyObjectByType<GameOverSystem>();
+        _gameManager.State = GameManager.GameState.Playing;
         if (GameOver.position != Vector2.zero) transform.position = GameOver.position;
         _timer = FindAnyObjectByType<Timer>();
         _player = GetComponent<PlayerController>();
@@ -20,7 +22,9 @@ public class StartGame : MonoBehaviour
     IEnumerator TimerStart(float time)
     {
         _timer.enabled = false;
+        _gameOver.enabled = false;
         yield return new WaitForSeconds(time);
         _timer.enabled = true;
+        _gameOver.enabled = true;
     }
 }
