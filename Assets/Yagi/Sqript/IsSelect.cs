@@ -12,7 +12,6 @@ public class IsSelect : MonoBehaviour
         {
             stage.enabled = false;
             stage.image.color = Color.gray;
-            _clearObj[0].SetActive(false);
         }
         ClearCheck();
     }
@@ -23,7 +22,6 @@ public class IsSelect : MonoBehaviour
         {
             _stage[i].enabled = true;
             _stage[i].image.color = Color.white;
-            if(i != 0) _clearObj[i-1].SetActive(true);
         }
     }
 
