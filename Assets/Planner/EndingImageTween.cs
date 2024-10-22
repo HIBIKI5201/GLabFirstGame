@@ -11,12 +11,14 @@ public class EndingImageTween : MonoBehaviour
     {
         _canvasGroup = _ui.gameObject.GetComponent<CanvasGroup>();
         _canvasGroup.alpha = 0;
+        _canvasGroup.gameObject.SetActive(false);
         _illustrations.transform.DOMoveY(-8f, _moveTime);
         Invoke("UISet", _moveTime);
     }
 
     void UISet()
     {
+        _canvasGroup.gameObject.SetActive(true);
         _canvasGroup.DOFade(1, 2);
     }
 }
