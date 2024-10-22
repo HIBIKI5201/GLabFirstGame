@@ -10,7 +10,7 @@ public class StartGame : MonoBehaviour
     {
         gameManager = FindAnyObjectByType<GameManager>();
         gameManager.State = GameManager.GameState.Playing;
-        if (GameOver.position != null) transform.position = GameOver.position;
+        if (GameOver.position == Vector2.zero) transform.position = GameOver.position;
         _timer = FindAnyObjectByType<Timer>();
         _player = GetComponent<PlayerController>();
         _player.StopAction(2f);
