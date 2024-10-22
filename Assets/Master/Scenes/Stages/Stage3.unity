@@ -141,12 +141,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1770593447057491968, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _warkTime
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1770593447057491968, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _clearText
       value: 
       objectReference: {fileID: 231846001}
+    - target: {fileID: 1770593447057491968, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _sceneLoader
+      value: 
+      objectReference: {fileID: 1521564279}
     - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 317.51
@@ -198,6 +202,10 @@ PrefabInstance:
     - target: {fileID: 2758658429717762690, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521634095070392426, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _scene
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4898885117197900936, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _maxClamp.x
@@ -460,6 +468,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ebc7202fe105ba40a6ea7086c5980d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1521564279 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4521634095070392426, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+  m_PrefabInstance: {fileID: 30186184}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711941635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1606816956 stripped
