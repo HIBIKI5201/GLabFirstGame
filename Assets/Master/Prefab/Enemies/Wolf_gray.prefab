@@ -174,8 +174,8 @@ MonoBehaviour:
   _beast: 2
   _maxHp: 3
   _currentHp: 0
-  _speed: 5.3999996
-  _chaseSpeed: 6.6000004
+  _speed: 5.4
+  _chaseSpeed: 6.6
   _currentSpeed: 0
   _attack: 1
   _jumpPower: 5
