@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour
@@ -8,7 +9,8 @@ public class Enemy : MonoBehaviour
     AudioManager _audio;
     Rigidbody2D _rb;
     Transform _playerTra;
-    SpriteRenderer _spriteRenderer;
+    Transform _modelT;
+    SpriteRenderer[] spriteRenderers;
     BoxCollider2D _boxCollider;
     PlayerController _player;
 
@@ -142,6 +144,8 @@ public class Enemy : MonoBehaviour
     /// プレイヤーを最後に攻撃した時間
     /// </summary>
     float _attackedTimer;
+
+    Vector2 _modelScale;
     enum Direction
     {
         Right, Left, None
@@ -234,11 +238,16 @@ public class Enemy : MonoBehaviour
     {
         _myTra = transform;
         _audio = AudioManager.Instance;
+
         _rb = (_rb != null) ? _rb : GetComponent<Rigidbody2D>();
 
-        _spriteRenderer = (_spriteRenderer != null) ? _spriteRenderer : GetComponent<SpriteRenderer>();
+        _modelT = (_modelT != null) ? _modelT : GetComponentInChildren<Animator>().transform;
+        _modelScale = _modelT.localScale;
+
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
         _playerTra = (_playerTra != null) ? _playerTra : GameObject.FindAnyObjectByType<PlayerController>().transform;
+
         _boxCollider = (_boxCollider != null) ? _boxCollider : GetComponent<BoxCollider2D>();
     }
     void MatchGround()
@@ -258,7 +267,9 @@ public class Enemy : MonoBehaviour
             Debug.Log("敵死亡");
             Destroy(this.gameObject);
         }
-        _spriteRenderer.flipX = _dir switch { Direction.Right => true, Direction.Left => false, _ => _spriteRenderer.flipX };
+        var vec = _modelScale;
+        vec.x *= _dir switch { Direction.Right => -1, Direction.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
+        _modelT.localScale = vec;
         switch (State)
         {
             case EnemyState.Faint:
@@ -325,7 +336,7 @@ public class Enemy : MonoBehaviour
             if (Time.time >= _meatTimer + _meatTime)
             {
                 State = EnemyState.Normal;
-                _dir = _spriteRenderer.flipX ? Direction.Right : Direction.Left;
+                _dir = Mathf.Sign(_modelT.localScale.x) switch { 1 => Direction.Left, -1 => Direction.Right, _ => Direction.None };
             }
             //ジャンプが必要で 地面にいて　ジャンプができる
             if (IsJump() && IsGrounded() && _jumpOver)
@@ -513,9 +524,9 @@ public class Enemy : MonoBehaviour
             float time = Time.time;
             while(Time.time <= time + 0.5f)
             {
-                _spriteRenderer.color = new Color(0.5f, 0.5f, 0.5f);
+                spriteRenderers.Select(x => x.color = new Color(0.5f, 0.5f, 0.5f));
                 yield return new WaitForSeconds(0.1f);
-                _spriteRenderer.color = Color.white;
+                spriteRenderers.Select(x => x.color = Color.white);
                 yield return new WaitForSeconds(0.1f);
             }
             _canDamage = true;
