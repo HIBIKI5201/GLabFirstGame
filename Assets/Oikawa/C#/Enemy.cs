@@ -241,9 +241,15 @@ public class Enemy : MonoBehaviour
 
         _rb = (_rb != null) ? _rb : GetComponent<Rigidbody2D>();
 
-        _modelT = (_modelT != null) ? _modelT : GetComponentInChildren<Animator>().transform;
+        if(_modelT == null)
+        {
+            if (_beast == Beast.Wolf_Gray)
+                _modelT = (_modelT != null) ? _modelT : transform;
+            else
+                _modelT = (_modelT != null) ? _modelT : GetComponentInChildren<Animator>().transform;
+        }
         _modelScale = _modelT.localScale;
-
+        _modelScale.x = MathF.Abs(_modelScale.x);
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
         _playerTra = (_playerTra != null) ? _playerTra : GameObject.FindAnyObjectByType<PlayerController>().transform;
@@ -524,9 +530,9 @@ public class Enemy : MonoBehaviour
             float time = Time.time;
             while(Time.time <= time + 0.5f)
             {
-                spriteRenderers.Select(x => x.color = new Color(0.5f, 0.5f, 0.5f));
+                spriteRenderers.ToList().ForEach(x => x.color = new Color(0.5f, 0.5f, 0.5f));
                 yield return new WaitForSeconds(0.1f);
-                spriteRenderers.Select(x => x.color = Color.white);
+                spriteRenderers.ToList().ForEach(x => x.color = Color.white);
                 yield return new WaitForSeconds(0.1f);
             }
             _canDamage = true;
