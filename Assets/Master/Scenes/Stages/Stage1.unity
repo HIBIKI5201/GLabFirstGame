@@ -188,6 +188,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 828264955}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _itemSetting.LeafRock
+      value: 
+      objectReference: {fileID: 384209979}
+    - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _throwsetting.Platform
       value: 
       objectReference: {fileID: 1805939698}

@@ -2453,11 +2453,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 519556591593795504, guid: 8ab5b3e000396e947b41a8fc16fd1067, type: 3}
   m_PrefabInstance: {fileID: 4344398350558461094}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4799949910179519892 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9139701723802067250, guid: 8ab5b3e000396e947b41a8fc16fd1067, type: 3}
-  m_PrefabInstance: {fileID: 4344398350558461094}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5413418643261398608 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8604748153981690614, guid: 8ab5b3e000396e947b41a8fc16fd1067, type: 3}
@@ -2666,10 +2661,10 @@ PrefabInstance:
     - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _itemSetting.LeafRock
       value: 
-      objectReference: {fileID: 4799949910179519892}
+      objectReference: {fileID: 5689166291836177070}
     - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _itemSetting.LeafSize
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 607212381471825759, guid: cedc9e604798cb94c96a884dbcdfc548, type: 3}
       propertyPath: _itemSetting.LeafBottle
