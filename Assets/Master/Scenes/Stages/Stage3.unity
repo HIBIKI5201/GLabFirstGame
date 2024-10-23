@@ -131,6 +131,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 270906391555921784, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 317.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 270906391555921784, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.36
+      objectReference: {fileID: 0}
     - target: {fileID: 1618597503987682967, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -207,6 +215,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3043342483754226344, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _stageNum
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3962553894747395174, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _stageNum
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4521634095070392426, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _scene
       value: 2
@@ -231,6 +247,10 @@ PrefabInstance:
       propertyPath: orthographic size
       value: 8.66
       objectReference: {fileID: 0}
+    - target: {fileID: 8072446210379629184, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_BoundingShape2D
+      value: 
+      objectReference: {fileID: 1720503569}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -688,6 +708,11 @@ MonoBehaviour:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8976443181274026212, guid: 0dce521fb369d754fa7f0eae12de7a97, type: 3}
   m_PrefabInstance: {fileID: 374667677}
+  m_PrefabAsset: {fileID: 0}
+--- !u!60 &1720503569 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3277842017304326239, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+  m_PrefabInstance: {fileID: 30186184}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1728919133 stripped
 GameObject:

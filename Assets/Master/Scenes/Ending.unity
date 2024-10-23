@@ -1271,6 +1271,7 @@ GameObject:
   - component: {fileID: 1447696299}
   - component: {fileID: 1447696303}
   - component: {fileID: 1447696304}
+  - component: {fileID: 1447696305}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1392,6 +1393,20 @@ MonoBehaviour:
   _fadePanel: {fileID: 95922446}
   _fadeTime: 2
   _fadeColor: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &1447696305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447696298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e17c00dd89882a04ea0e25465f836c7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _badEnd: {fileID: 1746962722}
+  _happyEnd: {fileID: 1749024846}
 --- !u!1 &1527346046
 GameObject:
   m_ObjectHideFlags: 0
