@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>–³“GŽžŠÔ’†‚©‚Ç‚¤‚©</summary>
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
-    PlayerStatus _playerStatus = PlayerStatus.Normal;
+    [HideInInspector] public PlayerStatus _playerStatus = PlayerStatus.Normal;
     Rigidbody2D _rb;
     SpriteRenderer _spriteRenderer;
     Scene m_simulationScene;
@@ -153,7 +153,7 @@ public class PlayerController : MonoBehaviour
             UseItem();
         }
     }
-    enum PlayerStatus
+    public enum PlayerStatus
     {
         Rock,
         Bottle,
