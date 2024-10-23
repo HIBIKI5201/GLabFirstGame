@@ -20,6 +20,8 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(_currentTime <= 30) TimerColorChange();
+
         if(_currentTime > 0)
         {
             _currentTime -= Time.deltaTime;
@@ -38,5 +40,10 @@ public class Timer : MonoBehaviour
         int min = Mathf.FloorToInt(_currentTime / 60);
         int sec = Mathf.FloorToInt(_currentTime % 60);
         timerTxt.text = string.Format("{0:00}:{1:00}", min, sec);
+    }
+
+    void TimerColorChange()
+    {
+        timerTxt.color = new Color(210, 0, 0);
     }
 }
