@@ -857,6 +857,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1918890376}
+        m_TargetAssemblyTypeName: StageTitleActive, Assembly-CSharp
+        m_MethodName: StageSelect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &232290078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1036,6 +1048,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2005372968}
         m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: FadeBGM
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1918890376}
+        m_TargetAssemblyTypeName: StageTitleActive, Assembly-CSharp
+        m_MethodName: StageSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4010,6 +4034,7 @@ GameObject:
   - component: {fileID: 1918890374}
   - component: {fileID: 1918890373}
   - component: {fileID: 1918890375}
+  - component: {fileID: 1918890376}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4156,6 +4181,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 406e27ad90e27b5489b479d0e01e2629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1918890376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918890368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ebd3d3f4ae2f74e8c4c45432da641d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1924097594
 GameObject:
   m_ObjectHideFlags: 0
@@ -4278,6 +4315,18 @@ MonoBehaviour:
       - m_Target: {fileID: 2005372968}
         m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
         m_MethodName: FadeBGM
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1918890376}
+        m_TargetAssemblyTypeName: StageTitleActive, Assembly-CSharp
+        m_MethodName: StageSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

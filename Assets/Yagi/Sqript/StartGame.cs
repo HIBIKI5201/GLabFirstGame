@@ -5,6 +5,7 @@ using UnityEngine;
 public class StartGame : MonoBehaviour
 {
     [SerializeField] CanvasGroup _stageText;
+    public static bool _isFirst = true; //1‰ñ–Ú‚È‚çtrue(ƒŠƒXƒ|[ƒ“‚Ífalse‚É‚µ‚Ä‚¨‚­)
     PlayerController _player;
     GameManager _gameManager;
     Timer _timer;
@@ -18,12 +19,13 @@ public class StartGame : MonoBehaviour
         _timer = FindAnyObjectByType<Timer>();
         _player = GetComponent<PlayerController>();
         _player.StopAction(2f);
+        _stageText.gameObject.SetActive(false);
         StartCoroutine(TimerStart(2.5f));
     }
 
     IEnumerator TimerStart(float time)
     {
-        _stageText.gameObject.SetActive(true);
+        if(_isFirst) _stageText.gameObject.SetActive(true);
         _timer.enabled = false;
         _gameOver.enabled = false;
         yield return new WaitForSeconds(time);
@@ -38,5 +40,6 @@ public class StartGame : MonoBehaviour
     void TextHidden()
     {
         _stageText.gameObject.SetActive(false);
+        _isFirst = false;
     }
 }
