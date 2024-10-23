@@ -122,8 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc04bcc536fa2fc46bc82b4a3fc83898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiArea:
+  _itemUI:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  _rose: {fileID: 0}

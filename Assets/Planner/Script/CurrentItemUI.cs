@@ -5,41 +5,36 @@
 /// </summary>
 public class CurrentItemUI : MonoBehaviour
 {
-    [SerializeField] GameObject[] _uiArea;
-    [SerializeField] GameObject _rose;
+    [SerializeField] GameObject[] _itemUI;
     PlayerController _playerController;
+    Vector3 _selectedScale = new Vector3(1.2f, 1.2f, 1.2f);
+    Vector3 _initializeScale = Vector3.one;
 
     void Start()
     {
         var player = GameObject.FindGameObjectWithTag("Player");
         _playerController = player.GetComponent<PlayerController>();
-
-        _rose.SetActive(false);
     }
 
     void Update()
     {
         if (_playerController._playerStatus == PlayerController.PlayerStatus.Rock)
         {
-            ActiveCheck();
-            _rose.transform.position = _uiArea[0].transform.position;
+            _itemUI[0].transform.localScale = _selectedScale;
+            _itemUI[1].transform.localScale = _initializeScale;
+            _itemUI[2].transform.localScale = _initializeScale;
         }
         else if (_playerController._playerStatus == PlayerController.PlayerStatus.Bottle)
         {
-            ActiveCheck();
-            _rose.transform.position = _uiArea[1].transform.position;
+            _itemUI[1].transform.localScale = _selectedScale;
+            _itemUI[0].transform.localScale = _initializeScale;
+            _itemUI[2].transform.localScale = _initializeScale;
         }
         else if (_playerController._playerStatus == PlayerController.PlayerStatus.Meat)
         {
-            ActiveCheck();
-            _rose.transform.position = _uiArea[2].transform.position;
+            _itemUI[2].transform.localScale = _selectedScale;
+            _itemUI[0].transform.localScale = _initializeScale;
+            _itemUI[1].transform.localScale = _initializeScale;
         }
-        else
-            _rose.SetActive(false);
-    }
-
-    void ActiveCheck()
-    {
-        if(!_rose.activeSelf) _rose.SetActive(true);
     }
 }
