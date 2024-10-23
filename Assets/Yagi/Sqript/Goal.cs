@@ -17,6 +17,7 @@ public class Goal : MonoBehaviour
     Rigidbody2D _rb;
     [SerializeField, Header("ゴール後歩く時間")] float _warkTime;
     [SerializeField, Header("歩くアニメーションの名前")] string _anime;
+    [SerializeField] Stage1GoalPerformance _goalPerformance;
     IsClear _isClear;
     Timer _timer;
     bool _walk;
@@ -49,6 +50,7 @@ public class Goal : MonoBehaviour
             if (_gameManager.State == GameManager.GameState.StageClear)
             {
                 _rb.Sleep();
+                if(_goalPerformance != null) _goalPerformance.Perfomance(_warkTime);
                 _playerController.StopAction(_warkTime + 10f);
                 StartCoroutine(Walk(_warkTime));
                 Invoke(nameof(Clear), _warkTime);
