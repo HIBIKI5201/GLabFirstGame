@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 手に持っているアイテムにバラを表示します
@@ -7,6 +8,7 @@ public class CurrentItemUI : MonoBehaviour
 {
     [SerializeField] GameObject[] _itemUI;
     PlayerController _playerController;
+    Outline[] _outline = new Outline[3];
     Vector3 _selectedScale = new Vector3(1.2f, 1.2f, 1.2f);
     Vector3 _initializeScale = Vector3.one;
 
@@ -14,27 +16,53 @@ public class CurrentItemUI : MonoBehaviour
     {
         var player = GameObject.FindGameObjectWithTag("Player");
         _playerController = player.GetComponent<PlayerController>();
+        for (int i = 0; i < 3; i++)
+        {
+            _outline[i] = _itemUI[i].GetComponent<Outline>();
+        }
     }
 
     void Update()
     {
-        if (_playerController._playerStatus == PlayerController.PlayerStatus.Rock)
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
         {
-            _itemUI[0].transform.localScale = _selectedScale;
-            _itemUI[1].transform.localScale = _initializeScale;
-            _itemUI[2].transform.localScale = _initializeScale;
+            ItemUsageState();
         }
-        else if (_playerController._playerStatus == PlayerController.PlayerStatus.Bottle)
-        {
-            _itemUI[1].transform.localScale = _selectedScale;
-            _itemUI[0].transform.localScale = _initializeScale;
-            _itemUI[2].transform.localScale = _initializeScale;
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        { 
+            ResetImage();
         }
-        else if (_playerController._playerStatus == PlayerController.PlayerStatus.Meat)
+    }
+
+
+    /// <summary>
+    /// 手に持っているアイテムを強調します
+    /// </summary>
+    void ItemUsageState()
+    {
+        ResetImage();
+
+        int index = _playerController._playerStatus switch
         {
-            _itemUI[2].transform.localScale = _selectedScale;
-            _itemUI[0].transform.localScale = _initializeScale;
-            _itemUI[1].transform.localScale = _initializeScale;
+            PlayerController.PlayerStatus.Rock => 0,
+            PlayerController.PlayerStatus.Bottle => 1,
+            PlayerController.PlayerStatus.Meat => 2,
+            _ => 3,
+        };
+
+        if (index == 3) return;
+
+        _itemUI[index].transform.localScale = _selectedScale;
+        _outline[index].enabled = true;
+    }
+
+    void ResetImage()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            _itemUI[i].transform.localScale = _initializeScale;
+            _outline[i].enabled = false;
         }
     }
 }

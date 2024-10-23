@@ -49,6 +49,6 @@ public class DamageEffect : MonoBehaviour
     void Dying()
     {
         _vignette.gameObject.SetActive(true);
-        _vignette.DOFade(0, 1.5f).SetEase(Ease.OutQuart).SetLoops(-1, LoopType.Yoyo);
+        _vignette.DOFade(0, 1f).SetEase(Ease.OutQuart).SetLoops(-1, LoopType.Yoyo);
     }
 }
