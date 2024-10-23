@@ -136,6 +136,9 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("DamageCamera‚ª‚ ‚è‚Ü‚¹‚ñ");
         }
+        _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+        _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+        _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
         //_afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
         //_afterItemPos1 = new Vector3[] { _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position };
