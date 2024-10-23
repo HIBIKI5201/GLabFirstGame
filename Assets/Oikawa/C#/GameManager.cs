@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] GameState _state;
+    public GameState _state;
     public static GameManager instance;
     public GameState State 
     { 

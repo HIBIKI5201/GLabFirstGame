@@ -19,6 +19,11 @@ public class DamageEffect : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.instance._state == GameManager.GameState.StageClear)
+        {
+            _vignette.gameObject.SetActive(false);
+        }
+
         if(!_dying && _ctrl.CurrentHp == 1) 
         {
             Dying();

@@ -1,8 +1,10 @@
-using UnityEngine;
+using DG.Tweening;
 using System.Collections;
+using UnityEngine;
 
 public class StartGame : MonoBehaviour
 {
+    [SerializeField] CanvasGroup _stageText;
     PlayerController _player;
     GameManager _gameManager;
     Timer _timer;
@@ -21,10 +23,20 @@ public class StartGame : MonoBehaviour
 
     IEnumerator TimerStart(float time)
     {
+        _stageText.gameObject.SetActive(true);
         _timer.enabled = false;
         _gameOver.enabled = false;
         yield return new WaitForSeconds(time);
         _timer.enabled = true;
         _gameOver.enabled = true;
+        _stageText.DOFade(0, 0.3f).OnComplete(TextHidden);
+    }
+
+    /// <summary>
+    /// フェードが完了したらテキストを非表示にする
+    /// </summary>
+    void TextHidden()
+    {
+        _stageText.gameObject.SetActive(false);
     }
 }
