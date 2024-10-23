@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField, Tooltip("プレイヤーの体力の最大値")] int _maxHp;
     public int CurrentHp { get; private set; }
-    [SerializeField, Tooltip("体力のバラの花びら")] List<GameObject> _rose = new List<GameObject>();
+    [SerializeField, Tooltip("体力のバラの花びら")] public List<GameObject> _rose = new List<GameObject>();
     [SerializeField, Tooltip("プレイヤーの速度の最大値")] public float _maxSpeed;
     [SerializeField, Tooltip("プレイヤーの移動速度の加速度")] public float _movePower;
     [SerializeField, Tooltip("入力がない時の減速度")] public float _deceleration;
@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
     Vector3[] _afterItemPos2 = new Vector3[3];
     float _horiInput = 0;
     DamageCamera _damageCamera;
+    DamageEffect _damageEffect;
     PauseManager _pauseManager;
     AudioManager _audioManager;
     AudioSource _audioSource;
@@ -95,6 +96,7 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _audioManager = FindAnyObjectByType<AudioManager>();
         _pauseManager = FindAnyObjectByType<PauseManager>();
+        _damageEffect = GetComponent<DamageEffect>();
         if (_pauseManager != null)
             _pauseManager.OnPauseResume += PauseAction;
         else
@@ -574,7 +576,7 @@ public class PlayerController : MonoBehaviour
                 CurrentHp += value;
                 for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
-                    Destroy(_rose[0]);
+                    _damageEffect.DamageEffectPlay();
                     _rose.RemoveAt(0);
                 }
                 StartCoroutine(Invincible());

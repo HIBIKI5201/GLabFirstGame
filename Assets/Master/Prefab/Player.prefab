@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5081243653824690662}
   - component: {fileID: 2876446638051849357}
   - component: {fileID: 5215226295752310641}
+  - component: {fileID: 68313780225532984}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -171,6 +172,7 @@ MonoBehaviour:
   _isJump: 0
   _isStompEnemy: 0
   _canAction: 1
+  _playerStatus: 3
 --- !u!70 &4628700171233902132
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -220,6 +222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 0}
   _fadeImage: {fileID: 0}
+  _sceneLoader: {fileID: 0}
   _clearText: {fileID: 0}
   _timerTxt: {fileID: 0}
   _clearTime: {fileID: 0}
@@ -332,6 +335,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e12736113cd86643b0111fb57dc74e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &68313780225532984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989625297304483414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b89a417d7e607845b81e56c973fe794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &636050959518985300
