@@ -8,11 +8,22 @@ using UnityEngine.UI;
 public class DamageEffect : MonoBehaviour
 {
     [SerializeField] Image _redImage;
+    [SerializeField] Image _vignette;
+    bool _dying;
     PlayerController _ctrl;
 
     void Start()
     {
         _ctrl = GetComponent<PlayerController>();
+    }
+
+    void Update()
+    {
+        if(!_dying && _ctrl.CurrentHp == 1) 
+        {
+            Dying();
+            _dying = true;
+        }
     }
 
     public void DamageEffectPlay()
@@ -25,5 +36,14 @@ public class DamageEffect : MonoBehaviour
         _redImage.gameObject.SetActive(true);
         _redImage.color = new Color(255, 0, 0, 0.25f);
         _redImage.DOFade(0, 0.3f);
+    }
+
+    /// <summary>
+    /// 瀕死のときの演出
+    /// </summary>
+    void Dying()
+    {
+        _vignette.gameObject.SetActive(true);
+        _vignette.DOFade(0, 1.5f).SetEase(Ease.OutQuart).SetLoops(-1, LoopType.Yoyo);
     }
 }

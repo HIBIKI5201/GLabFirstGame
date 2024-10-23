@@ -11,7 +11,6 @@ public class Stage_BGMLoad : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("呼ばれた");
         int index = _stageNum switch
         {
             StageNum.Stage1 => 2,
