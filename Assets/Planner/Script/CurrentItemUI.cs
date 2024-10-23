@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// 手に持っているアイテムにバラを表示します
@@ -8,9 +7,9 @@ public class CurrentItemUI : MonoBehaviour
 {
     [SerializeField] GameObject[] _itemUI;
     PlayerController _playerController;
-    Outline[] _outline = new Outline[3];
-    Vector3 _selectedScale = new Vector3(1.2f, 1.2f, 1.2f);
+    Vector3 _selectedScale = new Vector3(1.05f, 1.05f, 1.05f);
     Vector3 _initializeScale = Vector3.one;
+    Vector3[] _pos = new Vector3[3];
 
     void Start()
     {
@@ -18,7 +17,7 @@ public class CurrentItemUI : MonoBehaviour
         _playerController = player.GetComponent<PlayerController>();
         for (int i = 0; i < 3; i++)
         {
-            _outline[i] = _itemUI[i].GetComponent<Outline>();
+            _pos[i] = _itemUI[i].transform.position;
         }
     }
 
@@ -30,7 +29,7 @@ public class CurrentItemUI : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
-        { 
+        {
             ResetImage();
         }
     }
@@ -54,7 +53,10 @@ public class CurrentItemUI : MonoBehaviour
         if (index == 3) return;
 
         _itemUI[index].transform.localScale = _selectedScale;
-        _outline[index].enabled = true;
+        Vector3 pos = _pos[index];  
+        pos.x += 40;
+        pos.y -= 10;
+        _itemUI[index].transform.position = new Vector3(pos.x, pos.y, pos.z);
     }
 
     void ResetImage()
@@ -62,7 +64,7 @@ public class CurrentItemUI : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             _itemUI[i].transform.localScale = _initializeScale;
-            _outline[i].enabled = false;
+            _itemUI[i].transform.position = _pos[i];
         }
     }
 }

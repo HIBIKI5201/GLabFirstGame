@@ -70,8 +70,8 @@ MonoBehaviour:
     _volume: 0.6
     _pitch: 1
   - _name: bossFight
-    _clip: {fileID: 8300000, guid: 21be19249870ea94e8febe9a3a52b7f2, type: 3}
-    _volume: 0.9
+    _clip: {fileID: 8300000, guid: f2b86b3c567404d4a980ce43b596f386, type: 3}
+    _volume: 0.6
     _pitch: 1
   - _name: badend
     _clip: {fileID: 8300000, guid: bde6a29cffae8a94887cd796af864b81, type: 3}
