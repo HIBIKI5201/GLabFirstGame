@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
         {
             if (_state == value)
                 return;
-            Debug.Log($"{_state}‚©‚ç{value}‚ÉˆÚs"); 
+            //Debug.Log($"{_state}‚©‚ç{value}‚ÉˆÚs"); 
             _state = value;
         } 
     }

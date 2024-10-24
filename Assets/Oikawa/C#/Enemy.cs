@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
         {
             if (value == _state)
                 return;
-            Debug.Log($"“G{_state}‚©‚ç{value}‚ÉˆÚs");
+            //Debug.Log($"“G{_state}‚©‚ç{value}‚ÉˆÚs");
             _state = value;
         }
     }
@@ -270,7 +270,7 @@ public class Enemy : MonoBehaviour
     {
         if (_currentHp <= 0)
         {
-            Debug.Log("“G€–S");
+            //Debug.Log("“G€–S");
             Destroy(this.gameObject);
         }
         var vec = _modelScale;
