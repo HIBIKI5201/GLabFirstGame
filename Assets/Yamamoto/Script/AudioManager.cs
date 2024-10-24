@@ -26,8 +26,9 @@ public class AudioManager : MonoBehaviour
 
 
     float _fadeSpeed;
-    float _fadeTime = 2f;
+    float _fadeTime = 1f;
     float _startVolume;
+    bool _isFading = false;
     //Awake‚ÅInstance‚É•Û‘¶•ˆê¶‰ó‚³‚ê‚È‚¢ˆ—
     void Awake()
     {
@@ -75,12 +76,27 @@ public class AudioManager : MonoBehaviour
         _bgmSource.volume -= _fadeSpeed * Time.deltaTime;
 
 
-        if (_bgmSource.volume <= 0)
+        if (_bgmSource.volume < 0.14)
         {
             _bgmSource.volume = 0;
             _bgmSource.Stop();
             _bgmSource.volume = _startVolume;
+            _isFading = false;
             Debug.Log(_bgmSource.volume);
+        }
+    }
+
+    public void OnFading()
+    {
+        _isFading = true;
+    }
+
+    private void Update()
+    {
+        if (_isFading)
+        {
+            Debug.Log("jikkou!");
+            FadeBGM();
         }
     }
 }
