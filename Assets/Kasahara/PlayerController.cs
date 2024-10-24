@@ -119,6 +119,7 @@ public class PlayerController : MonoBehaviour
         if (_throwsetting.Platform != null)
         {
             platform = Instantiate(_throwsetting.Platform);
+            platform.GetComponentInChildren<SpriteRenderer>().enabled = false;
             SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         }
         else
