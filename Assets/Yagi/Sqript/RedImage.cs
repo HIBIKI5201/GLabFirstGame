@@ -26,9 +26,9 @@ public class RedImage : MonoBehaviour
         Invoke("Relode", 2f);
     }
 
-    private void Relode()
+    private void Reload()
     {
-        Scene _scnen = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(_scnen.name);
+        Scene scnen = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scnen.name);
     }
 }
