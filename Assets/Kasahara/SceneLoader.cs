@@ -28,6 +28,7 @@ public class SceneLoader : MonoBehaviour
                     {
                         Image.gameObject.SetActive(false);
                         IsFading = false;
+                        Image = null;
                     });
             }
         }

@@ -356,7 +356,7 @@ MonoBehaviour:
   _scene: 3
   _fadePanel: {fileID: 119888174}
   _fadeTime: 1
-  _fadeColor: {r: 0, g: 0, b: 0, a: 0}
+  _fadeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &372374887
 Transform:
   m_ObjectHideFlags: 0

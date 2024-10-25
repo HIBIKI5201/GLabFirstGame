@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +73,6 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer _spriteRenderer;
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
-    float _throwParabolaPower = 0;
     GameObject[] _itemPos = new GameObject[3];
     Vector3[] _afterItemPos0 = new Vector3[3];
     Vector3[] _afterItemPos1 = new Vector3[3];
@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
         if (_throwsetting.Platform != null)
         {
             platform = Instantiate(_throwsetting.Platform);
-            platform.GetComponentInChildren<SpriteRenderer>().enabled = false;
+            Array.ForEach(platform.GetComponentsInChildren<Renderer>(), x => x.enabled = false);
             SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         }
         else
@@ -247,7 +247,7 @@ public class PlayerController : MonoBehaviour
             if (!_isJump)
             {
                 float x = 0;
-                if(_rb.velocity.x != 0)
+                if (_rb.velocity.x != 0)
                 {
                     x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
                 }
@@ -368,12 +368,16 @@ public class PlayerController : MonoBehaviour
     /// <returns></returns>
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
-        _animator.SetBool("isJump", true);
+        if (_rb.velocity.y > 0)
+        {
+            _animator.SetBool("isJump", true);
+        }
         _audioSource.Stop();
         while (_rb.velocity.y > 0)
         {
             yield return new WaitForEndOfFrame();
         }
+        _animator.SetBool("isFall", true);
         _rb.gravityScale = _fallSpeed;
         while (_isJump)
         {
@@ -387,6 +391,7 @@ public class PlayerController : MonoBehaviour
                     _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
                     _animator.SetBool("isJump", false);
+                    _animator.SetBool("isFall", false) ;
                     if (_landingInertia && _horiInput == 0)
                     {
                         _rb.velocity = new Vector2(0, _rb.velocity.y);
@@ -398,7 +403,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (obj.gameObject.CompareTag("Enemy"))
                 {
-                    if(obj.gameObject.GetComponent<Enemy>().State != Enemy.EnemyState.Faint)
+                    if (obj.gameObject.GetComponent<Enemy>().State != Enemy.EnemyState.Faint)
                     {
                         FluctuationLife(-1);
                     }
@@ -718,7 +723,6 @@ public class PlayerController : MonoBehaviour
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.velocity = Vector3.zero;
             rb.AddForce(_throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale, ForceMode2D.Impulse);
-            _throwParabolaPower = 0;
         }
         item.Throwing();
         if (item as Rock)
