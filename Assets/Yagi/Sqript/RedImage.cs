@@ -23,12 +23,12 @@ public class RedImage : MonoBehaviour
     private void FadeOut()
     {
         _fadeOutObject.SetActive(true);
-        Invoke("Relode", 2f);
+        Invoke("Reload", 2f);
     }
 
     private void Reload()
     {
-        Scene scnen = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scnen.name);
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
     }
 }
