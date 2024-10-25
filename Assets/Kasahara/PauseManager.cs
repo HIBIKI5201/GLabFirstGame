@@ -30,7 +30,7 @@ public class PauseManager : MonoBehaviour
     void Update()
     {
         // ESC キーが押されたら一時停止・再開を切り替える
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel") && !SceneLoader.IsFading)
         {
             PauseResume();
         }
@@ -47,6 +47,7 @@ public class PauseManager : MonoBehaviour
     /// </summary>
     public void Surrender()
     {
+        _fadePanel.SetActive(true);
         _loader.FadeAndLoadScene(_fadePanel.GetComponent<Image>(), _color, _fadeTime, SceneLoader.Scenes.SelectStage);
     }
     /// <summary>

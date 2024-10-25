@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
         {
             if (value == _state)
                 return;
-            Debug.Log($"ìG{_state}Ç©ÇÁ{value}Ç…à⁄çs");
+            //Debug.Log($"ìG{_state}Ç©ÇÁ{value}Ç…à⁄çs");
             _state = value;
         }
     }
@@ -241,13 +241,8 @@ public class Enemy : MonoBehaviour
 
         _rb = (_rb != null) ? _rb : GetComponent<Rigidbody2D>();
 
-        if(_modelT == null)
-        {
-            if (_beast == Beast.Wolf_Gray)
-                _modelT = (_modelT != null) ? _modelT : transform;
-            else
-                _modelT = (_modelT != null) ? _modelT : GetComponentInChildren<Animator>().transform;
-        }
+        if (_modelT == null)
+            _modelT = (_modelT != null) ? _modelT : GetComponentInChildren<Animator>().transform;
         _modelScale = _modelT.localScale;
         _modelScale.x = MathF.Abs(_modelScale.x);
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
@@ -270,7 +265,7 @@ public class Enemy : MonoBehaviour
     {
         if (_currentHp <= 0)
         {
-            Debug.Log("ìGéÄñS");
+            //Debug.Log("ìGéÄñS");
             Destroy(this.gameObject);
         }
         var vec = _modelScale;
@@ -300,8 +295,12 @@ public class Enemy : MonoBehaviour
                 Search();
                 break;
         }
-        if(GameManager.instance.State == GameManager.GameState.GameOver)
+        if(GameManager.instance.State == GameManager.GameState.GameOver ||
+        GameManager.instance.State == GameManager.GameState.StageClear)
+        {
             this.enabled = false;
+            gameObject.SetActive(false);
+        }
 
         void UpdateReturn()
         {

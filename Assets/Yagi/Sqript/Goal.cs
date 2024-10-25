@@ -18,6 +18,7 @@ public class Goal : MonoBehaviour
     [SerializeField, Header("ゴール後歩く時間")] float _warkTime;
     [SerializeField, Header("歩くアニメーションの名前")] string _anime;
     [SerializeField] Stage1GoalPerformance _goalPerformance;
+    [SerializeField] Stage3GoalPerformance _goal3Performance;
     IsClear _isClear;
     Timer _timer;
     bool _walk;
@@ -51,22 +52,23 @@ public class Goal : MonoBehaviour
             {
                 _rb.Sleep();
                 if(_goalPerformance != null) _goalPerformance.Perfomance(_warkTime);
+                if(_goal3Performance != null) _goal3Performance.StartCoroutine(_goal3Performance.DoPerformance(_warkTime));
                 _playerController.StopAction(_warkTime + 10f);
                 StartCoroutine(Walk(_warkTime));
-                Invoke(nameof(Clear), _warkTime);
+                if (_goal3Performance == null) Invoke(nameof(Clear), _warkTime);
                 _timer.enabled = false;
             }
         }
     }
 
-    private void Clear()
+    public void Clear()
     {
         _clearText.SetActive(true);
         _timerTxt.enabled = false;
         _clearTime.enabled = true;
         int min = Mathf.FloorToInt(_timer._currentTime / 60);
         int sec = Mathf.FloorToInt(_timer._currentTime % 60);
-        _clearTime.text = $"クリア時間 {min}:{sec}";
+        _clearTime.text = $"クリア時間 {min.ToString("00")}:{sec.ToString("00")}";
         _isClear.StageClear(_nowStage);
     }
 
@@ -76,7 +78,7 @@ public class Goal : MonoBehaviour
         if (_anime != null) _animator.Play(_anime);
         yield return new WaitForSeconds(time);
         _walk = false;
-        StartCoroutine(Image(2f));
+        if (_goal3Performance == null) StartCoroutine(Image(2f));
     }
 
     IEnumerator Image(float time)
@@ -84,10 +86,10 @@ public class Goal : MonoBehaviour
         yield return new WaitForSeconds(time);
         _fadeImage.SetActive(true);
         FadeOut fadeOut = _fadeImage.GetComponent<FadeOut>();
-        StartCoroutine(LoadScene(fadeOut._fadeTime));
+        if(_goal3Performance == null) StartCoroutine(LoadScene(fadeOut._fadeTime));
     }
 
-    IEnumerator LoadScene(float time)
+    public IEnumerator LoadScene(float time)
     {
         yield return new WaitForSeconds(time);
         _sceneLoader.FadeAndLoadScene();

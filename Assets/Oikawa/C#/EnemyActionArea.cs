@@ -34,7 +34,7 @@ public class EnemyActionArea : MonoBehaviour
                 if (target == _enemiesTra[i])
                 {
                     _enemies[i].enabled = enabled;
-                    Debug.Log(logStr);
+                    //Debug.Log(logStr);
                     return;
                 }
             }

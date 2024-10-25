@@ -131,13 +131,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 270906391555921784, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.66
+      objectReference: {fileID: 0}
     - target: {fileID: 1770593447057491968, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _goalPerformance
       value: 
       objectReference: {fileID: 1876642817}
+    - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.66
+      objectReference: {fileID: 0}
     - target: {fileID: 2713661338995360478, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_Name
       value: Template
+      objectReference: {fileID: 0}
+    - target: {fileID: 2713661338995360478, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2758658429717762690, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -191,6 +203,14 @@ PrefabInstance:
       propertyPath: _leafUI.Array.data[2]
       value: 
       objectReference: {fileID: 1951487090}
+    - target: {fileID: 4898885117197900936, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _minClamp.x
+      value: -21.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4953143955142307075, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.66
+      objectReference: {fileID: 0}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _throwsetting.Platform
       value: 
@@ -769,29 +789,9 @@ PrefabInstance:
       propertyPath: _gameManager
       value: 
       objectReference: {fileID: 1876642809}
-    - target: {fileID: 2524077151089094685, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4001412698565215189, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
       propertyPath: m_Name
       value: Stage1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7719523469006665095, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
-      propertyPath: m_Color.b
-      value: 0.09380561
-      objectReference: {fileID: 0}
-    - target: {fileID: 7719523469006665095, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
-      propertyPath: m_Color.g
-      value: 0.09380561
-      objectReference: {fileID: 0}
-    - target: {fileID: 7719523469006665095, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
-      propertyPath: m_Color.r
-      value: 0.09433961
-      objectReference: {fileID: 0}
-    - target: {fileID: 8883066464621546474, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 12.17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

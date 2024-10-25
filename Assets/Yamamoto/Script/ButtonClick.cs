@@ -46,6 +46,11 @@ public class ButtonClick : MonoBehaviour
     {
         AudioManager.Instance.PlaySE("determination");
     }
+
+    public void BgmFadeOut()
+    {
+        AudioManager.Instance.OnFading();
+    }
     // Start is called before the first frame update
     void Start()
     {

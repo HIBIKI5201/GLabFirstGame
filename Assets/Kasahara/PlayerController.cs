@@ -119,6 +119,7 @@ public class PlayerController : MonoBehaviour
         if (_throwsetting.Platform != null)
         {
             platform = Instantiate(_throwsetting.Platform);
+            platform.GetComponentInChildren<SpriteRenderer>().enabled = false;
             SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         }
         else
@@ -156,6 +157,13 @@ public class PlayerController : MonoBehaviour
             Jump();
             ChangeItem();
             UseItem();
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.name == "goal")
+        {
+            _isInvincible = true;
         }
     }
     public enum PlayerStatus
@@ -390,7 +398,10 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (obj.gameObject.CompareTag("Enemy"))
                 {
-                    FluctuationLife(-1);
+                    if(obj.gameObject.GetComponent<Enemy>().State != Enemy.EnemyState.Faint)
+                    {
+                        FluctuationLife(-1);
+                    }
                     _isStompEnemy = true;
                     _rb.gravityScale = 1;
                 }
