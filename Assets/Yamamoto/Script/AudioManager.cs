@@ -29,6 +29,8 @@ public class AudioManager : MonoBehaviour
     float _fadeTime = 1f;
     float _startVolume;
     bool _isFading = false;
+    bool _isBossArea = false;
+    static public bool _isFinish = false;
     //Awake‚ÅInstance‚É•Û‘¶•ˆê¶‰ó‚³‚ê‚È‚¢ˆ—
     void Awake()
     {
@@ -82,21 +84,45 @@ public class AudioManager : MonoBehaviour
             _bgmSource.Stop();
             _bgmSource.volume = _startVolume;
             _isFading = false;
-            Debug.Log(_bgmSource.volume);
+            _isFinish = true;
+            //Debug.Log(_bgmSource.volume);
         }
     }
 
+    public void FadeInBGM()
+    {
+        _startVolume = 0f;
+        _fadeSpeed = 0.3f;
+        PlayBGM("bossFight");
+        _bgmSource.volume += _fadeSpeed * Time.deltaTime;
+
+        if(_bgmSource.volume > 0.6f)
+        {
+            _bgmSource.volume = 0.6f;
+            _isBossArea = false;
+            _isFinish = false;
+        }
+    }
     public void OnFading()
     {
         _isFading = true;
+    }
+
+    public void ChangeBossBgm()
+    {
+        _isBossArea = true;
     }
 
     private void Update()
     {
         if (_isFading)
         {
-            Debug.Log("jikkou!");
+            //Debug.Log("jikkou!");
             FadeBGM();
+        }
+        if (_isBossArea)
+        {
+            FadeInBGM();
         }
     }
 }
