@@ -14,7 +14,6 @@ public class Torabasami : MonoBehaviour
     float _timer;
     void Start()
     {
-        _controller = GameObject.Find("Player").GetComponent<PlayerController>();
         _torabasamiSprite = GetComponent<SpriteRenderer>();
     }
 
@@ -31,6 +30,7 @@ public class Torabasami : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            collision.gameObject.GetComponent<PlayerController>();
             StartCoroutine(TrapTime(_stopTime));
             _controller.FluctuationLife(-1);
             _controller.StopAction(_stopTime);
@@ -50,6 +50,7 @@ public class Torabasami : MonoBehaviour
             _isTrap = true;
             yield return new WaitForSeconds(time);
             _isTrap = false;
+            Destroy(this.gameObject);
         }
     }
 }
