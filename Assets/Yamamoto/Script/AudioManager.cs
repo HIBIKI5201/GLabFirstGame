@@ -21,8 +21,8 @@ public class AudioManager : MonoBehaviour
     public List<Sound> _bgmSounds;
     public List<Sound> _seSounds;
 
-    public AudioSource _bgmSource;
-    public AudioSource _seSource;
+    [HideInInspector] public AudioSource _bgmSource;
+    [HideInInspector] public AudioSource _seSource;
 
 
     float _fadeSpeed;
