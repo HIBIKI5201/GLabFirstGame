@@ -707,10 +707,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4579202595001667696, guid: 408bca2df67bb5c45a391722cf367601, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 47.64
-      objectReference: {fileID: 0}
     - target: {fileID: 4653702447719845661, guid: 408bca2df67bb5c45a391722cf367601, type: 3}
       propertyPath: _gameManager
       value: 
@@ -1283,7 +1279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _clearPanel: {fileID: 231846004}
-  _uiSet: {fileID: 1596374668}
+  _uiSet: {fileID: 0}
   _vignette: {fileID: 296313218}
   _cam: {fileID: 811215460}
   _fukidasi:
@@ -1292,11 +1288,6 @@ MonoBehaviour:
   _text: {fileID: 1156478303}
   _goal: {fileID: 1066776311}
   _redImage: {fileID: 0}
---- !u!225 &1596374668 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 7032356832867671980, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
-  m_PrefabInstance: {fileID: 30186184}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1728919133 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1790204358524668027, guid: 408bca2df67bb5c45a391722cf367601, type: 3}
