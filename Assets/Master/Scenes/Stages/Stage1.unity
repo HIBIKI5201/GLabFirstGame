@@ -203,6 +203,10 @@ PrefabInstance:
       propertyPath: _leafUI.Array.data[2]
       value: 
       objectReference: {fileID: 1951487090}
+    - target: {fileID: 4326204674328132018, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4898885117197900936, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _minClamp.x
       value: -21.9
