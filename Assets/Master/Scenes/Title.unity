@@ -1412,9 +1412,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.3
-  m_Text: "\u5965\u7530\u5065\u4E8C\u90CE\u3000\u30C7\u30B6\u30A4\u30CA\u30FC\n\u5742\u4E0B
+  m_Text: "\u5965\u7530\u5065\u4E8C\u90CE\u3000\u30C7\u30B6\u30A4\u30CA\u30FC L\n\u5742\u4E0B
     \u9280\u6CB3\u3000\u30C7\u30B6\u30A4\u30CA\u30FC\n\u9322 \u5955\u5609\u3000\u30C7\u30B6\u30A4\u30CA\u30FC\n\u9577\u8C37\u5DDD
-    \u7DBE\u3000\u30C7\u30B6\u30A4\u30CA\u30FC"
+    \u7DBE\u3000\u30C7\u30B6\u30A4\u30CA\u30FC\n\uFF08L \uFF1D\u30BB\u30AF\u30B7\u30E7\u30F3\u30EA\u30FC\u30C0\u30FC\uFF09"
 --- !u!222 &701007399
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2786,6 +2786,7 @@ GameObject:
   - component: {fileID: 1160914685}
   - component: {fileID: 1160914684}
   - component: {fileID: 1160914683}
+  - component: {fileID: 1160914686}
   m_Layer: 5
   m_Name: StartImage2
   m_TagString: Untagged
@@ -2850,6 +2851,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920.0001, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1160914686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160914682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542e69e0980df634d8050a403ff123d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _movePattern: 1
+  _moveTime: 5
+  _distance: 0.1
+  _scale: 1.02
 --- !u!1 &1349831208
 GameObject:
   m_ObjectHideFlags: 0
@@ -3758,6 +3775,7 @@ GameObject:
   - component: {fileID: 1620627216}
   - component: {fileID: 1620627217}
   - component: {fileID: 1620627218}
+  - component: {fileID: 1620627219}
   m_Layer: 5
   m_Name: StartImage1
   m_TagString: Untagged
@@ -3822,6 +3840,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1620627219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620627215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542e69e0980df634d8050a403ff123d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _movePattern: 1
+  _moveTime: 5
+  _distance: 0.1
+  _scale: 1.02
 --- !u!1 &1649527818
 GameObject:
   m_ObjectHideFlags: 0
@@ -4872,7 +4906,7 @@ MonoBehaviour:
     m_LineSpacing: 1.3
   m_Text: "\u65B0\u4FDD \u7F8E\u6708\u3000\u30C7\u30A3\u30EC\u30AF\u30BF\u30FC\n\u767D\u77F3
     \u9686\u535A\u3000\u30D7\u30E9\u30F3\u30CA\u30FC\n\u77F3\u4E95 \u514B\u4F73\u3000\u30D7\u30E9\u30F3\u30CA\u30FC\n\u53CA\u5DDD
-    \u88D5\u5DF1\u3000\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC\n\u7B20\u539F \u98AF\u592A\u3000\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC\n\u5C71\u672C
+    \u88D5\u5DF1\u3000\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC L\n\u7B20\u539F \u98AF\u592A\u3000\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC\n\u5C71\u672C
     \u51CC\u8F14\u3000\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC\n\u516B\u6728 \u864E\u592A\u90CE\u3000\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC"
 --- !u!222 &1836790272
 CanvasRenderer:
