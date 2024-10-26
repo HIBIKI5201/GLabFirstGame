@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
     public List<Sound> _bgmSounds;
     public List<Sound> _seSounds;
 
-    private AudioSource _bgmSource;
+    public AudioSource _bgmSource;
     private AudioSource _seSource;
 
 

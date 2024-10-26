@@ -133,7 +133,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 270906391555921784, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 356.76
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 270906391555921784, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 356.76
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -249,7 +249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4953143955142307075, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 356.76
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4953143955142307075, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -584,7 +584,7 @@ PrefabInstance:
       objectReference: {fileID: 695931517}
     - target: {fileID: 8630784609624567645, guid: 4cf456962c1c55c498da852d6bf517a9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 356.76
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8630784609624567645, guid: 4cf456962c1c55c498da852d6bf517a9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1291,6 +1291,7 @@ MonoBehaviour:
   - {fileID: 738734564}
   _text: {fileID: 1156478303}
   _goal: {fileID: 1066776311}
+  _redImage: {fileID: 0}
 --- !u!225 &1596374668 stripped
 CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 7032356832867671980, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
