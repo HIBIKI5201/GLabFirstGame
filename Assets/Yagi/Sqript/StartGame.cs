@@ -10,12 +10,14 @@ public class StartGame : MonoBehaviour
     GameManager _gameManager;
     Timer _timer;
     GameOverSystem _gameOver;
+    Checkpoint _checkpoint;
     void Start()
     {
+        _checkpoint = FindAnyObjectByType<Checkpoint>();
         _gameManager = FindAnyObjectByType<GameManager>();
         _gameOver = FindAnyObjectByType<GameOverSystem>();
         _gameManager.State = GameManager.GameState.Playing;
-        if (GameOver.position != Vector2.zero) transform.position = GameOver.position;
+        if (Checkpoint._checkpoint != Vector2.zero) transform.position = Checkpoint._checkpoint;
         _timer = FindAnyObjectByType<Timer>();
         _player = GetComponent<PlayerController>();
         _player.StopAction(2f);

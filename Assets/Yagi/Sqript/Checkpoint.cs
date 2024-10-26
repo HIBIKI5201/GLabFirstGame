@@ -15,7 +15,7 @@ public class Checkpoint : MonoBehaviour
 
     static Vector2 _startPlayerPos;
 
-    public Vector2 _checkpoint { get; set; }
+    public static Vector2 _checkpoint { get; set; }
 
     public bool _isCheck = false;
 
@@ -24,6 +24,7 @@ public class Checkpoint : MonoBehaviour
         if (_startPlayerPos == Vector2.zero)_startPlayerPos = _player.transform.position;
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        //_gameManager = GameManager.instance;
     }
 
     private void Update()
@@ -39,6 +40,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log("チェックポイントを通過");
             _isCheck = true;
             _checkpoint = _player.transform.position;
             _capsuleCollider.enabled = false;
