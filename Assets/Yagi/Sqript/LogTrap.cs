@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,6 @@ public class LogTrap : MonoBehaviour
 
     void Swing()
     {
-
         //Z座標のローテーションを90になるまで増やす
         if (_isSwingRight && _rotationz < 90)
         {

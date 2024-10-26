@@ -63,6 +63,7 @@ public class Goal : MonoBehaviour
 
     public void Clear()
     {
+        AudioManager.Instance.PlaySE("stageclear");
         _clearText.SetActive(true);
         _timerTxt.enabled = false;
         _clearTime.enabled = true;

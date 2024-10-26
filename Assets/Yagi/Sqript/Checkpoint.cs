@@ -24,14 +24,13 @@ public class Checkpoint : MonoBehaviour
         if (_startPlayerPos == Vector2.zero)_startPlayerPos = _player.transform.position;
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _gameManager = GameManager.instance;
     }
 
     private void Update()
     {
-        if (_gameManager.State == GameManager.GameState.StageClear)
+        if (GameManager.instance.State == GameManager.GameState.StageClear)
         {
-            Debug.Log("チェックポイントをリセット");
+            //Debug.Log("チェックポイントをリセット");
             _checkpoint = _startPlayerPos;
         }
     }
@@ -40,7 +39,8 @@ public class Checkpoint : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("チェックポイントを通過");
+            //Debug.Log("チェックポイントを通過");
+            AudioManager.Instance.PlaySE("checkpoint");
             _isCheck = true;
             _checkpoint = _player.transform.position;
             _capsuleCollider.enabled = false;

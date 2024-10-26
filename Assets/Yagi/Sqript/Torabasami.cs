@@ -15,6 +15,7 @@ public class Torabasami : MonoBehaviour
     void Start()
     {
         _torabasamiSprite = GetComponent<SpriteRenderer>();
+        _controller = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
     private void Update()
@@ -38,6 +39,7 @@ public class Torabasami : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            AudioManager.Instance.PlaySE("damage_enemy");
             Destroy(collision.gameObject);
             if (_meat)
             {

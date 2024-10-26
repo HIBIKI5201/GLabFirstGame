@@ -142,7 +142,7 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: cbf5e650234c15a4fadfac1fefcd8720, type: 3}
     _volume: 1
     _pitch: 0
-  - _name: stageRelease
+  - _name: checkpoint
     _clip: {fileID: 8300000, guid: 0847a4207d8aab345bc90c7adeb86476, type: 3}
     _volume: 1
     _pitch: 0
@@ -182,3 +182,4 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: 5b7e1af3753028542884d94b92fc3578, type: 3}
     _volume: 1
     _pitch: 0
+  _bgmSource: {fileID: 0}

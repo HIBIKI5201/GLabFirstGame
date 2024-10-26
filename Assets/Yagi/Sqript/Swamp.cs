@@ -41,6 +41,7 @@ public class Swamp : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            AudioManager.Instance.PlaySE("damage_enemy");
             _enemy = collision.gameObject.GetComponent<Enemy>();
 
             _defaultEnemySpeed = _enemy._currentSpeed;
@@ -64,6 +65,7 @@ public class Swamp : MonoBehaviour
         {
             if (_enemyTimer > 1)
             {
+                AudioManager.Instance.PlaySE("damage_enemy");
                 _enemy.LifeFluctuation(-1);
                 _enemyTimer = 0;
             }

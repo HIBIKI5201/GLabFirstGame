@@ -2,6 +2,8 @@
 using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 /// <summary>
@@ -9,24 +11,21 @@ using UnityEngine.UI;
 /// </summary>
 public class Stage3GoalPerformance : MonoBehaviour
 {
-    [SerializeField] CanvasGroup _clearPanel, _uiSet;
-    [SerializeField] Image _vignette;
+    [SerializeField] CanvasGroup _clearPanel, _operate, _hp;
+    [SerializeField] Image _vignette, _fadePanel;
     [SerializeField] CinemachineVirtualCamera _cam;
     [SerializeField] GameObject[] _fukidasi;
     [SerializeField] Text _text;
     [SerializeField] Goal _goal;
-    [SerializeField] RedImage _redImage;
+    [SerializeField] Volume _volume;
+    
 
     void Start()
     {
-        //テスト　IsClear._concealed = true;
+        IsClear._concealed = true;
         _vignette.gameObject.SetActive(false);
         _cam.gameObject.SetActive(false);
     }
-
-    //ハッピーエンドか、バッドエンドかによって変化
-    //吹き出し
-
 
     public IEnumerator DoPerformance(float warkTime)
     {
@@ -45,7 +44,8 @@ public class Stage3GoalPerformance : MonoBehaviour
         yield return new WaitForSeconds(panelTime);
 
         _clearPanel.DOFade(0, 1);
-        _uiSet.DOFade(0, 1);
+        _operate.DOFade(0, 1);
+        _hp.DOFade(0, 1);
         AudioManager.Instance._bgmSource.DOFade(0,4);
 
         yield return new WaitForSeconds(warkTime - panelTime);
@@ -63,6 +63,7 @@ public class Stage3GoalPerformance : MonoBehaviour
         {
             _text.text = "";
             _text.DOText("扉を開けて。", 2f);
+            AudioManager.Instance.PlaySE("knock");
 
             yield return new WaitForSeconds(5f);
 
@@ -72,7 +73,8 @@ public class Stage3GoalPerformance : MonoBehaviour
             yield return new WaitForSeconds(5f);
 
             _text.text = "";
-            _text.DOText("赤ずきんだよ。", 2f);
+            _text.DOText("赤ずきんだよ。扉を開けて。", 2f);
+            AudioManager.Instance.PlaySE("knock");
 
             yield return new WaitForSeconds(5f);
 
@@ -83,6 +85,23 @@ public class Stage3GoalPerformance : MonoBehaviour
             _text.DOText("食べたりしないからさあ、開けてよお？", 4f);
 
             yield return new WaitForSeconds(4f);
+
+            _fadePanel.color = new Color(0, 0, 0, 0);
+            _fadePanel.gameObject.SetActive(true);
+            _fadePanel.DOFade(1, 2);
+
+            yield return new WaitForSeconds(1f);
+
+            AudioManager.Instance.PlaySE("openDoor");
+
+            yield return new WaitForSeconds(4f);
+
+            AudioManager.Instance.PlaySE("damaged");
+
+            yield return new WaitForSeconds(2f);
+
+            _goal.StartCoroutine(_goal.LoadScene(1f));
+
         }
         else //HappyEnd
         {
@@ -93,11 +112,14 @@ public class Stage3GoalPerformance : MonoBehaviour
 
             _text.text = "";
             _text.DOText("大好きな、大好きな、おばあさん。", 2f);
+
+            yield return new WaitForSeconds(3f);
+
+            AudioManager.Instance.PlaySE("openDoor");
+
+            yield return new WaitForSeconds(2f);
+
+            _goal.StartCoroutine(_goal.LoadScene(1f));
         }
-
-        yield return new WaitForSeconds(3f);
-
-        _goal.StartCoroutine(_goal.LoadScene(1f));
-
     }
 }

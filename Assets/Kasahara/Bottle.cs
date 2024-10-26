@@ -28,7 +28,7 @@ public class Bottle : ItemBase
                         Landing = true;
                         //地面についたらコライダーを復活
                         GetComponent<Collider2D>().enabled = true;
-                        //AudioManager.Instance.PlaySE("bottle");
+                        AudioManager.Instance.PlaySE("crack");
                     }
                 }
             }

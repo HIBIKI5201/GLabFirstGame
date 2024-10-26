@@ -8,6 +8,7 @@ public class Timer : MonoBehaviour
     [SerializeField] Text timerTxt;
     [SerializeField][Header("ŠJŽnŽžŠÔ")] float _startTime;
     public float _currentTime;
+    bool _sePlayed;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,12 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_currentTime <= 30) TimerColorChange();
+        if (_currentTime <= 30)
+        {
+            TimerColorChange();
+            if(!_sePlayed) AudioManager.Instance.PlaySE("timeLimit");
+            _sePlayed = true;
+        }
 
         if(_currentTime > 0)
         {

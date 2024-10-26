@@ -20,6 +20,7 @@ public class GameOver : MonoBehaviour
         if (_gameManager.State == GameManager.GameState.GameOver)
         {
             _redObject.SetActive(true);
+            AudioManager.Instance.PlaySE("dead");
         }
     }
 }
