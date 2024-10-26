@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    [SerializeField] GameManager _gameManager;
+    GameManager _gameManager;
 
     [SerializeField] GameObject _player;
 
@@ -24,7 +24,7 @@ public class Checkpoint : MonoBehaviour
         if (_startPlayerPos == Vector2.zero)_startPlayerPos = _player.transform.position;
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        //_gameManager = GameManager.instance;
+        _gameManager = GameManager.instance;
     }
 
     private void Update()
