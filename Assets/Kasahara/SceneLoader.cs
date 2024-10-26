@@ -72,5 +72,6 @@ public class SceneLoader : MonoBehaviour
             IsFading = false;
             SceneManager.LoadScene(Enum.GetName(typeof(Scenes), scene));
         });
+        AudioManager.Instance.OnFading();
     }
 }
