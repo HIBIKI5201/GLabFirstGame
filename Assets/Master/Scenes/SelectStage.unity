@@ -959,8 +959,8 @@ MonoBehaviour:
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: -10, y: 0}
   _buttonImage:
-  - {fileID: 21300000, guid: 9228f810b5dd66f4aa006c18828cae7a, type: 3}
-  - {fileID: 21300000, guid: 9228f810b5dd66f4aa006c18828cae7a, type: 3}
+  - {fileID: 21300000, guid: b185427c2f4c6fa47abe3087039eba6c, type: 3}
+  - {fileID: 21300000, guid: b185427c2f4c6fa47abe3087039eba6c, type: 3}
   _currentImage: {fileID: 232290078}
 --- !u!1 &234961691
 GameObject:
@@ -1195,8 +1195,8 @@ MonoBehaviour:
   _normalScale: {x: 1, y: 1, z: 1}
   _newPosition: {x: -10, y: 0}
   _buttonImage:
-  - {fileID: 21300000, guid: ad972afa6390fdd44b84f902f50eec19, type: 3}
-  - {fileID: 21300000, guid: ad972afa6390fdd44b84f902f50eec19, type: 3}
+  - {fileID: 21300000, guid: 92cf644f2a1ffe240966e42b1d9a556f, type: 3}
+  - {fileID: 21300000, guid: 92cf644f2a1ffe240966e42b1d9a556f, type: 3}
   _currentImage: {fileID: 234961694}
 --- !u!1 &257297184
 GameObject:
