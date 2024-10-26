@@ -73,12 +73,10 @@ public class SceneLoader : MonoBehaviour
     public void FadeAndLoadScene(Image image, Color fadeColor, float fadeTime, Scenes scene)
     {
         IsFading = true;
-        Image.gameObject.SetActive(true);
         DOTween.To(() => image.color, c => image.color = c, fadeColor, _fadeTime).SetUpdate(true).OnComplete(
         () =>
         {
             IsFading = false;
-            Image = null;
             SceneManager.LoadScene(Enum.GetName(typeof(Scenes), scene));
         });
     }
