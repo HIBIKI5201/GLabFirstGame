@@ -56,6 +56,7 @@ public class SceneLoader : MonoBehaviour
     public void FadeAndLoadScene()
     {
         IsFading = true;
+        Image = _fadePanel.GetComponent<Image>();
         Image.gameObject.SetActive(true);
         DOTween.To(() => Image.color, c => Image.color = c, _fadeColor, _fadeTime).OnComplete(SceneLoad);
     }
