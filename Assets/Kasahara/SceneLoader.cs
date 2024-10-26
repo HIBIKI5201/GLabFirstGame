@@ -53,9 +53,10 @@ public class SceneLoader : MonoBehaviour
     }
     void SceneLoad()
     {
+        AudioManager.Instance._seSource.volume = 1f;
         IsFading = false;
         Image = null;
-        Debug.Log("LoadScene");
+        //Debug.Log("LoadScene");
         SceneManager.LoadScene(Enum.GetName(typeof(Scenes), _scene));
     }
     /// <summary>

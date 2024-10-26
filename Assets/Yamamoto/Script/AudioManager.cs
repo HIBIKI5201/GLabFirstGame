@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
     public List<Sound> _seSounds;
 
     public AudioSource _bgmSource;
-    private AudioSource _seSource;
+    public AudioSource _seSource;
 
 
     float _fadeSpeed;
