@@ -20,16 +20,7 @@ public class SceneLoader : MonoBehaviour
             if (Image == null)
             {
                 Image = _fadePanel.GetComponent<Image>();
-                Image.color = _fadeColor;
-                Debug.Log(Image.color);
-                IsFading = true;
-                DOTween.To(() => Image.color, c => Image.color = c, Color.clear, _fadeTime).OnComplete(
-                    () =>
-                    {
-                        Image.gameObject.SetActive(false);
-                        IsFading = false;
-                        Image = null;
-                    });
+                Image.color = Color.clear;
             }
         }
         else
@@ -64,6 +55,7 @@ public class SceneLoader : MonoBehaviour
     {
         IsFading = false;
         Image = null;
+        Debug.Log("LoadScene");
         SceneManager.LoadScene(Enum.GetName(typeof(Scenes), _scene));
     }
     /// <summary>
