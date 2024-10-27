@@ -16,7 +16,6 @@ public class IsClear : MonoBehaviour
 
     private void Start()
     {
-        _gameAllClear = false;
         DontDestroyOnLoad(gameObject);
     }
     private void Update()
@@ -34,7 +33,7 @@ public class IsClear : MonoBehaviour
     {
         if (_stagesCleared <= stage)
         {
-            if (_stagesCleared == stage && stage == 3)
+            if (stage == 3)
             {
                 _gameAllClear = true;
             }
