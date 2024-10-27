@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     SpriteRenderer[] spriteRenderers;
     BoxCollider2D _boxCollider;
     PlayerController _player;
+    GameObject _meatIcon;
 
     [Tooltip("動物の種類")]
     [SerializeField] Beast _beast;
@@ -209,6 +210,7 @@ public class Enemy : MonoBehaviour
         _canReset = true;
         ResetStatus();
         CacheComponents();
+        _meatIcon = transform.GetChild(1).gameObject;
     }
     void ResetStatus()
     {
@@ -324,6 +326,7 @@ public class Enemy : MonoBehaviour
         }
         void UpdateMeat()
         {
+            _meatIcon.SetActive(true);
             //肉との距離
             float x = _meatPosi.x - _myTra.position.x;
             //肉に向ける
@@ -341,6 +344,7 @@ public class Enemy : MonoBehaviour
             if (Time.time >= _meatTimer + _meatTime)
             {
                 State = EnemyState.Normal;
+                _meatIcon.SetActive(false);
                 _dir = Mathf.Sign(_modelT.localScale.x) switch { 1 => Direction.Left, -1 => Direction.Right, _ => Direction.None };
             }
             //ジャンプが必要で 地面にいて　ジャンプができる
