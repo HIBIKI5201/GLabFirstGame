@@ -13,7 +13,7 @@ public class Goal : MonoBehaviour
     [SerializeField] Text _timerTxt;
     [SerializeField] Text _clearTime;
     Animator _animator;
-    [SerializeField, Header("現在のステージ")] int _nowStage;
+    [SerializeField, Header("現在のステージ")] public int _nowStage;
     Rigidbody2D _rb;
     [SerializeField, Header("ゴール後歩く時間")] float _warkTime;
     [SerializeField, Header("歩くアニメーションの名前")] string _anime;
