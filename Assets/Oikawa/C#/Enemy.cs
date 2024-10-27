@@ -14,6 +14,8 @@ public class Enemy : MonoBehaviour
     BoxCollider2D _boxCollider;
     PlayerController _player;
     GameObject _meatIcon;
+    StunAnime _stunAnime;
+    GameObject _stunAnimeObj;
 
     [Tooltip("“®•¨‚ÌŽí—Þ")]
     [SerializeField] Beast _beast;
@@ -238,6 +240,8 @@ public class Enemy : MonoBehaviour
     }
     void CacheComponents()
     {
+        _stunAnime = GetComponentInChildren<StunAnime>();
+        _stunAnimeObj = _stunAnime.gameObject;
         _myTra = transform;
         _audio = AudioManager.Instance;
 
@@ -273,6 +277,9 @@ public class Enemy : MonoBehaviour
         var vec = _modelScale;
         vec.x *= _dir switch { Direction.Right => -1, Direction.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
         _modelT.localScale = vec;
+
+        _stunAnimeObj.SetActive(State == EnemyState.Faint);
+
         switch (State)
         {
             case EnemyState.Faint:
