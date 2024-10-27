@@ -22,7 +22,6 @@ public class Stage3GoalPerformance : MonoBehaviour
 
     void Start()
     {
-        IsClear._concealed = true;
         _vignette.gameObject.SetActive(false);
         _cam.gameObject.SetActive(false);
     }

@@ -76,7 +76,13 @@ public class Goal : MonoBehaviour
     IEnumerator Walk(float time)
     {
         _walk = true;
-        if (_anime != null) _animator.Play(_anime);
+        if (_anime != null)
+        {
+            _animator.SetBool("isClear",true);
+            _animator.Play(_anime);
+            Debug.Log("ゴールアニメーション");
+            Debug.Log(_animator.gameObject.name);
+        }
         yield return new WaitForSeconds(time);
         _walk = false;
         if (_goal3Performance == null) StartCoroutine(Image(2f));

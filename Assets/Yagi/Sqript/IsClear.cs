@@ -6,6 +6,7 @@ public class IsClear : MonoBehaviour
 {
     public static int _stagesCleared = 0;
     public static bool _concealed = false;
+
     /// <summary>
     /// ゲームを一周クリアしたかのフラグ
     /// </summary>
@@ -15,23 +16,32 @@ public class IsClear : MonoBehaviour
 
     private void Start()
     {
+        _gameAllClear = false;
         DontDestroyOnLoad(gameObject);
     }
-    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            _gameAllClear = true;
+        }
+    }
     /// <summary>
     /// ステージを開放するかどうかの判定
     /// </summary>
     /// <param name="stage"></param>
     public void StageClear(int stage)
     {
-        if (_stagesCleared < stage)
+        if (_stagesCleared <= stage)
         {
-            _stagesCleared = stage;
-            if (_stagesCleared == 3)
+            if (_stagesCleared == stage && stage == 3)
             {
                 _gameAllClear = true;
             }
+            _stagesCleared = stage;
+            
             PlayerPrefs.SetInt("nowStage", _stagesCleared);
         }
+        Debug.Log($"_gameAllClear{_gameAllClear},_concealed{_concealed}");
     }
 }

@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (_canAction)
+        if (_canAction && _playerStatus != PlayerStatus.Death)
         {
             Move();
             //NewMove();
@@ -391,7 +391,7 @@ public class PlayerController : MonoBehaviour
                     _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
                     _animator.SetBool("isJump", false);
-                    _animator.SetBool("isFall", false) ;
+                    _animator.SetBool("isFall", false);
                     if (_landingInertia && _horiInput == 0)
                     {
                         _rb.velocity = new Vector2(0, _rb.velocity.y);
