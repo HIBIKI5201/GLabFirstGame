@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 32, y: 18}
+  m_Size: {x: 32, y: 32}
   m_EdgeRadius: 0
 --- !u!114 &6933714879863258669
 MonoBehaviour:
@@ -204,6 +204,7 @@ MonoBehaviour:
   _clampEnabled: 1
   _minClamp: {x: -16, y: -3.5}
   _maxClamp: {x: 320, y: -0.8}
+  _canShake: 0
   _shakeSpeed: 0.05
   _shakePower: 0.4
 --- !u!114 &3723998025422491589
