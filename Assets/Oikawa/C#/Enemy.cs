@@ -14,7 +14,6 @@ public class Enemy : MonoBehaviour
     BoxCollider2D _boxCollider;
     PlayerController _player;
     GameObject _meatIcon;
-    StunAnime _stunAnime;
     GameObject _stunAnimeObj;
 
     [Tooltip("“®•¨‚ÌŽí—Þ")]
@@ -240,8 +239,7 @@ public class Enemy : MonoBehaviour
     }
     void CacheComponents()
     {
-        _stunAnime = GetComponentInChildren<StunAnime>();
-        _stunAnimeObj = _stunAnime.gameObject;
+        _stunAnimeObj = GetComponentInChildren<StunAnime>().gameObject;
         _myTra = transform;
         _audio = AudioManager.Instance;
 
@@ -269,6 +267,7 @@ public class Enemy : MonoBehaviour
     }
     void Update()
     {
+        _rb.isKinematic = false;
         if (_currentHp <= 0)
         {
             //Debug.Log("“GŽ€–S");
@@ -395,8 +394,8 @@ public class Enemy : MonoBehaviour
         void UpdateVelocity()
         {
             Vector2 velo = _rb.velocity;
-            if (!_jumpOver||!_canChase)
-                velo.y = velo.y > 0.01f ? 0.01f : velo.y;
+            //if (!_jumpOver||!_canChase)
+                //velo.y = velo.y > 0.01f ? 0.01f : velo.y;
 
             velo.x = _currentSpeed * _dir switch { Direction.Right => 1, Direction.Left => -1, _ => 0 };
             _rb.velocity = velo;
