@@ -53,7 +53,7 @@ public class Goal : MonoBehaviour
                 _rb.Sleep();
                 if(_goalPerformance != null) _goalPerformance.Perfomance(_warkTime);
                 if(_goal3Performance != null) _goal3Performance.StartCoroutine(_goal3Performance.DoPerformance(_warkTime));
-                _playerController.StopAction(_warkTime + 10f);
+                _playerController.StopAction(_warkTime + 120f);
                 StartCoroutine(Walk(_warkTime));
                 if (_goal3Performance == null) Invoke(nameof(Clear), _warkTime);
                 _timer.enabled = false;
