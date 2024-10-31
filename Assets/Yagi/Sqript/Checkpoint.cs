@@ -30,9 +30,16 @@ public class Checkpoint : MonoBehaviour
     {
         if (GameManager.instance.State == GameManager.GameState.StageClear)
         {
-            //Debug.Log("チェックポイントをリセット");
-            _checkpoint = _startPlayerPos;
+            ResetPoint();
         }
+    }
+
+    /// <summary>
+    ///Debug.Log("チェックポイントをリセット");
+    /// </summary>
+    public void ResetPoint()
+    {
+        _checkpoint = _startPlayerPos;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

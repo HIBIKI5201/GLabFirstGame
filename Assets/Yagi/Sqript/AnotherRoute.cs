@@ -28,6 +28,8 @@ public class AnotherRoute : MonoBehaviour
         {
             IsClear._concealed = true;
             IsClear._stagesCleared = 1;
+            Checkpoint checkpoint = FindAnyObjectByType<Checkpoint>();
+            checkpoint.ResetPoint();
             PlayerPrefs.SetInt("nowStage", IsClear._stagesCleared);
             _load.FadeAndLoadScene();
         }
