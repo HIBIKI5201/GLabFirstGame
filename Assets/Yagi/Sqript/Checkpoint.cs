@@ -70,7 +70,8 @@ public class Checkpoint : MonoBehaviour
             //Debug.Log("チェックポイントを通過");
             AudioManager.Instance.PlaySE("checkpoint");
             _isCheck = true;
-            _checkpoint = _player.transform.position;
+            if(_nowStage == 3) _checkpoint = new Vector2(_player.transform.position.x,_player.transform.position.y - 2.85f);
+            else _checkpoint = _player.transform.position;
             _capsuleCollider.enabled = false;
             if (_changeSprite) _spriteRenderer.sprite = _changeSprite;
         }
