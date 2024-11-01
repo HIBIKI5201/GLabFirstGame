@@ -21,7 +21,6 @@ public class StartGame : MonoBehaviour
         _gameManager.State = GameManager.GameState.Playing;
         if (Checkpoint._checkpoint != Vector2.zero)
         {
-            if (_goal._nowStage == 3) Checkpoint._checkpoint = new Vector2(Checkpoint._checkpoint.x, Checkpoint._checkpoint.y + 1.034f) ;
             transform.position = Checkpoint._checkpoint;
         }
         _timer = FindAnyObjectByType<Timer>();
