@@ -7,7 +7,7 @@ public class Checkpoint : MonoBehaviour
 
     [SerializeField] GameObject _player;
 
-    [Header("•ÏX‚³‚ê‚é‰æ‘œ"), SerializeField] Sprite _changeSprite;
+    [Header("ï¿½ÏXï¿½ï¿½ï¿½ï¿½ï¿½æ‘œ"), SerializeField] Sprite _changeSprite;
 
     SpriteRenderer _spriteRenderer;
 
@@ -22,6 +22,7 @@ public class Checkpoint : MonoBehaviour
     public static Vector2 _checkpoint { get; set; }
 
     public bool _isCheck = false;
+    private bool _isFirstCheck = false;
 
     private void Awake()
     {
@@ -55,7 +56,7 @@ public class Checkpoint : MonoBehaviour
     }
 
     /// <summary>
-    ///Debug.Log("ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚ğƒŠƒZƒbƒg");
+    ///Debug.Log("ï¿½`ï¿½Fï¿½bï¿½Nï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½g");
     /// </summary>
     public void ResetPoint()
     {
@@ -64,15 +65,16 @@ public class Checkpoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && !_isFirstCheck)
         {
-            //Debug.Log("ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚ğ’Ê‰ß");
+            //Debug.Log("ï¿½`ï¿½Fï¿½bï¿½Nï¿½|ï¿½Cï¿½ï¿½ï¿½gï¿½ï¿½Ê‰ï¿½");
             AudioManager.Instance.PlaySE("checkpoint");
             _isCheck = true;
             //if(_nowStage == 3) _checkpoint = new Vector2(_player.transform.position.x,_player.transform.position.y - 2.85f);
             _checkpoint = _player.transform.position;
             _capsuleCollider.enabled = false;
             if (_changeSprite) _spriteRenderer.sprite = _changeSprite;
+            _isFirstCheck = true;
         }
     }
 }

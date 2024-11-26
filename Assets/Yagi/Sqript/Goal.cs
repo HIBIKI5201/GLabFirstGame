@@ -6,17 +6,17 @@ using UnityEngine.UI;
 public class Goal : MonoBehaviour
 {
     [SerializeField] GameManager _gameManager;
-    [Header("ƒtƒF[ƒhƒAƒEƒg‚·‚éƒCƒ[ƒW"), SerializeField] GameObject _fadeImage;
+    [Header("ï¿½tï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½W"), SerializeField] GameObject _fadeImage;
     [SerializeField] SceneLoader _sceneLoader;
     PlayerController _playerController;
     [SerializeField] GameObject _clearText;
     [SerializeField] Text _timerTxt;
     [SerializeField] Text _clearTime;
-    Animator _animator;
-    [SerializeField, Header("Œ»İ‚ÌƒXƒe[ƒW")] public int _nowStage;
+    public Animator _animator;
+    [SerializeField, Header("ï¿½ï¿½ï¿½İ‚ÌƒXï¿½eï¿½[ï¿½W")] public int _nowStage;
     Rigidbody2D _rb;
-    [SerializeField, Header("ƒS[ƒ‹Œã•à‚­ŠÔ")] float _warkTime;
-    [SerializeField, Header("•à‚­ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì–¼‘O")] string _anime;
+    [SerializeField, Header("ï¿½Sï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] float _warkTime;
+    [SerializeField, Header("ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ì–ï¿½ï¿½O")] string _anime;
     [SerializeField] Stage1GoalPerformance _goalPerformance;
     [SerializeField] Stage3GoalPerformance _goal3Performance;
     IsClear _isClear;
@@ -69,7 +69,7 @@ public class Goal : MonoBehaviour
         _clearTime.enabled = true;
         int min = Mathf.FloorToInt(_timer._currentTime / 60);
         int sec = Mathf.FloorToInt(_timer._currentTime % 60);
-        _clearTime.text = $"ƒNƒŠƒAŠÔ {min.ToString("00")}:{sec.ToString("00")}";
+        _clearTime.text = $"ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ  {min.ToString("00")}:{sec.ToString("00")}";
         _isClear.StageClear(_nowStage);
     }
 
@@ -80,11 +80,12 @@ public class Goal : MonoBehaviour
         {
             _animator.SetBool("isClear",true);
             _animator.Play(_anime);
-            Debug.Log("ƒS[ƒ‹ƒAƒjƒ[ƒVƒ‡ƒ“");
+            Debug.Log("ï¿½Sï¿½[ï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½");
             Debug.Log(_animator.gameObject.name);
         }
         yield return new WaitForSeconds(time);
         _walk = false;
+        _animator.SetBool("isClear",false);
         if (_goal3Performance == null) StartCoroutine(Image(2f));
     }
 
