@@ -7,40 +7,16 @@ public class Checkpoint : MonoBehaviour
 
     [SerializeField] GameObject _player;
 
-    [Header("�ύX�����摜"), SerializeField] Sprite _changeSprite;
+    [Header("変更するイラスト"), SerializeField] Sprite _changeSprite;
 
     SpriteRenderer _spriteRenderer;
 
     CapsuleCollider2D _capsuleCollider;
 
-    static Vector2 _startPlayerPos;
+    [SerializeField] int nowStage;
 
-    [SerializeField] int _nowStage;
-
-    static Vector2 _stage3Start;
-
-    public static Vector2 _checkpoint { get; set; }
-
-    public bool _isCheck = false;
     private bool _isFirstCheck = false;
 
-    private void Awake()
-    {
-        if (_startPlayerPos == Vector2.zero) _startPlayerPos = _player.transform.position;
-        
-        if (_nowStage == 2)
-        {
-            _stage3Start = new Vector2(_startPlayerPos.x, _startPlayerPos.y + 2.85f);
-            _startPlayerPos = _stage3Start;
-        }
-        else
-        {
-            if (_startPlayerPos == _stage3Start)
-            {
-                _startPlayerPos = new Vector2(_startPlayerPos.x, _startPlayerPos.y - 2.85f);
-            }
-        }
-    }
     private void Start()
     {        
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
@@ -55,23 +31,18 @@ public class Checkpoint : MonoBehaviour
         }
     }
 
-    /// <summary>
-    ///Debug.Log("�`�F�b�N�|�C���g�����Z�b�g");
-    /// </summary>
+   
     public void ResetPoint()
     {
-        _checkpoint = _startPlayerPos;
+        CheckPointManager._checkPoint[nowStage - 1] = Vector2.zero;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player") && !_isFirstCheck)
         {
-            //Debug.Log("�`�F�b�N�|�C���g��ʉ�");
             AudioManager.Instance.PlaySE("checkpoint");
-            _isCheck = true;
-            //if(_nowStage == 3) _checkpoint = new Vector2(_player.transform.position.x,_player.transform.position.y - 2.85f);
-            _checkpoint = _player.transform.position;
+            CheckPointManager._checkPoint[nowStage - 1] = this.transform.position;
             _capsuleCollider.enabled = false;
             if (_changeSprite) _spriteRenderer.sprite = _changeSprite;
             _isFirstCheck = true;
