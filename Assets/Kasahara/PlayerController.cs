@@ -11,61 +11,61 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, Tooltip("ƒvƒŒƒCƒ„[‚Ì‘Ì—Í‚ÌÅ‘å’l")] int _maxHp;
+    [SerializeField, Tooltip("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‘Ì—Í‚ÌÅ‘ï¿½l")] int _maxHp;
     public int CurrentHp { get; private set; }
-    [SerializeField, Tooltip("‘Ì—Í‚Ìƒoƒ‰‚Ì‰Ô‚Ñ‚ç")] public List<GameObject> _rose = new List<GameObject>();
-    [SerializeField, Tooltip("ƒvƒŒƒCƒ„[‚Ì‘¬“x‚ÌÅ‘å’l")] public float _maxSpeed;
-    [SerializeField, Tooltip("ƒvƒŒƒCƒ„[‚ÌˆÚ“®‘¬“x‚Ì‰Á‘¬“x")] public float _movePower;
-    [SerializeField, Tooltip("“ü—Í‚ª‚È‚¢‚ÌŒ¸‘¬“x")] public float _deceleration;
-    [SerializeField, Tooltip("’…’n‚ÉŠµ«‚ğ“K—p‚·‚é")] bool _landingInertia;
-    [SerializeField, Tooltip("ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv—Í")] float _jumpPower;
-    [SerializeField, Tooltip("—‰º‘¬“x")] float _fallSpeed;
-    [SerializeField, Tooltip("ƒvƒŒƒCƒ„[‚Ì–³“GŠÔ")] int _damageCool;
-    [SerializeField, Tooltip("Ú’n”»’è‚ÌˆÊ’u")] Vector2 _point;
-    [SerializeField, Tooltip("Ú’n”»’è‚Ì‘å‚«‚³")] Vector2 _size;
-    [SerializeField, Tooltip("Ú’n”»’è‚ÌŠp“x")] float _angle;
-    [SerializeField, Tooltip("ƒ_ƒbƒVƒ…‚Ì‰¹")] AudioClip _dash;
-    [SerializeField, Tooltip("•à‚¢‚Ä‚é‰¹")] AudioClip _walk;
-    [SerializeField, Tooltip("<ƒAƒCƒeƒ€‚ğ“Š‚°‚éİ’è>")] Throwsetting _throwsetting;
-    [SerializeField, Tooltip("<ƒAƒCƒeƒ€‚Ìİ’è>")] ItemSetting _itemSetting;
+    [SerializeField, Tooltip("ï¿½Ì—Í‚Ìƒoï¿½ï¿½ï¿½Ì‰Ô‚Ñ‚ï¿½")] public List<GameObject> _rose = new List<GameObject>();
+    [SerializeField, Tooltip("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‘ï¿½ï¿½xï¿½ÌÅ‘ï¿½l")] public float _maxSpeed;
+    [SerializeField, Tooltip("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½xï¿½Ì‰ï¿½ï¿½ï¿½ï¿½x")] public float _movePower;
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½Í‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ÌŒï¿½ï¿½ï¿½ï¿½x")] public float _deceleration;
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ÉŠï¿½ï¿½ï¿½ï¿½ï¿½Kï¿½pï¿½ï¿½ï¿½ï¿½")] bool _landingInertia;
+    [SerializeField, Tooltip("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒWï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½")] float _jumpPower;
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½x")] float _fallSpeed;
+    [SerializeField, Tooltip("ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì–ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½")] int _damageCool;
+    [SerializeField, Tooltip("ï¿½Ú’nï¿½ï¿½ï¿½ï¿½ÌˆÊ’u")] Vector2 _point;
+    [SerializeField, Tooltip("ï¿½Ú’nï¿½ï¿½ï¿½ï¿½Ì‘å‚«ï¿½ï¿½")] Vector2 _size;
+    [SerializeField, Tooltip("ï¿½Ú’nï¿½ï¿½ï¿½ï¿½ÌŠpï¿½x")] float _angle;
+    [SerializeField, Tooltip("ï¿½_ï¿½bï¿½Vï¿½ï¿½ï¿½Ì‰ï¿½")] AudioClip _dash;
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚é‰¹")] AudioClip _walk;
+    [SerializeField, Tooltip("<ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ğ“Š‚ï¿½ï¿½ï¿½İ’ï¿½>")] Throwsetting _throwsetting;
+    [SerializeField, Tooltip("<ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Ìİ’ï¿½>")] ItemSetting _itemSetting;
     [System.Serializable]
     struct Throwsetting
     {
-        [Tooltip("‚Ü‚Á‚·‚®“Š‚°‚é‹­‚³")] public float ThrowStraightPower;
-        [Tooltip("•ú•¨“I‚É“Š‚°‚é‹­‚³")] public float MaxThrowParabolaPower;
-        [Tooltip("‘OŒã‚É“®‚­‚â‚Â‚Ì‘‰Á—¦")] public float ThrowRate;
-        [Tooltip("•ú•¨“I‚É“Š‚°‚é•ûŒü")] public Vector2 ThrowParabolaDirection;
-        [Tooltip("ƒAƒCƒeƒ€‚ğ“Š‚°‚éˆÊ’u")] public Vector2 ThrowPos;
-        [Tooltip("’e“¹—\‘ªü")] public LineRenderer BulletSimulationLine;
-        [Tooltip("’e“¹—\‘ªü‚Ì’·‚³")] public int SimulateFrame;
-        [Tooltip("°‚ÌƒIƒuƒWƒFƒNƒg‚ğ‚Ü‚Æ‚ß‚½‚â‚Â")] public GameObject Platform;
+        [Tooltip("ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‹­ï¿½ï¿½")] public float ThrowStraightPower;
+        [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½É“ï¿½ï¿½ï¿½ï¿½é‹­ï¿½ï¿½")] public float MaxThrowParabolaPower;
+        [Tooltip("ï¿½Oï¿½ï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½Â‚Ì‘ï¿½ï¿½ï¿½ï¿½ï¿½")] public float ThrowRate;
+        [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] public Vector2 ThrowParabolaDirection;
+        [Tooltip("ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ğ“Š‚ï¿½ï¿½ï¿½Ê’u")] public Vector2 ThrowPos;
+        [Tooltip("ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] public LineRenderer BulletSimulationLine;
+        [Tooltip("ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì’ï¿½ï¿½ï¿½")] public int SimulateFrame;
+        [Tooltip("ï¿½ï¿½ï¿½ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Ü‚Æ‚ß‚ï¿½ï¿½ï¿½ï¿½")] public GameObject Platform;
     }
-    /// <summary>ƒAƒCƒeƒ€‚Ìİ’è</summary>
+    /// <summary>ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Ìİ’ï¿½</summary>
     [System.Serializable]
     struct ItemSetting
     {
-        [Tooltip("‚Ä‚éÎ‚ÌÅ‘å’l")] public int MaxRockCount;
-        [Tooltip("‚Ä‚é‹ó‚«•r‚ÌÅ‘å’l")] public int MaxBottleCount;
-        [Tooltip("‚Ä‚é“÷‚ÌÅ‘å’l")] public int MaxMeatCount;
-        [Tooltip("Î‚ÌUI")] public GameObject RockUi;
-        [Tooltip("‹ó‚«•r‚ÌUI")] public GameObject BottleUi;
-        [Tooltip("“÷‚ÌUI")] public GameObject MeatUi;
-        [Tooltip("Î‚ÌŒÂ”‚ğ•\¦‚·‚éƒeƒLƒXƒg")] public Text RockCountText;
-        [Tooltip("‹ó‚«•r‚ÌŒÂ”‚ğ•\¦‚·‚éƒeƒLƒXƒg")] public Text BottleCountText;
-        [Tooltip("“÷‚ÌŒÂ”‚ğ•\¦‚·‚éƒeƒLƒXƒg")] public Text MeatCountText;
-        [Tooltip("ƒAƒCƒeƒ€‚ğ‚Á‚Ä‚¢‚È‚¢‚Æ‚«‚ÌF")] public Color ZeroItemColor;
-        [Tooltip("Î‚É‘Î‰‚·‚é—t‚Á‚Ï")] public GameObject LeafRock;
-        [Tooltip("‹ó‚«•r‚É‘Î‰‚·‚é—t‚Á‚Ï")] public GameObject LeafBottle;
-        [Tooltip("“÷‚É‘Î‰‚·‚é—t‚Á‚Ï")] public GameObject LeafMeat;
-        [Tooltip("—t‚Á‚Ï‚ÌŠg‘å—¦")] public float LeafSize;
+        [Tooltip("ï¿½ï¿½ï¿½Ä‚ï¿½Î‚ÌÅ‘ï¿½l")] public int MaxRockCount;
+        [Tooltip("ï¿½ï¿½ï¿½Ä‚ï¿½ó‚«•rï¿½ÌÅ‘ï¿½l")] public int MaxBottleCount;
+        [Tooltip("ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ÌÅ‘ï¿½l")] public int MaxMeatCount;
+        [Tooltip("ï¿½Î‚ï¿½UI")] public GameObject RockUi;
+        [Tooltip("ï¿½ó‚«•rï¿½ï¿½UI")] public GameObject BottleUi;
+        [Tooltip("ï¿½ï¿½ï¿½ï¿½UI")] public GameObject MeatUi;
+        [Tooltip("ï¿½Î‚ÌŒÂï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½g")] public Text RockCountText;
+        [Tooltip("ï¿½ó‚«•rï¿½ÌŒÂï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½g")] public Text BottleCountText;
+        [Tooltip("ï¿½ï¿½ï¿½ÌŒÂï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½g")] public Text MeatCountText;
+        [Tooltip("ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½ÌF")] public Color ZeroItemColor;
+        [Tooltip("ï¿½Î‚É‘Î‰ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½")] public GameObject LeafRock;
+        [Tooltip("ï¿½ó‚«•rï¿½É‘Î‰ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½")] public GameObject LeafBottle;
+        [Tooltip("ï¿½ï¿½ï¿½É‘Î‰ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½")] public GameObject LeafMeat;
+        [Tooltip("ï¿½tï¿½ï¿½ï¿½Ï‚ÌŠgï¿½å—¦")] public float LeafSize;
     }
-    /// <summary>‚Á‚Ä‚¢‚éƒAƒCƒeƒ€‚ÌƒŠƒXƒg</summary>
+    /// <summary>ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Ìƒï¿½ï¿½Xï¿½g</summary>
     List<ItemBase> _itemList = new List<ItemBase>();
-    /// <summary>Ú’n”»’è</summary>
+    /// <summary>ï¿½Ú’nï¿½ï¿½ï¿½ï¿½</summary>
     [SerializeField] bool _isJump;
-    /// <summary>“G‚ğ“¥‚ñ‚¾”»’è</summary>
+    /// <summary>ï¿½Gï¿½ğ“¥‚ñ‚¾”ï¿½ï¿½ï¿½</summary>
     [SerializeField] bool _isStompEnemy;
-    /// <summary>–³“GŠÔ’†‚©‚Ç‚¤‚©</summary>
+    /// <summary>ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½Ô’ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½</summary>
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
     [HideInInspector] public PlayerStatus _playerStatus = PlayerStatus.Normal;
@@ -100,13 +100,13 @@ public class PlayerController : MonoBehaviour
         if (_pauseManager != null)
             _pauseManager.OnPauseResume += PauseAction;
         else
-            Debug.LogError("‚±‚ÌƒV[ƒ“‚ÉPauseManager‚ª‘¶İ‚µ‚Ü‚¹‚ñ");
+            Debug.LogError("ï¿½ï¿½ï¿½ÌƒVï¿½[ï¿½ï¿½ï¿½ï¿½PauseManagerï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
         if (_animator == null)
         {
             _animator = GetComponentInChildren<Animator>();
             if (_animator == null)
             {
-                Debug.LogError("Animator‚ª‚ ‚è‚Ü‚¹‚ñ");
+                Debug.LogError("Animatorï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
             }
         }
     }
@@ -124,12 +124,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("_throwsetting.Platform‚É’n–Ê‚ÌƒIƒuƒWƒFƒNƒg‚ğƒZƒbƒg‚µ‚Ä‚­‚¾‚³‚¢");
+            Debug.LogError("_throwsetting.Platformï¿½É’nï¿½Ê‚ÌƒIï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         }
         _damageCamera = FindAnyObjectByType<DamageCamera>();
         if (_audioSource == null)
         {
-            Debug.LogError("AudioSourse‚ª‚ ‚è‚Ü‚¹‚ñ");
+            Debug.LogError("AudioSourseï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
         }
         else
         {
@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
         }
         if (_damageCamera == null)
         {
-            Debug.LogError("DamageCamera‚ª‚ ‚è‚Ü‚¹‚ñ");
+            Debug.LogError("DamageCameraï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
         }
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
@@ -237,10 +237,10 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
-        //–â‘è“_:
-        //1:’n–Ê‚É‚Â‚¢‚Ä‚é‚Æ‚«‰¡•ûŒü‚Ö‚ÌˆÚ“®‘¬“x‚ª•sˆÀ’è
-        //2:ƒvƒŒƒCƒ„[‚ğ‚Á”ò‚Î‚·ê‡‚É‰¡“ü—Í‚É‚æ‚Á‚Ä‚ ‚Ü‚è‚Á”ò‚Î‚¹‚È‚¢‚©‚à
-        //‰Á‘¬“x“I‚ÉŒ¸‚é
+        //ï¿½ï¿½ï¿½_:
+        //1:ï¿½nï¿½Ê‚É‚Â‚ï¿½ï¿½Ä‚ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö‚ÌˆÚ“ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½
+        //2:ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ğ‚ï¿½ï¿½ï¿½Î‚ï¿½ï¿½ê‡ï¿½É‰ï¿½ï¿½ï¿½ï¿½Í‚É‚ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚èï¿½ï¿½ï¿½ï¿½Î‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½
+        //ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½Iï¿½ÉŒï¿½ï¿½ï¿½
         _horiInput = Input.GetAxisRaw("Horizontal");
         if (_horiInput == 0)
         {
@@ -327,7 +327,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                //Debug.Log("ƒWƒƒƒ“ƒv‚µ‚½");
+                //Debug.Log("ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½");
                 AudioManager.Instance.PlaySE("jump");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
@@ -337,7 +337,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                //Debug.Log("ƒWƒƒƒ“ƒv‚Å‚«‚È‚©‚Á‚½");
+                //Debug.Log("ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½");
             }
         }
         if (Input.GetKey(KeyCode.Space))
@@ -351,7 +351,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (_isStompEnemy)
         {
-            //Debug.Log("“G‚ğ“¥‚ñ‚Å¬ƒWƒƒƒ“ƒv");
+            //Debug.Log("ï¿½Gï¿½ğ“¥‚ï¿½Åï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½v");
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
@@ -363,7 +363,7 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(_isJump);
     }
     /// <summary>
-    /// ’…’n‚ğŒŸ’m‚·‚é
+    /// ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <returns></returns>
     IEnumerator GroundingJudge(IEnumerator enumerator)
@@ -396,7 +396,7 @@ public class PlayerController : MonoBehaviour
                     {
                         _rb.velocity = new Vector2(0, _rb.velocity.y);
                     }
-                    //ƒRƒ‹[ƒ`ƒ“‚ğ˜A‘±‚Å‹N“®‚³‚¹‚È‚¢‚½‚ß‚É‘Ò‚Â
+                    //ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Å‹Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ß‚É‘Ò‚ï¿½
                     yield return new WaitForSeconds(0.5f);
                     _jumpEnumerator = null;
                     yield break;
@@ -415,7 +415,7 @@ public class PlayerController : MonoBehaviour
         _jumpEnumerator = null;
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ªƒAƒCƒeƒ€‚ğ“üè‚µ‚½‚Æ‚«‚ÉŒÄ‚Ôƒƒ\ƒbƒh
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚µï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ÉŒÄ‚Ôƒï¿½ï¿½\ï¿½bï¿½h
     /// </summary>
     /// <param name="item"></param>
     public void GetItem(ItemBase item)
@@ -461,7 +461,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Enter‚ª‰Ÿ‚³‚ê‚½ƒAƒCƒeƒ€‚ğ“Š‚°‚é‚½‚ß‚ÌƒRƒ‹[ƒ`ƒ“‚ğƒXƒ^[ƒg‚µ‚Ü‚·
+    /// Enterï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ğ“Š‚ï¿½ï¿½é‚½ï¿½ß‚ÌƒRï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½gï¿½ï¿½ï¿½Ü‚ï¿½
     /// </summary>
     void UseItem()
     {
@@ -472,7 +472,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ª‚Á‚Ä‚¢‚éƒAƒCƒeƒ€‚É‰‚¶‚Ä_itemList‚©‚çƒAƒCƒeƒ€‚ğæ‚Á‚Ä‚«‚Ü‚·B
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ï¿½_itemListï¿½ï¿½ï¿½ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
@@ -508,7 +508,7 @@ public class PlayerController : MonoBehaviour
                 //{
                 //    _itemPos[i].transform.position = _afterItemPos2[i];
                 //}
-                Debug.Log("Î‚ğg‚¤");
+                Debug.Log("ï¿½Î‚ï¿½ï¿½gï¿½ï¿½");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -523,7 +523,7 @@ public class PlayerController : MonoBehaviour
                 //{
                 //    _itemPos[i].transform.position = _afterItemPos1[i];
                 //}
-                Debug.Log("•r‚ğg‚¤");
+                Debug.Log("ï¿½rï¿½ï¿½ï¿½gï¿½ï¿½");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -538,7 +538,7 @@ public class PlayerController : MonoBehaviour
                 //{
                 //    _itemPos[i].transform.position = _afterItemPos0[i];
                 //}
-                Debug.Log("“÷‚ğg‚¤");
+                Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
@@ -547,7 +547,7 @@ public class PlayerController : MonoBehaviour
             _itemSetting.LeafRock.transform.localScale = Vector3.one;
             _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-            Debug.Log("ƒAƒCƒeƒ€‚ğ‚½‚È‚¢");
+            Debug.Log("ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½");
         }
     }
     void CreatePhysicsScene()
@@ -580,7 +580,7 @@ public class PlayerController : MonoBehaviour
         Destroy(ghost.gameObject);
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ì‘Ì—Í‚ğˆø”‚É“n‚µ‚½”’l•ª‘Œ¸‚³‚¹‚Ü‚·B
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‘Ì—Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É“nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
     /// </summary>
     /// <param name="value"></param>
     public void FluctuationLife(int value)
@@ -610,7 +610,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                //ƒ_ƒ[ƒW‚ğó‚¯‚½‚Ìˆ—Aˆê’U•Û—¯
+                //ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ó‚¯‚ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½Uï¿½Û—ï¿½
                 //DOTween.To(() => new Color(), s => )
             }
         }
@@ -622,7 +622,7 @@ public class PlayerController : MonoBehaviour
         {
             CurrentHp = _maxHp;
         }
-        //Debug.Log($"Player‚Ì‘Ì—Í:{CurrentHp}");
+        //Debug.Log($"Playerï¿½Ì‘Ì—ï¿½:{CurrentHp}");
     }
     IEnumerator Invincible()
     {
@@ -631,16 +631,16 @@ public class PlayerController : MonoBehaviour
         _isInvincible = false;
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚Ì‘¬“x‚ğ’²®‚·‚é
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‘ï¿½ï¿½xï¿½ğ’²ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="multi">”{—¦</param>
-    /// <param name="slowtime">Œp‘±ŠÔ</param>
+    /// <param name="multi">ï¿½{ï¿½ï¿½</param>
+    /// <param name="slowtime">ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
     public void Slow(float multi, float slowtime)
     {
         StartCoroutine(Slowing(multi, slowtime));
     }
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ªs“®‚Å‚«‚È‚­‚È‚éˆ—
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½È‚éˆï¿½ï¿½
     /// </summary>
     /// <param name="time"></param>
     public void StopAction(float time)
@@ -681,26 +681,26 @@ public class PlayerController : MonoBehaviour
         {
             goto EndCoroutine;
         }
-        //“Š‚°‚éƒAƒCƒeƒ€‚ÉRigidbody‚ª‚Â‚¢‚Ä‚È‚©‚Á‚½‚ç‚Â‚¯‚é
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½Rigidbodyï¿½ï¿½ï¿½Â‚ï¿½ï¿½Ä‚È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½
         if (!item.TryGetComponent(out Rigidbody2D rb))
         {
             rb = item.AddComponent<Rigidbody2D>();
         }
         item.gameObject.GetComponent<Collider2D>().isTrigger = false;
-        //‚Ü‚Á‚·‚®“Š‚°‚é
+        //ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (item.Throw == ItemBase.ThrowType.Straight)
         {
-            //ƒAƒCƒeƒ€‚ğƒvƒŒƒCƒ„[‚ÌˆÊ’u‚É‚Á‚Ä‚­‚é
+            //ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÊ’uï¿½Éï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.gravityScale = 0;
             rb.AddForce(new Vector2(_throwsetting.ThrowStraightPower * transform.localScale.x, 0), ForceMode2D.Impulse);
         }
-        //•ú•¨“I‚É“Š‚°‚é
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½
         else
         {
             if (_throwsetting.BulletSimulationLine == null)
             {
-                Debug.LogError("LineRenderer‚ªnull‚Å“Š‚°‚ê‚Ü‚¹‚ñ");
+                Debug.LogError("LineRendererï¿½ï¿½nullï¿½Å“ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
                 goto EndCoroutine;
             }
             float t = 0;
@@ -719,7 +719,7 @@ public class PlayerController : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
             _throwsetting.BulletSimulationLine.positionCount = 0;
-            //ƒAƒCƒeƒ€‚ğƒvƒŒƒCƒ„[‚ÌˆÊ’u‚É‚Á‚Ä‚­‚é
+            //ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÊ’uï¿½Éï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.velocity = Vector3.zero;
             rb.AddForce(_throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale, ForceMode2D.Impulse);

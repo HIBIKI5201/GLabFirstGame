@@ -25,7 +25,7 @@ public class SceneLoader : MonoBehaviour
         }
         else
         {
-            Debug.LogError("FadePanel‚ªƒZƒbƒg‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogError("FadePanelï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
         }
     }
     public enum Scenes
@@ -41,9 +41,9 @@ public class SceneLoader : MonoBehaviour
         Stage4,
     }
     /// <summary>
-    /// ƒV[ƒ“‚ğŒÄ‚Ño‚·ƒƒ\ƒbƒh
+    /// ï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½bï¿½h
     /// </summary>
-    [ContextMenu("ƒV[ƒ“‚ğŒÄ‚Ño‚·ƒƒ\ƒbƒh")]
+    [ContextMenu("ï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½h")]
     public void FadeAndLoadScene()
     {
         IsFading = true;
@@ -60,9 +60,9 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(Enum.GetName(typeof(Scenes), _scene));
     }
     /// <summary>
-    /// ƒV[ƒ“‚ğŒÄ‚Ño‚·ƒƒ\ƒbƒh
+    /// ï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½bï¿½h
     /// </summary>
-    [ContextMenu("ƒV[ƒ“‚ğŒÄ‚Ño‚·ƒƒ\ƒbƒh")]
+    [ContextMenu("ï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½h")]
     public void FadeAndLoadScene(Image image, Color fadeColor, float fadeTime, Scenes scene)
     {
         IsFading = true;

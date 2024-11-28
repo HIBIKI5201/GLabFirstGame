@@ -6,20 +6,21 @@ using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
-    [SerializeField,Header("ƒ|[ƒY‚É—LŒø‰»‚·‚éUI"),Tooltip("ƒ|[ƒY‚É—LŒø‰»‚·‚éUI")] GameObject[] PauseUI;
-    [Header("ƒŠƒ^ƒCƒA‚µ‚½‚ÌƒtƒF[ƒhƒAƒEƒg‚Ìİ’è")]
+    [SerializeField,Header("ï¿½|ï¿½[ï¿½Yï¿½ï¿½ï¿½É—Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UI"),Tooltip("ï¿½|ï¿½[ï¿½Yï¿½ï¿½ï¿½É—Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UI")] GameObject[] PauseUI;
+    [Header("ï¿½ï¿½ï¿½^ï¿½Cï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒtï¿½Fï¿½[ï¿½hï¿½Aï¿½Eï¿½gï¿½Ìİ’ï¿½")]
     [SerializeField] SceneLoader _loader;
     [SerializeField] GameObject _fadePanel;
     [SerializeField] Color _color;
     [SerializeField] float _fadeTime;
-    /// <summary>true ‚Ì‚Íˆê’â~‚Æ‚·‚é</summary>
+    [SerializeField] Checkpoint _checkpoint;
+    /// <summary>true ï¿½Ìï¿½ï¿½Íˆêï¿½ï¿½~ï¿½Æ‚ï¿½ï¿½ï¿½</summary>
     bool _pauseFlg = false;
-    /// <summary>ƒfƒŠƒQ[ƒg‚ğ“ü‚ê‚Ä‚¨‚­•Ï”</summary>
+    /// <summary>ï¿½fï¿½ï¿½ï¿½Qï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½Ïï¿½</summary>
     Action<bool> _onPauseResume;
-    /// <summary>ƒRƒ‹[ƒ`ƒ“‚ğ‚¢‚ê‚éƒŠƒXƒg</summary>
+    /// <summary>ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½éƒŠï¿½Xï¿½g</summary>
     List<IEnumerator> _coroutines = new List<IEnumerator>();
     /// <summary>
-    /// ˆê’â~EÄŠJ‚ğ“ü‚ê‚éƒfƒŠƒQ[ƒgƒvƒƒpƒeƒB
+    /// ï¿½êï¿½ï¿½~ï¿½Eï¿½ÄŠJï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Qï¿½[ï¿½gï¿½vï¿½ï¿½ï¿½pï¿½eï¿½B
     /// </summary>
     public Action<bool> OnPauseResume
     {
@@ -29,34 +30,35 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        // ESC ƒL[‚ª‰Ÿ‚³‚ê‚½‚çˆê’â~EÄŠJ‚ğØ‚è‘Ö‚¦‚é
+        // ESC ï¿½Lï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½êï¿½ï¿½~ï¿½Eï¿½ÄŠJï¿½ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½ï¿½
         if (Input.GetButtonDown("Cancel") && !SceneLoader.IsFading)
         {
             PauseResume();
         }
     }
     /// <summary>
-    /// ƒ{ƒ^ƒ“ƒNƒŠƒbƒN‚Åˆê’â~EÄŠJ‚·‚é‚½‚ß‚Ìƒƒ\ƒbƒh
+    /// ï¿½{ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½Åˆêï¿½ï¿½~ï¿½Eï¿½ÄŠJï¿½ï¿½ï¿½é‚½ï¿½ß‚Ìƒï¿½ï¿½\ï¿½bï¿½h
     /// </summary>
     public void PauseResumeByClick()
     {
         PauseResume();
     }
     /// <summary>
-    /// ƒ{ƒ^ƒ“ƒNƒŠƒbƒN‚ÅƒŠƒ^ƒCƒA‚·‚é‚½‚ß‚Ìƒƒ\ƒbƒh
+    /// ï¿½{ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½bï¿½Nï¿½Åƒï¿½ï¿½^ï¿½Cï¿½Aï¿½ï¿½ï¿½é‚½ï¿½ß‚Ìƒï¿½ï¿½\ï¿½bï¿½h
     /// </summary>
     public void Surrender()
     {
+        _checkpoint.ResetPoint();
         _fadePanel.SetActive(true);
         _loader.FadeAndLoadScene(_fadePanel.GetComponent<Image>(), _color, _fadeTime, SceneLoader.Scenes.SelectStage);
     }
     /// <summary>
-    /// ˆê’â~EÄŠJ‚ğØ‚è‘Ö‚¦‚é
+    /// ï¿½êï¿½ï¿½~ï¿½Eï¿½ÄŠJï¿½ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½ï¿½
     /// </summary>
     void PauseResume()
     {
         _pauseFlg = !_pauseFlg;
-        _onPauseResume(_pauseFlg);  // ‚±‚ê‚Å•Ï”‚É‘ã“ü‚µ‚½ŠÖ”‚ği‘S‚ÄjŒÄ‚Ño‚¹‚é
+        _onPauseResume(_pauseFlg);  // ï¿½ï¿½ï¿½ï¿½Å•Ïï¿½ï¿½É‘ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½iï¿½Sï¿½Äjï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½
         foreach (var i in PauseUI)
         {
             i.SetActive(_pauseFlg);
@@ -73,9 +75,9 @@ public class PauseManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// ƒ|[ƒY‚µ‚Ä—~‚µ‚¢ƒRƒ‹[ƒ`ƒ“‚ğ‚¢‚ê‚éB(WaitForSeconds‚ğg‚í‚È‚¢‚±‚Æ‚ğ„§)
-    /// ƒRƒ‹[ƒ`ƒ“‚ªn‚Ü‚Á‚½’¼Œã‚É•K‚¸GetCoroutine()‚ğŒÄ‚Ño‚µ‚ÄIEnumeratorŒ^‚Ì•Ï”‚É•Û‘¶‚µ‚Ä
-    /// ƒRƒ‹[ƒ`ƒ“‚ªI‚í‚Á‚½‚ç•K‚¸1ƒtƒŒ[ƒ€‘Ò‚Á‚Ä•K‚¸OnComplete(•Û‘¶‚µ‚½IEnumeratorŒ^‚Ì•Ï”)‚ğŒÄ‚Ño‚·‚±‚Æ
+    /// ï¿½|ï¿½[ï¿½Yï¿½ï¿½ï¿½Ä—~ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B(WaitForSecondsï¿½ï¿½ï¿½gï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½Æ‚ğ„ï¿½)
+    /// ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É•Kï¿½ï¿½GetCoroutine()ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½IEnumeratorï¿½^ï¿½Ì•Ïï¿½ï¿½É•Û‘ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Kï¿½ï¿½1ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Ò‚ï¿½ï¿½Ä•Kï¿½ï¿½OnComplete(ï¿½Û‘ï¿½ï¿½ï¿½ï¿½ï¿½IEnumeratorï¿½^ï¿½Ì•Ïï¿½)ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="enumerator"></param>
     public void BeginCoroutine(IEnumerator enumerator)
@@ -84,7 +86,7 @@ public class PauseManager : MonoBehaviour
         StartCoroutine(enumerator);
     }
     /// <summary>
-    /// “®‚©‚µ‚½ƒRƒ‹[ƒ`ƒ“‚ª‰½Ò‚©‚ğŠo‚¦‚Ä‚¨‚­ƒƒ\ƒbƒh
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò‚ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½bï¿½h
     /// </summary>
     public IEnumerator GetCoroutine()
     {
@@ -106,8 +108,8 @@ public class PauseManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// ƒRƒ‹[ƒ`ƒ“‚ªI—¹‚µ‚½‚çŒÄ‚Ô
-    /// ŒÄ‚Ô‘O‚Éyield return new WaitForEndOfFrame()‚ğ‘‚­‚±‚Æ
+    /// ï¿½Rï¿½ï¿½ï¿½[ï¿½`ï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½
+    /// ï¿½Ä‚Ô‘Oï¿½ï¿½yield return new WaitForEndOfFrame()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="enumerator"></param>
     public void OnComplete(IEnumerator enumerator)
