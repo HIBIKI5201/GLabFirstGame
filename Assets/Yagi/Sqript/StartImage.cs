@@ -8,19 +8,19 @@ using UnityEngine.Rendering.Universal;
 public class StartImage : MonoBehaviour
 {
     [SerializeField] Image _startImage;
-    [SerializeField, Header("ˆê–‡–Ú‚ÌƒCƒ[ƒW")] Image _firstImage;
-    [SerializeField, Header("“ñ–‡–Ú‚ÌƒCƒ[ƒW")] Image _secondImage;
+    [SerializeField, Header("ï¿½ê–‡ï¿½Ú‚ÌƒCï¿½ï¿½ï¿½[ï¿½W")] Image _firstImage;
+    [SerializeField, Header("ï¿½ñ–‡–Ú‚ÌƒCï¿½ï¿½ï¿½[ï¿½W")] Image _secondImage;
     [SerializeField] float _fadeinTime;
     [SerializeField] float _fadeoutTime;
-    [SerializeField, Header("•\¦ŠÔ")] float _indicationTime;
-    [SerializeField, Header("‘S‚Ä‚Ìƒ{ƒ^ƒ“‚ğ“ü‚ê‚é")] GameObject[] _button;
+    [SerializeField, Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] float _indicationTime;
+    [SerializeField, Header("ï¿½Sï¿½Ä‚Ìƒ{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] GameObject[] _button;
     [SerializeField] Volume _volume;
     private ColorAdjustments _colorAdjustments;
     private bool _isSkip = true;
 
     private void Awake()
     {
-        //_firstImage‚Æ_secondImage‚ÌƒAƒ‹ƒtƒ@’l‚ğ‚O‚É‚·‚é
+        //_firstImageï¿½ï¿½_secondImageï¿½ÌƒAï¿½ï¿½ï¿½tï¿½@ï¿½lï¿½ï¿½ï¿½Oï¿½É‚ï¿½ï¿½ï¿½
         var fc = _firstImage.color;
         _firstImage.color = new Color(fc.r, fc.g, fc.b, 0);
         var sc = _secondImage.color;
@@ -34,14 +34,14 @@ public class StartImage : MonoBehaviour
     }
     void Start()
     {
-        //ƒtƒF[ƒhŠJn
+        //ï¿½tï¿½Fï¿½[ï¿½hï¿½Jï¿½n
         StartCoroutine(FadeInterval(_firstImage, _secondImage, _indicationTime, _fadeinTime));
     }
     private void Update()
     {
         if (_isSkip)
         {
-            //ƒL[‚âƒ}ƒEƒXƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‰‰o‚ğƒXƒLƒbƒv‚·‚é
+            //ï¿½Lï¿½[ï¿½ï¿½}ï¿½Eï¿½Xï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Xï¿½Lï¿½bï¿½vï¿½ï¿½ï¿½ï¿½
             if (Input.anyKeyDown) Skip();
         }
     }

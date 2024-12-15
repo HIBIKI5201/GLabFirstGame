@@ -16,56 +16,58 @@ public class Enemy : MonoBehaviour
     GameObject _meatIcon;
     GameObject _stunAnimeObj;
 
-    [Tooltip("“®•¨‚Ìí—Ş")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½")]
     [SerializeField] Beast _beast;
     enum Beast
     {
         /// <summary>
-        /// –ìŒ¢
+        /// ï¿½ìŒ¢
         /// </summary>
         StrayDog,
 
         /// <summary>
-        /// ˜T
+        /// ï¿½T
         /// </summary>
         Wolf_Normal,
 
         /// <summary>
-        /// ˜T(ŠD)
+        /// ï¿½T(ï¿½D)
         /// </summary>
         Wolf_Gray,
 
         /// <summary>
-        /// ŒF
+        /// ï¿½F
         /// </summary>
         Bear,
 
         /// <summary>
-        /// ƒXƒe[ƒW4‚Ìƒ{ƒX‚Ì˜T
+        /// ï¿½Xï¿½eï¿½[ï¿½W4ï¿½Ìƒ{ï¿½Xï¿½Ì˜T
         /// </summary>
         Boss_Wolf
     }
-    [Tooltip("Å‘åHP"), Space]
+    [Tooltip("ï¿½Å‘ï¿½HP"), Space]
     [SerializeField] int _maxHp;
-    [Tooltip("Œ»İHP")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½HP")]
     [SerializeField] int _currentHp;
 
-    [Space, Tooltip("‰Šú‚Ì‘¬“x")]
+    [Space, Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½x")]
     public float _speed;
     public float _chaseSpeed;
-    [Tooltip("Œ»İ‚Ì‘¬“x")]
+    [Tooltip("ï¿½ï¿½ï¿½İ‚Ì‘ï¿½ï¿½x")]
     public float _currentSpeed;
 
-    [Space, Tooltip("UŒ‚—Í")]
+    [Space, Tooltip("ï¿½Uï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] int _attack;
 
-    [Space, Tooltip("ƒWƒƒƒ“ƒv—Í")]
+    [Space, Tooltip("ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½")]
     [SerializeField] float _jumpPower;
 
-    [Space, Tooltip("ó‘Ô")]
+    [Space, Tooltip("ï¿½ï¿½ï¿½")]
     [SerializeField] EnemyState _state;
+    
+    [SerializeField] Animator _anim;
     /// <summary>
-    /// ƒfƒoƒbƒOo‚·‚æ‚¤‚ÌState‚ÌƒvƒƒpƒeƒB
+    /// ï¿½fï¿½oï¿½bï¿½Oï¿½oï¿½ï¿½ï¿½æ‚¤ï¿½ï¿½Stateï¿½Ìƒvï¿½ï¿½ï¿½pï¿½eï¿½B
     /// </summary>
     public EnemyState State
     {
@@ -74,32 +76,32 @@ public class Enemy : MonoBehaviour
         {
             if (value == _state)
                 return;
-            //Debug.Log($"“G{_state}‚©‚ç{value}‚ÉˆÚs");
+            //Debug.Log($"ï¿½G{_state}ï¿½ï¿½ï¿½ï¿½{value}ï¿½ÉˆÚs");
             _state = value;
         }
     }
 
-    [Tooltip("”ò‚Ñ‰z‚¦‚é")]
+    [Tooltip("ï¿½ï¿½Ñ‰zï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] bool _jumpOver;
 
-    [Tooltip("’i·‚ğ~‚è‚ê‚é")]
+    [Tooltip("ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] bool _goDown;
 
-    [Tooltip("’Ç‚¢‚©‚¯‚ç‚ê‚é")]
+    [Tooltip("ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] bool _canChase;
 
-    [Tooltip("ƒ_ƒ[ƒWó‚¯‚ê‚é")]
+    [Tooltip("ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ó‚¯‚ï¿½ï¿½")]
     [SerializeField] bool _canDamage;
 
     [Space]
-    [Tooltip("’n–Ê‚âáŠQ•¨‚Ìİ’è")]
+    [Tooltip("ï¿½nï¿½Ê‚ï¿½ï¿½Qï¿½ï¿½ï¿½Ìİ’ï¿½")]
     [SerializeField] GroundedRay _ground;
     [Space]
 
-    [Tooltip("is•ûŒü")]
+    [Tooltip("ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] Direction _dir;
 
-    [Tooltip("í‚ÉƒfƒoƒbƒO‚ğ•\¦")]
+    [Tooltip("ï¿½ï¿½Éƒfï¿½oï¿½bï¿½Oï¿½ï¿½ï¿½")]
     [SerializeField] bool _alwaysDebug;
 
     /// <summary>
@@ -108,42 +110,42 @@ public class Enemy : MonoBehaviour
     Transform _myTra;
 
     /// <summary>
-    /// ƒ{ƒgƒ‹‚ª—‚¿‚½ˆÊ’u
+    /// ï¿½{ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê’u
     /// </summary>
     Vector2 _bottlePosi;
 
     /// <summary>
-    /// “÷‚ª—‚¿‚½ˆÊ’u
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê’u
     /// </summary>
     Vector2 _meatPosi;
 
     /// <summary>
-    /// “÷‚ğ‚ ‚«‚ç‚ß‚é‚Ü‚Å‚Ìƒ^ƒCƒ}[
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½Ü‚Å‚Ìƒ^ï¿½Cï¿½}ï¿½[
     /// </summary>
     float _meatTimer;
 
     /// <summary>
-    /// “÷‚ğ‚ ‚«‚ç‚ß‚é‚Ü‚Å‚Ì’·‚³
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½Ü‚Å‚Ì’ï¿½ï¿½ï¿½
     /// </summary>
     float _meatTime;
 
     /// <summary>
-    /// “÷‚ğH‚¢n‚ß‚½‚©‚Ìƒtƒ‰ƒO
+    /// ï¿½ï¿½ï¿½ï¿½Hï¿½ï¿½ï¿½nï¿½ß‚ï¿½ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½O
     /// </summary>
     bool _meatEat;
 
     /// <summary>
-    /// ŠJn‚ÉÄ¶‚ğ–h‚®ƒtƒ‰ƒO
+    /// ï¿½Jï¿½nï¿½ï¿½ï¿½ÉÄï¿½ï¿½ï¿½hï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O
     /// </summary>
     bool _canMoveSE;
 
     /// <summary>
-    /// ‰Šú‰»‚Ìd•¡‚ğ–h‚®ƒtƒ‰ƒO
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìdï¿½ï¿½ï¿½ï¿½hï¿½ï¿½ï¿½tï¿½ï¿½ï¿½O
     /// </summary>
     bool _canReset;
 
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚ğÅŒã‚ÉUŒ‚‚µ‚½ŠÔ
+    /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ÅŒï¿½ÉUï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     float _attackedTimer;
 
@@ -155,54 +157,54 @@ public class Enemy : MonoBehaviour
     [System.Serializable]
     struct GroundedRay
     {
-        [Tooltip("Ray‚ª”½‰‚·‚éLayerMask")]
+        [Tooltip("Rayï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½LayerMask")]
         public LayerMask _mask;
 
-        [Tooltip("‰¡‚ÌRay‚ª”½‰‚·‚éLayerMask")]
+        [Tooltip("ï¿½ï¿½ï¿½ï¿½Rayï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½LayerMask")]
         public LayerMask _sideMask;
 
-        [Tooltip("•Ç‚â“GAƒvƒŒƒCƒ„[‚ğ”»’f‚·‚é")]
+        [Tooltip("ï¿½Ç‚ï¿½Gï¿½Aï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ğ”»’fï¿½ï¿½ï¿½ï¿½")]
         public Vector2 _sideRayPos;
 
-        [Tooltip("‰E‘¤‚ÌŠR‚ğ”»’f‚·‚éRay‚Ì’†S")]
+        [Tooltip("ï¿½Eï¿½ï¿½ï¿½ÌŠRï¿½ğ”»’fï¿½ï¿½ï¿½ï¿½Rayï¿½Ì’ï¿½ï¿½S")]
         public Vector2 _rightRayPos;
 
-        [Tooltip("¶‘¤‚ÌŠR‚ğ”»’f‚·‚éRay‚Ì’†S")]
+        [Tooltip("ï¿½ï¿½ï¿½ï¿½ï¿½ÌŠRï¿½ğ”»’fï¿½ï¿½ï¿½ï¿½Rayï¿½Ì’ï¿½ï¿½S")]
         public Vector2 _leftRayPos;
 
-        [Space, Tooltip("ŠR‚ğ”»’f‚·‚éRay‚Ì’·‚³")]
+        [Space, Tooltip("ï¿½Rï¿½ğ”»’fï¿½ï¿½ï¿½ï¿½Rayï¿½Ì’ï¿½ï¿½ï¿½")]
         public float _rayLong;
 
-        [Tooltip("•Ç‚ğ”»’f‚·‚éRay‚Ì’·‚³")]
+        [Tooltip("ï¿½Ç‚ğ”»’fï¿½ï¿½ï¿½ï¿½Rayï¿½Ì’ï¿½ï¿½ï¿½")]
         public float _sideRayLong;
 
-        [Space, Tooltip("”ò‚Ô‚Ì‚ğ”»’f‚·‚éRay‚Ì’·‚³")]
+        [Space, Tooltip("ï¿½ï¿½Ô‚Ì‚ğ”»’fï¿½ï¿½ï¿½ï¿½Rayï¿½Ì’ï¿½ï¿½ï¿½")]
         public float _jumpRayLong;
     }
     public enum EnemyState
     {
         /// <summary>
-        /// ’Êí
+        /// ï¿½Êï¿½
         /// </summary>
         Normal,
 
         /// <summary>
-        /// Î‚Å‹Câ
+        /// ï¿½Î‚Å‹Cï¿½ï¿½
         /// </summary>
         Faint,
 
         /// <summary>
-        /// “÷‚É‹C‚Ã‚¢‚½
+        /// ï¿½ï¿½ï¿½É‹Cï¿½Ã‚ï¿½ï¿½ï¿½
         /// </summary>
         Bite,
 
         /// <summary>
-        /// ƒ{ƒgƒ‹‚Ì‰¹‚É‹C‚Ã‚¢‚½
+        /// ï¿½{ï¿½gï¿½ï¿½ï¿½Ì‰ï¿½ï¿½É‹Cï¿½Ã‚ï¿½ï¿½ï¿½
         /// </summary>
         Escape,
 
         /// <summary>
-        /// ƒvƒŒƒCƒ„[‚ğŒ©‚Â‚¯‚½
+        /// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½
         /// </summary>
         Chase,
     }
@@ -215,7 +217,7 @@ public class Enemy : MonoBehaviour
     }
     void ResetStatus()
     {
-        //–€C‚Æ”½”­—Í‚ğ0‚Éİ’è
+        //ï¿½ï¿½ï¿½Cï¿½Æ”ï¿½ï¿½ï¿½ï¿½Í‚ï¿½0ï¿½Éİ’ï¿½
         PhysicsMaterial2D physicsMaterial2D = new()
         {
             friction = 0,
@@ -228,7 +230,7 @@ public class Enemy : MonoBehaviour
         _state = EnemyState.Normal;
         _canDamage = true;
 
-        //Às‚©‚ç0.2•bŠÔŒø‰Ê‰¹‚ğÄ¶‚³‚¹‚È‚¢
+        //ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½0.2ï¿½bï¿½ÔŒï¿½ï¿½Ê‰ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
         StartCoroutine(WaitAudio());
         IEnumerator WaitAudio()
         {
@@ -270,7 +272,7 @@ public class Enemy : MonoBehaviour
         _rb.isKinematic = false;
         if (_currentHp <= 0)
         {
-            //Debug.Log("“G€–S");
+            //Debug.Log("ï¿½Gï¿½ï¿½ï¿½S");
             Destroy(this.gameObject);
         }
         var vec = _modelScale;
@@ -285,6 +287,7 @@ public class Enemy : MonoBehaviour
                 Vector2 velo = _rb.velocity;
                 velo.x = 0;
                 _rb.velocity = velo;
+                _anim.SetBool("Dizzy", true);
                 break;
             case EnemyState.Bite:
                 UpdateMeat();
@@ -301,6 +304,8 @@ public class Enemy : MonoBehaviour
                 UpdateReturn();
                 UpdateVelocity();
                 Search();
+                _anim.SetBool("Gallop", false);
+                _anim.SetBool("Dizzy", false);
                 break;
         }
         if(GameManager.instance.State == GameManager.GameState.GameOver ||
@@ -327,18 +332,19 @@ public class Enemy : MonoBehaviour
         {
             float x = _bottlePosi.x - _myTra.position.x;
             _dir = x >= 0 ? Direction.Left : Direction.Right;
+            _anim.SetBool("Gallop", true);
 
             UpdateVelocity();
         }
         void UpdateMeat()
         {
             _meatIcon.SetActive(true);
-            //“÷‚Æ‚Ì‹——£
+            //ï¿½ï¿½ï¿½Æ‚Ì‹ï¿½ï¿½ï¿½
             float x = _meatPosi.x - _myTra.position.x;
-            //“÷‚ÉŒü‚¯‚é
+            //ï¿½ï¿½ï¿½ÉŒï¿½ï¿½ï¿½ï¿½ï¿½
             _dir = x <= 0 ? Direction.Left : Direction.Right;
 
-            //“÷‚Æ‚Ì‹——£
+            //ï¿½ï¿½ï¿½Æ‚Ì‹ï¿½ï¿½ï¿½
             if (Mathf.Abs(x) <= 0.2f) 
             {
                 _dir = Direction.None;
@@ -346,14 +352,14 @@ public class Enemy : MonoBehaviour
                     _meatTimer = Time.time;
                 _meatEat = true;
             }
-            //“÷‚ğŒ©‚Â‚¯‚Ä‚©‚ç5•bŒo‰ß‚µ‚½‚ç
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½5ï¿½bï¿½oï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½
             if (Time.time >= _meatTimer + _meatTime)
             {
                 State = EnemyState.Normal;
                 _meatIcon.SetActive(false);
                 _dir = Mathf.Sign(_modelT.localScale.x) switch { 1 => Direction.Left, -1 => Direction.Right, _ => Direction.None };
             }
-            //ƒWƒƒƒ“ƒv‚ª•K—v‚Å ’n–Ê‚É‚¢‚Ä@ƒWƒƒƒ“ƒv‚ª‚Å‚«‚é
+            //ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Kï¿½vï¿½ï¿½ ï¿½nï¿½Ê‚É‚ï¿½ï¿½Ä@ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½
             if (IsJump() && IsGrounded() && _jumpOver)
                 VelocityJump();
             UpdateVelocity();
@@ -579,11 +585,11 @@ public class Enemy : MonoBehaviour
     {
         if (!_canDamage&&value < 0)
         {
-            Debug.Log("“G–³“GŠÔ‚Ì‚½‚ßƒ_ƒ[ƒW–³‚µ");
+            Debug.Log("ï¿½Gï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½Ô‚Ì‚ï¿½ï¿½ßƒ_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½");
             return;
         }
         _currentHp += value;
-        Debug.Log($"“GHP{value}‘Œ¸  c‚è:{_currentHp}");
+        Debug.Log($"ï¿½GHP{value}ï¿½ï¿½ï¿½ï¿½  ï¿½cï¿½ï¿½:{_currentHp}");
         if (value < 0)
             DamageEffect();
     }
@@ -670,12 +676,12 @@ public class Enemy : MonoBehaviour
     void TestReactionBottle() => ReactionBottle(Vector2.zero, 5);
     [ContextMenu("TestReactionMeat")]
     void TestReactionMeat() => ReactionMeat(Vector2.zero,5);
-    [ContextMenu("InitializeGroundedRay(©“®İ’è)")]
+    [ContextMenu("InitializeGroundedRay(ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½)")]
     void InitializeGroundedRay()
     {
         if (!TryGetComponent<BoxCollider2D>(out _boxCollider)) 
         { 
-            Debug.Log("BoxCollider2D‚ª‚İ‚Â‚©‚ç‚È‚¢"); 
+            Debug.Log("BoxCollider2Dï¿½ï¿½ï¿½İ‚Â‚ï¿½ï¿½ï¿½È‚ï¿½"); 
             return;
         }
 
@@ -689,7 +695,7 @@ public class Enemy : MonoBehaviour
         _ground._jumpRayLong = (size.x / 2f) + 0.2f;
     }
 
-    [ContextMenu("SettingStatus(©“®İ’è)")]
+    [ContextMenu("SettingStatus(ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½)")]
     void SettingStatus()
     {
         PlayerController player = FindAnyObjectByType<PlayerController>();
@@ -743,7 +749,7 @@ public class Enemy : MonoBehaviour
                 _goDown = true;
                 break;
             default:
-                Debug.LogError("‘¶İ‚µ‚È‚¢Beast‚ğQÆ‚µ‚Ä‚¢‚é");
+                Debug.LogError("ï¿½ï¿½ï¿½İ‚ï¿½ï¿½È‚ï¿½Beastï¿½ï¿½ï¿½Qï¿½Æ‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½");
                 break;
         }
     }

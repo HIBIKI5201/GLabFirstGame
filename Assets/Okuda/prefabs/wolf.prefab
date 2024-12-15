@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6397822514531744163
+--- !u!1001 &6505336971753565722
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -11,6 +11,18 @@ PrefabInstance:
     - target: {fileID: -8653719598885068355, guid: f971999e9d068af46933735ece181848, type: 3}
       propertyPath: m_Name
       value: wolf
+      objectReference: {fileID: 0}
+    - target: {fileID: -8653719598885068355, guid: f971999e9d068af46933735ece181848, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8478553540853150096, guid: f971999e9d068af46933735ece181848, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.8077698
+      objectReference: {fileID: 0}
+    - target: {fileID: -8478553540853150096, guid: f971999e9d068af46933735ece181848, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.023630833
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: f971999e9d068af46933735ece181848, type: 3}
       propertyPath: m_LocalPosition.x
@@ -58,21 +70,21 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: f971999e9d068af46933735ece181848, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3399085785501279343}
+      addedObject: {fileID: 6031299929471114647}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: f971999e9d068af46933735ece181848, type: 3}
---- !u!1 &6858540717367072798 stripped
+--- !u!1 &6746487201833979815 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: f971999e9d068af46933735ece181848, type: 3}
-  m_PrefabInstance: {fileID: 6397822514531744163}
+  m_PrefabInstance: {fileID: 6505336971753565722}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &3399085785501279343
+--- !u!95 &6031299929471114647
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6858540717367072798}
+  m_GameObject: {fileID: 6746487201833979815}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 417aa2ef964f2c8448937586693daa77, type: 2}
