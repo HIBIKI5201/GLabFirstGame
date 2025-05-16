@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Master/Scenes/Title.unity
+    path: Assets/Scenes/OutGame/Title.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Master/Scenes/SelectStage.unity
+    path: Assets/Scenes/OutGame/SelectStage.unity
     guid: af9cc08fc36160549bafb4fc57a8378f
   - enabled: 1
-    path: Assets/Master/Scenes/Ending.unity
+    path: Assets/Scenes/OutGame/Ending.unity
     guid: ef717f8022890d744980319332d598bf
   - enabled: 1
-    path: Assets/Master/Scenes/Stages/Stage1.unity
+    path: Assets/Scenes/InGame/Stage1.unity
     guid: 064924b761b28014a8c86a509b29928f
   - enabled: 1
-    path: Assets/Master/Scenes/Stages/Stage2.unity
+    path: Assets/Scenes/InGame/Stage2.unity
     guid: 4b957291d58a4b442898b3814c2900da
   - enabled: 1
     path: Assets/Master/Scenes/Stages/Stage3.unity
