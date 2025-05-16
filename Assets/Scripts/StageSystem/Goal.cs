@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Goal : MonoBehaviour
@@ -17,7 +18,7 @@ public class Goal : MonoBehaviour
     Rigidbody2D _rb;
     [SerializeField, Header("�S�[�����������")] float _warkTime;
     [SerializeField, Header("�����A�j���[�V�����̖��O")] string _anime;
-    [SerializeField] Stage1GoalPerformance _goalPerformance;
+    [FormerlySerializedAs("_goalPerformance")] [SerializeField] Stage1GoalSequence goalSequence;
     [SerializeField] Stage3GoalPerformance _goal3Performance;
     GameProgressManager _gameProgressManager;
     Timer _timer;
@@ -51,7 +52,7 @@ public class Goal : MonoBehaviour
             if (_gameManager.StateType == GameStateType.StageClear)
             {
                 _rb.Sleep();
-                if(_goalPerformance != null) _goalPerformance.Perfomance(_warkTime);
+                if(goalSequence != null) goalSequence.StartSequence(_warkTime);
                 if(_goal3Performance != null) _goal3Performance.StartCoroutine(_goal3Performance.DoPerformance(_warkTime));
                 _playerController.StopAction(_warkTime + 120f);
                 StartCoroutine(Walk(_warkTime));
