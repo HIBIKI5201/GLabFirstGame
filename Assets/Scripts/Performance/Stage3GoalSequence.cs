@@ -3,13 +3,12 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 /// <summary>
 /// ステージ3特有のGoal演出
 /// </summary>
-public class Stage3GoalPerformance : MonoBehaviour
+public class Stage3GoalSequence : MonoBehaviour
 {
     [SerializeField] CanvasGroup _clearPanel, _operate, _hp;
     [SerializeField] Image _vignette, _fadePanel;
@@ -18,7 +17,6 @@ public class Stage3GoalPerformance : MonoBehaviour
     [SerializeField] Text _text;
     [SerializeField] Goal _goal;
     [SerializeField] Volume _volume;
-    
 
     void Start()
     {

@@ -19,7 +19,7 @@ public class Goal : MonoBehaviour
     [SerializeField, Header("�S�[�����������")] float _warkTime;
     [SerializeField, Header("�����A�j���[�V�����̖��O")] string _anime;
     [FormerlySerializedAs("_goalPerformance")] [SerializeField] Stage1GoalSequence goalSequence;
-    [SerializeField] Stage3GoalPerformance _goal3Performance;
+    [FormerlySerializedAs("_goal3Performance")] [SerializeField] Stage3GoalSequence goal3Sequence;
     GameProgressManager _gameProgressManager;
     Timer _timer;
     bool _walk;
@@ -53,10 +53,10 @@ public class Goal : MonoBehaviour
             {
                 _rb.Sleep();
                 if(goalSequence != null) goalSequence.StartSequence(_warkTime);
-                if(_goal3Performance != null) _goal3Performance.StartCoroutine(_goal3Performance.DoPerformance(_warkTime));
+                if(goal3Sequence != null) goal3Sequence.StartCoroutine(goal3Sequence.DoPerformance(_warkTime));
                 _playerController.StopAction(_warkTime + 120f);
                 StartCoroutine(Walk(_warkTime));
-                if (_goal3Performance == null) Invoke(nameof(Clear), _warkTime);
+                if (goal3Sequence == null) Invoke(nameof(Clear), _warkTime);
                 _timer.enabled = false;
             }
         }
@@ -87,7 +87,7 @@ public class Goal : MonoBehaviour
         yield return new WaitForSeconds(time);
         _walk = false;
         _animator.SetBool("isClear",false);
-        if (_goal3Performance == null) StartCoroutine(Image(2f));
+        if (goal3Sequence == null) StartCoroutine(Image(2f));
     }
 
     IEnumerator Image(float time)
@@ -95,7 +95,7 @@ public class Goal : MonoBehaviour
         yield return new WaitForSeconds(time);
         _fadeImage.SetActive(true);
         FadeOut fadeOut = _fadeImage.GetComponent<FadeOut>();
-        if(_goal3Performance == null) StartCoroutine(LoadScene(fadeOut._fadeTime));
+        if(goal3Sequence == null) StartCoroutine(LoadScene(fadeOut._fadeTime));
     }
 
     public IEnumerator LoadScene(float time)
