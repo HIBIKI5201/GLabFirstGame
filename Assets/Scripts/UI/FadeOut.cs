@@ -2,13 +2,17 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆå‡¦ç†
+/// </summary>
 public class FadeOut : MonoBehaviour
 {
-    [Header("ƒtƒF[ƒhƒAƒEƒg‚É‚©‚¯‚éŠÔ"),SerializeField] public float _fadeTime;
-    Image _image;
-    void Start()
+    public float _fadeTime; // ãƒ•ã‚§ãƒ¼ãƒ‰ã«ã‹ã‘ã‚‹æ™‚é–“
+    private Image _image;
+    
+    private void Start()
     {
         _image = GetComponent<Image>();
-        _image.DOFade(2f, _fadeTime);
+        _image.DOFade(1f, _fadeTime);
     }
 }
