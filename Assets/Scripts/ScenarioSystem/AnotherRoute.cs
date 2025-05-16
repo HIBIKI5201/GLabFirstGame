@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class AnotherRoute : MonoBehaviour
 {
-    [SerializeField, Header("SelectStage‚ªİ’è‚³‚ê‚Ä‚¢‚éSceaneLoderƒIƒuƒWƒFƒNƒg")] SceneLoader _load;
+    [SerializeField, Header("SelectStageï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½SceaneLoderï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g")] SceneLoader _load;
     /// <summary>
-    /// ‚ ‚éêŠ‚ğ’´‚¦‚½‚©‚Ìƒtƒ‰ƒO
+    /// ï¿½ï¿½ï¿½ï¿½êŠï¿½ğ’´‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½O
     /// </summary>
     public bool _isPast;
     Timer time;
@@ -20,17 +20,17 @@ public class AnotherRoute : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ‹[ƒg•ªŠò‚ğ‚·‚é‚©‚Ç‚¤‚©‚Ìˆ—
+    /// ï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½
     /// </summary>
     private void IsAnother()
     {
-        if (_isPast && IsClear._gameAllClear)
+        if (_isPast && GameProgressManager.IsGameCompleted)
         {
-            IsClear._concealed = true;
-            IsClear._stagesCleared = 1;
+            GameProgressManager.IsSecretModeUnlocked = true;
+            GameProgressManager.HighestClearedStage = 1;
             Checkpoint checkpoint = FindAnyObjectByType<Checkpoint>();
             checkpoint.ResetPoint();
-            PlayerPrefs.SetInt("nowStage", IsClear._stagesCleared);
+            PlayerPrefs.SetInt("nowStage", GameProgressManager.HighestClearedStage);
             _load.FadeAndLoadScene();
         }
     }

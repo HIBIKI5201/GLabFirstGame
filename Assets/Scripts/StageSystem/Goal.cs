@@ -19,7 +19,7 @@ public class Goal : MonoBehaviour
     [SerializeField, Header("�����A�j���[�V�����̖��O")] string _anime;
     [SerializeField] Stage1GoalPerformance _goalPerformance;
     [SerializeField] Stage3GoalPerformance _goal3Performance;
-    IsClear _isClear;
+    GameProgressManager _gameProgressManager;
     Timer _timer;
     bool _walk;
 
@@ -31,7 +31,7 @@ public class Goal : MonoBehaviour
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
-        _isClear = FindAnyObjectByType<IsClear>();
+        _gameProgressManager = FindAnyObjectByType<GameProgressManager>();
         _rb = GetComponent<Rigidbody2D>();
         _clearText.SetActive(false);
         _clearTime.enabled = false;
@@ -70,7 +70,7 @@ public class Goal : MonoBehaviour
         int min = Mathf.FloorToInt(_timer._currentTime / 60);
         int sec = Mathf.FloorToInt(_timer._currentTime % 60);
         _clearTime.text = $"クリアタイム {min.ToString("00")}:{sec.ToString("00")}";
-        _isClear.StageClear(_nowStage);
+        _gameProgressManager.StageClear(_nowStage);
     }
 
     IEnumerator Walk(float time)

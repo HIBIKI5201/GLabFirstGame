@@ -58,7 +58,7 @@ public class Stage3GoalPerformance : MonoBehaviour
 
         yield return new WaitForSeconds(5f);
 
-        if (!IsClear._concealed) //BadEnd
+        if (!GameProgressManager.IsSecretModeUnlocked) //BadEnd
         {
             _text.text = "";
             _text.DOText("扉を開けて。", 2f);

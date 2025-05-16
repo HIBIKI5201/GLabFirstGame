@@ -6,7 +6,7 @@ public class EndChanger : MonoBehaviour
     [SerializeField] GameObject _happyEnd;
     private void Start()
     {
-        if ( IsClear._concealed == false )
+        if ( GameProgressManager.IsSecretModeUnlocked == false )
         {
             _happyEnd.SetActive(false);
             _badEnd.SetActive(true);

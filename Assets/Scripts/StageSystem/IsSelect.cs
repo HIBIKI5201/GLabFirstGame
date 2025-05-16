@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class IsSelect : MonoBehaviour
 {
-    [SerializeField, Header("ƒXƒe[ƒW‚Ìƒ{ƒ^ƒ“‚ğ‚P‚©‚ç‡”Ô‚É“ü‚ê‚Ä‚­‚¾‚³‚¢")] Button[] _stage = { };
+    [SerializeField, Header("ï¿½Xï¿½eï¿½[ï¿½Wï¿½Ìƒ{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Pï¿½ï¿½ï¿½ç‡ï¿½Ô‚É“ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] Button[] _stage = { };
     [SerializeField] GameObject[] _clearObj = new GameObject[3];
 
     void Start()
@@ -22,27 +22,27 @@ public class IsSelect : MonoBehaviour
 
     private void ClearCheck()
     {
-        for (var i = 0; i <= IsClear._stagesCleared; i++)
+        for (var i = 0; i <= GameProgressManager.HighestClearedStage; i++)
         {
-            if(IsClear._stagesCleared == 3)break;
+            if(GameProgressManager.HighestClearedStage == 3)break;
             _stage[i].enabled = true;
             _stage[i].image.color = Color.white;
         }
 
-        for (var i = 1; i <= IsClear._stagesCleared; i++)
+        for (var i = 1; i <= GameProgressManager.HighestClearedStage; i++)
         {
             _clearObj[i - 1].SetActive(true);
         }
     }
 
     /// <summary>
-    /// ƒŠƒZƒbƒg‹@”\
+    /// ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½@ï¿½\
     /// </summary>
     public void ResetGame()
     {
-        IsClear._stagesCleared = 0;
-        PlayerPrefs.SetInt("nowStage", IsClear._stagesCleared);
-        IsClear._concealed = false;
+        GameProgressManager.HighestClearedStage = 0;
+        PlayerPrefs.SetInt("nowStage", GameProgressManager.HighestClearedStage);
+        GameProgressManager.IsSecretModeUnlocked = false;
         foreach (var stage in _stage)
         {
             stage.enabled = false;
@@ -53,6 +53,6 @@ public class IsSelect : MonoBehaviour
             clearObj.SetActive(false);
         }
         ClearCheck();
-        Debug.Log(IsClear._stagesCleared);
+        Debug.Log(GameProgressManager.HighestClearedStage);
     }
 }
