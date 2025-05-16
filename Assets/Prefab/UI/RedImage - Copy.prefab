@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6607126210562561900}
   - component: {fileID: 1498346536529032969}
   m_Layer: 5
-  m_Name: RedImage
+  m_Name: RedImage - Copy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
