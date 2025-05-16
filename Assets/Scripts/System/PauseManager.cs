@@ -50,7 +50,7 @@ public class PauseManager : MonoBehaviour
     {
         _checkpoint.ResetPoint();
         _fadePanel.SetActive(true);
-        _loader.FadeAndLoadScene(_fadePanel.GetComponent<Image>(), _color, _fadeTime, SceneLoader.Scenes.SelectStage);
+        _loader.FadeAndLoadScene(_fadePanel.GetComponent<Image>(), _color, _fadeTime, SceneType.SelectStage);
     }
     /// <summary>
     /// �ꎞ��~�E�ĊJ��؂�ւ���
