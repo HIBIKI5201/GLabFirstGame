@@ -1,70 +1,89 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// 手に持っているアイテムにバラを表示します
+/// 現在選択中のアイテムをUI上で視覚的に強調表示するクラス
 /// </summary>
 public class CurrentItemUI : MonoBehaviour
 {
-    [SerializeField] GameObject[] _itemUI;
-    PlayerController _playerController;
-    Vector3 _selectedScale = new Vector3(1.05f, 1.05f, 1.05f);
-    Vector3 _initializeScale = Vector3.one;
-    Vector3[] _pos = new Vector3[3];
+    [SerializeField] private GameObject[] _itemUI; // 左上に表示しているアイテムイラスト
+    [SerializeField] private Vector3 _selectedScale = new Vector3(1.05f, 1.05f, 1.05f); // 選択中の時のScale
+    [SerializeField] private Vector3 _selectedOffset = new Vector3(40f, -10f, 0f); // 選択中の時の位置オフセット
+    private PlayerController _playerController;
+    private Vector3 _initialScale = Vector3.one; // 初期Scale
+    private Vector3[] _initialPositions = new Vector3[3]; // アイコンの初期位置
 
-    void Start()
+    private void Start()
     {
+        // プレイヤーを探してPlayerControllerの参照を取得する
         var player = GameObject.FindGameObjectWithTag("Player");
         _playerController = player.GetComponent<PlayerController>();
+        
+        // アイテムのイラストの初期座標を配列に保存しておく
         for (int i = 0; i < 3; i++)
         {
-            _pos[i] = _itemUI[i].transform.position;
+            _initialPositions[i] = _itemUI[i].transform.position;
         }
     }
 
-    void Update()
+    private void Update()
     {
+        // アイテムが選択されたら
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
         {
-            ItemUsageState();
+            UpdateItemHighlight();
         }
 
+        // アイテムが
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            ResetImage();
+            ResetAllItems();
         }
     }
+    
+    /// <summary>
+    /// 現在手に持っているアイテムをUIで強調表示する
+    /// </summary>
+    private void UpdateItemHighlight()
+    {
+        ResetAllItems(); // まずすべてのアイテムUIを初期状態に戻す
 
+        int selectedIndex = GetSelectedItemIndex();
+        if (selectedIndex < 0 || selectedIndex >= _itemUI.Length) return; // 有効なインデックスでない場合は何もしない
+
+        // 選択中のアイテムUIを強調表示
+        _itemUI[selectedIndex].transform.localScale = _selectedScale;
+        _itemUI[selectedIndex].transform.position = _initialPositions[selectedIndex] + _selectedOffset;
+    }
 
     /// <summary>
-    /// 手に持っているアイテムを強調します
+    /// 現在のプレイヤーステータスに対応するアイテムインデックスを取得
     /// </summary>
-    void ItemUsageState()
+    /// <returns>選択中のアイテムインデックス。該当なしの場合は-1</returns>
+    private int GetSelectedItemIndex()
     {
-        ResetImage();
-
-        int index = _playerController._playerStatus switch
+        if (_playerController == null)
+        {
+            return -1;
+        }
+        
+        return _playerController._playerStatus switch
         {
             PlayerController.PlayerStatus.Rock => 0,
             PlayerController.PlayerStatus.Bottle => 1,
             PlayerController.PlayerStatus.Meat => 2,
-            _ => 3,
+            _ => -1,
         };
-
-        if (index == 3) return;
-
-        _itemUI[index].transform.localScale = _selectedScale;
-        Vector3 pos = _pos[index];  
-        pos.x += 40;
-        pos.y -= 10;
-        _itemUI[index].transform.position = new Vector3(pos.x, pos.y, pos.z);
     }
 
-    void ResetImage()
+    /// <summary>
+    /// すべてのアイテムUIを初期状態にリセットする
+    /// </summary>
+    private void ResetAllItems()
     {
         for (int i = 0; i < 3; i++)
         {
-            _itemUI[i].transform.localScale = _initializeScale;
-            _itemUI[i].transform.position = _pos[i];
+            _itemUI[i].transform.localScale = _initialScale;
+            _itemUI[i].transform.position = _initialPositions[i];
         }
     }
 }
