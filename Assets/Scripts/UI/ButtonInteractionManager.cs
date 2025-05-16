@@ -11,7 +11,7 @@ public class ButtonInteractionManager : MonoBehaviour
     /// <summary>
     /// ボタン操作後の処理を実行する
     /// </summary>
-    public void Mute()
+    public void DisableButtonsAndMuteSe()
     {
         Invoke(nameof(VolumeChange), 0.3f);
         

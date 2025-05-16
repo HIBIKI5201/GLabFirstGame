@@ -895,7 +895,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1918890377}
         m_TargetAssemblyTypeName: ButtonLimitations, Assembly-CSharp
-        m_MethodName: Mute
+        m_MethodName: DisableButtonsAndMuteSe
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1155,7 +1155,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1918890377}
         m_TargetAssemblyTypeName: ButtonLimitations, Assembly-CSharp
-        m_MethodName: Mute
+        m_MethodName: DisableButtonsAndMuteSe
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2222,7 +2222,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1918890377}
         m_TargetAssemblyTypeName: ButtonLimitations, Assembly-CSharp
-        m_MethodName: Mute
+        m_MethodName: DisableButtonsAndMuteSe
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4723,7 +4723,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1918890377}
         m_TargetAssemblyTypeName: ButtonLimitations, Assembly-CSharp
-        m_MethodName: Mute
+        m_MethodName: DisableButtonsAndMuteSe
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
