@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
-/// Endingシーンの演出を制御するクラス
+/// エンディングシーンの演出を制御するクラス
 /// </summary>
 public class EndingSceneSequence : MonoBehaviour
 {
