@@ -45,7 +45,7 @@ public class Stage3GoalPerformance : MonoBehaviour
         _clearPanel.DOFade(0, 1);
         _operate.DOFade(0, 1);
         _hp.DOFade(0, 1);
-        AudioManager.Instance._bgmSource.DOFade(0,4);
+        AudioManager.Instance.BGMSource.DOFade(0,4);
 
         yield return new WaitForSeconds(warkTime - panelTime);
 

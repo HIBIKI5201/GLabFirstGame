@@ -17,6 +17,6 @@ public class ButtonLimitations : MonoBehaviour
 
     void VolumeChange()
     {
-        AudioManager.Instance._seSource.volume = 0;
+        AudioManager.Instance.SESource.volume = 0;
     }
 }
