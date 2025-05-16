@@ -133,6 +133,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7837231613573585402, guid: adba3c69e64e1204499edd859522a6d2, type: 3}
   m_PrefabInstance: {fileID: 666449198}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &95922450 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5414749794360513192, guid: adba3c69e64e1204499edd859522a6d2, type: 3}
+  m_PrefabInstance: {fileID: 666449198}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95922446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &244592765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1576,8 +1587,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scene: 0
-  _fadePanel: {fileID: 95922446}
+  _targetSceneType: 0
+  _fadePanel: {fileID: 95922450}
   _fadeTime: 2
   _fadeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &1447696305
@@ -2057,8 +2068,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveTime: 7
-  _illustrations: {fileID: 570706741}
-  _ui: {fileID: 278364250}
+  _showDuration: 2
+  _illustrations: {fileID: 570706742}
+  _canvasGroup: {fileID: 278364252}
 --- !u!1 &1749024846
 GameObject:
   m_ObjectHideFlags: 0
@@ -2111,8 +2123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveTime: 7
-  _illustrations: {fileID: 1620435395}
-  _ui: {fileID: 1420401862}
+  _showDuration: 2
+  _illustrations: {fileID: 1620435396}
+  _canvasGroup: {fileID: 1420401864}
 --- !u!1 &1757209207
 GameObject:
   m_ObjectHideFlags: 0
