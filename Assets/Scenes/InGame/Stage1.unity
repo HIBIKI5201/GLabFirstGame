@@ -227,6 +227,10 @@ PrefabInstance:
       propertyPath: _checkpoint
       value: 
       objectReference: {fileID: 134866986}
+    - target: {fileID: 4521634095070392426, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _fadePanel
+      value: 
+      objectReference: {fileID: 119888175}
     - target: {fileID: 4898885117197900936, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _minClamp.x
       value: -21.9
@@ -274,11 +278,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1876642817}
   m_SourcePrefab: {fileID: 100100000, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
---- !u!1 &119888174 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1799760755746090245, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+--- !u!114 &119888175 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1756947046909317267, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
   m_PrefabInstance: {fileID: 34037733}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &134866986 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1982527221207180391, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
@@ -412,8 +422,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scene: 3
-  _fadePanel: {fileID: 119888174}
+  _targetSceneType: 3
+  _fadePanel: {fileID: 119888175}
   _fadeTime: 1
   _fadeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &372374887

@@ -1618,7 +1618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scene: 0
+  _targetSceneType: 0
   _fadePanel: {fileID: 2094876024}
   _fadeTime: 2
   _fadeColor: {r: 0, g: 0, b: 0, a: 1}
@@ -1704,7 +1704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scene: 6
+  _targetSceneType: 6
   _fadePanel: {fileID: 2094876024}
   _fadeTime: 2
   _fadeColor: {r: 0, g: 0, b: 0, a: 1}
@@ -4006,7 +4006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scene: 5
+  _targetSceneType: 5
   _fadePanel: {fileID: 2094876024}
   _fadeTime: 2
   _fadeColor: {r: 0, g: 0, b: 0, a: 1}
@@ -4985,11 +4985,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7837231613573585402, guid: adba3c69e64e1204499edd859522a6d2, type: 3}
   m_PrefabInstance: {fileID: 2094876022}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2094876024 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5458055878238727998, guid: adba3c69e64e1204499edd859522a6d2, type: 3}
+--- !u!114 &2094876024 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5414749794360513192, guid: adba3c69e64e1204499edd859522a6d2, type: 3}
   m_PrefabInstance: {fileID: 2094876022}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2118223080
 GameObject:
   m_ObjectHideFlags: 0
@@ -5019,7 +5025,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scene: 4
+  _targetSceneType: 4
   _fadePanel: {fileID: 2094876024}
   _fadeTime: 2
   _fadeColor: {r: 0, g: 0, b: 0, a: 1}
