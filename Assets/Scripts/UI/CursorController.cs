@@ -1,30 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ButtonCtrl : MonoBehaviour
+/// <summary>
+/// キー入力を元に選択中のボタンを変更するためのクラス
+/// </summary>
+public class CursorController : MonoBehaviour
 {
     [SerializeField] Button[] _buttons;
     [SerializeField] Button _creditButton;
+    [SerializeField] GameObject credit;
     private int _index = -1;
     static public bool _openCredit = false;
     private bool _isSelected = false;
-
-    [SerializeField] GameObject credit;
 
     private void SelectButton(int _index)
     {
         EventSystem.current.SetSelectedGameObject(_buttons[_index].gameObject);
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))

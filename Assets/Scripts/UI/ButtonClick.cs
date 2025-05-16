@@ -14,14 +14,14 @@ public class ButtonClick : MonoBehaviour
     public void OpenCreditPanel()
     {
         AudioManager.Instance.PlaySE("determination");
-        ButtonCtrl._openCredit = true;
+        CursorController._openCredit = true;
         panel.SetActive(true);
     }
 
     public void CloseCredit()
     {
         AudioManager.Instance.PlaySE("back");
-        ButtonCtrl._openCredit = false;
+        CursorController._openCredit = false;
         panel.SetActive(false);
     }
 
