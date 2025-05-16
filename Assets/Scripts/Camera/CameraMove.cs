@@ -1,58 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// ã‚«ãƒ¡ãƒ©ã®å‹•ãã‚’åˆ¶å¾¡ã™ã‚‹ã‚¯ãƒ©ã‚¹
+/// </summary>
 [ExecuteInEditMode]
 public class CameraMove : MonoBehaviour
 {
-    [SerializeField] Transform _target;
+    [SerializeField] private Transform _target;
 
-    [Header("ƒJƒƒ‰‚Ì’ÇÕ‘¬“x")]
-    [SerializeField] float _speed;
+    [Header("ã‚«ãƒ¡ãƒ©ã®è¿½è·¡é€Ÿåº¦")]
+    [SerializeField] private float _speed;
+    [SerializeField] private Vector2 _offset;
 
-    [Space]
-    [SerializeField] Vector2 _offset;
+    [Header("ã‚«ãƒ¡ãƒ©ã®ç§»å‹•ã§ãã‚‹ç¯„å›²")]
+    [Tooltip("ã‚«ãƒ¡ãƒ©ã®ç§»å‹•ç¯„å›²ã‚’åˆ¶é™ã™ã‚‹ã‹")] [SerializeField] private bool _clampEnabled;
+    [SerializeField] private Vector2 _minClamp;
+    [SerializeField] private Vector2 _maxClamp;
+    private Vector2 _outPos;
 
-    [Header("ƒJƒƒ‰‚ÌˆÚ“®‚Å‚«‚é”ÍˆÍ")]
-    [Tooltip("ƒJƒƒ‰‚ÌˆÚ“®”ÍˆÍ‚Ì§ŒÀ‚ğ‚·‚é‚©")]
-    [SerializeField] bool _clampEnabled;
+    [Header("æ‰‹ãƒ–ãƒ¬")]
+    [SerializeField] private bool _canShake;
+    [SerializeField] private float _shakeSpeed = 0.05f;
+    [SerializeField] private float _shakePower = 0.4f;
 
-    [Tooltip("ˆÚ“®”ÍˆÍ‚Ì¶‰º’[‚ÌˆÊ’u")]
-    [SerializeField] Vector2 _minClamp;
-
-    [Tooltip("ˆÚ“®”ÍˆÍ‚Ì‰Eã‚ÌˆÊ’u")]
-    [SerializeField] Vector2 _maxClamp;
-    Vector2 _outPos;
-
-    [Header("èƒuƒŒ")]
-    [Tooltip("èƒuƒŒ‚Å‚«‚é‚©")]
-    [SerializeField] bool _canShake;
-    [Tooltip("èƒuƒŒ‘¬“x")]
-    [SerializeField] float _shakeSpeed = 0.05f;
-    [Tooltip("èƒuƒŒ‚Ì‹­‚³")]
-    [SerializeField] float _shakePower = 0.4f;
-
-    Transform _myTra;
-    void Start()
+    private void Start()
     {
-        _myTra = transform;
-        _outPos = _myTra.position;
-        if(_target == null)
-            _target = GameObject.FindAnyObjectByType<PlayerController>().transform;
-        _myTra.position = _target.position;
-        _outPos = _myTra.position;
+        _outPos = transform.position;
+        
+        if (_target == null)
+        {
+            // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒè¨­å®šã•ã‚Œã¦ã„ãªã‹ã£ãŸã‚‰Playerã‚’æ¢ã™
+            _target = FindAnyObjectByType<PlayerController>().transform;
+        }
+        
+        transform.position = _target.position;
+        _outPos = transform.position;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         Vector2 targetPos = _offset + (Vector2)_target.position;
+        
         if (_clampEnabled)
         {
             targetPos.x = Mathf.Clamp(targetPos.x, _minClamp.x, _maxClamp.x);
             targetPos.y = Mathf.Clamp(targetPos.y, _minClamp.y, _maxClamp.y);
         }
+        
         _outPos = Vector3.Lerp(_outPos, targetPos, Time.deltaTime * _speed);
 
         Vector2 blur = Vector2.zero;
+        
         if (_canShake)
         {
             blur = new(
@@ -63,12 +61,16 @@ public class CameraMove : MonoBehaviour
         Vector3 outPos = _outPos + blur;
         outPos.z = -20;
 
-        _myTra.position = outPos;
+        transform.position = outPos;
     }
+    
+    /// <summary>
+    /// ã‚®ã‚ºãƒ¢ã‚’æå†™ã™ã‚‹
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
-        if (!_clampEnabled)
-            return;
+        if (!_clampEnabled) return;
+        
         Vector2 min = _minClamp;
         Vector2 max = _maxClamp;
         Gizmos.DrawLine(min, new Vector2(min.x, max.y));
@@ -76,7 +78,7 @@ public class CameraMove : MonoBehaviour
         Gizmos.DrawLine(new Vector2(max.x, min.y),max);
         Gizmos.DrawLine(new Vector2(min.x, max.y),max);
 
-        Vector2 p = _myTra.position;
+        Vector2 p = transform.position;
         Vector2 clampP = p;
         clampP.x = Mathf.Clamp(clampP.x, min.x, max.x);
         clampP.y = Mathf.Clamp(clampP.y, min.y, max.y);
