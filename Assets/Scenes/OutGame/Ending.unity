@@ -834,7 +834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3658377694214830223, guid: 3119d4192b1665149b69ea058761b7a3, type: 3}
       propertyPath: m_Name
-      value: EndChanger
+      value: EndingController
       objectReference: {fileID: 0}
     - target: {fileID: 3658377694214830223, guid: 3119d4192b1665149b69ea058761b7a3, type: 3}
       propertyPath: m_IsActive
