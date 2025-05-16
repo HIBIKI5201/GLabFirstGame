@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
     Vector3[] _afterItemPos1 = new Vector3[3];
     Vector3[] _afterItemPos2 = new Vector3[3];
     float _horiInput = 0;
-    DamageCamera _damageCamera;
+    CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
     PauseManager _pauseManager;
     AudioManager _audioManager;
@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("_throwsetting.Platform�ɒn�ʂ̃I�u�W�F�N�g���Z�b�g���Ă�������");
         }
-        _damageCamera = FindAnyObjectByType<DamageCamera>();
+        _cameraShakeController = FindAnyObjectByType<CameraShakeController>();
         if (_audioSource == null)
         {
             Debug.LogError("AudioSourse������܂���");
@@ -135,9 +135,9 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log(_audioSource);
         }
-        if (_damageCamera == null)
+        if (_cameraShakeController == null)
         {
-            Debug.LogError("DamageCamera������܂���");
+            Debug.LogError("CameraShakeController������܂���");
         }
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
@@ -598,9 +598,9 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
 
-                if (_damageCamera != null)
+                if (_cameraShakeController != null)
                 {
-                    _damageCamera.Shake();
+                    _cameraShakeController.TriggerShake();
                 }
             }
             if (CurrentHp <= 0)
