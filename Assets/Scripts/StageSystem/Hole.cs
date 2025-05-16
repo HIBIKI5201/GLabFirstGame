@@ -12,7 +12,7 @@ public class Hole : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _gameManager.State = GameManager.GameState.GameOver;
+            _gameManager.StateType = GameStateType.GameOver;
         }
         else
         {

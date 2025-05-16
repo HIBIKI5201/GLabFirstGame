@@ -28,13 +28,12 @@ public class GameOverSystem : MonoBehaviour
         float currentTime = _timer._currentTime;
 
         if (
-            (_gameManager.State == GameManager.GameState.GameOver
+            (_gameManager.StateType == GameStateType.GameOver
             || currentHP <= 0
             || currentTime <= 0) && !_called)
         {
-            _gameManager.State = GameManager.GameState.GameOver; 
+            _gameManager.StateType = GameStateType.GameOver; 
             _called = true;
-            //Debug.Log("ゲームオーバーによるやり直し");
         }
     }
 }

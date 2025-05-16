@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GameOver : MonoBehaviour
 {
-    [SerializeField, Header("RedImage‚ð“ü‚ê‚é")] GameObject _redObject;
+    [SerializeField, Header("RedImageï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] GameObject _redObject;
     GameManager _gameManager;
 
     void Start()
@@ -17,7 +17,7 @@ public class GameOver : MonoBehaviour
 
     private void IsGameOver()
     {
-        if (_gameManager.State == GameManager.GameState.GameOver)
+        if (_gameManager.StateType == GameStateType.GameOver)
         {
             _redObject.SetActive(true);
             AudioManager.Instance.PlaySE("dead");

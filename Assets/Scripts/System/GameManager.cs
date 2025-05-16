@@ -2,35 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
-    public GameState _state;
+    [FormerlySerializedAs("_state")] public GameStateType stateType;
     public static GameManager instance;
-    public GameState State 
+    public GameStateType StateType 
     { 
-        get => _state; 
+        get => stateType; 
         set 
         {
-            if (_state == value)
+            if (stateType == value)
                 return;
-            //Debug.Log($"{_state}‚©‚ç{value}‚ÉˆÚs"); 
-            _state = value;
+            //Debug.Log($"{stateType}ï¿½ï¿½ï¿½ï¿½{value}ï¿½ÉˆÚs"); 
+            stateType = value;
         } 
     }
     
-    [Space,Tooltip("FPS’l‚ğw’è‚·‚é")]
+    [Space,Tooltip("FPSï¿½lï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½")]
     [SerializeField] bool _settingFPS;
-    [Tooltip("FPS’l")]
+    [Tooltip("FPSï¿½l")]
     [SerializeField,Range(10,120)] int _targetFPS;
-    public enum GameState
-    {
-        BeforeStart,
-        Playing,
-        Pause,
-        StageClear,
-        GameOver
-    }
+    
     void Start()
     {
         instance = this;

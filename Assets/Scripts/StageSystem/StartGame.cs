@@ -6,7 +6,7 @@ public class StartGame : MonoBehaviour
 {
     [SerializeField] CanvasGroup _stageText;
     [SerializeField] int _nowStage;
-    public static bool _isFirst = true; //1‰ñ–Ú‚È‚çtrue(ƒŠƒXƒ|[ƒ“‚Ífalse‚É‚µ‚Ä‚¨‚­)
+    public static bool _isFirst = true; //1ï¿½ï¿½Ú‚È‚ï¿½true(ï¿½ï¿½ï¿½Xï¿½|ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½falseï¿½É‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½)
     PlayerController _player;
     GameManager _gameManager;
     CheckPointManager _checkPointManager;
@@ -21,7 +21,7 @@ public class StartGame : MonoBehaviour
         _checkpoint = FindAnyObjectByType<Checkpoint>();
         _gameManager = FindAnyObjectByType<GameManager>();
         _gameOver = FindAnyObjectByType<GameOverSystem>();
-        _gameManager.State = GameManager.GameState.Playing;
+        _gameManager.StateType = GameStateType.Playing;
         _timer = FindAnyObjectByType<Timer>();
         _player = GetComponent<PlayerController>();
         _player.StopAction(2f);
@@ -45,7 +45,7 @@ public class StartGame : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒtƒF[ƒh‚ªŠ®—¹‚µ‚½‚çƒeƒLƒXƒg‚ğ”ñ•\¦‚É‚·‚é
+    /// ï¿½tï¿½Fï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½gï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½
     /// </summary>
     void TextHidden()
     {

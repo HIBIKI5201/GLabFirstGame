@@ -15,7 +15,7 @@ public class GoalObject : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player"))
         {
-            _gameManager.State = GameManager.GameState.StageClear;
+            _gameManager.StateType = GameStateType.StageClear;
             Destroy(_rightEnd);
             if(!_isFirst) AudioManager.Instance.PlaySE("goal");
             _isFirst = true;

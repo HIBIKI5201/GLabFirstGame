@@ -67,7 +67,7 @@ public class Enemy : MonoBehaviour
     
     [SerializeField] Animator _anim;
     /// <summary>
-    /// �f�o�b�O�o���悤��State�̃v���p�e�B
+    /// �f�o�b�O�o���悤��StateType�̃v���p�e�B
     /// </summary>
     public EnemyState State
     {
@@ -76,7 +76,7 @@ public class Enemy : MonoBehaviour
         {
             if (value == _state)
                 return;
-            //Debug.Log($"�G{_state}����{value}�Ɉڍs");
+            //Debug.Log($"�G{stateType}����{value}�Ɉڍs");
             _state = value;
         }
     }
@@ -308,8 +308,8 @@ public class Enemy : MonoBehaviour
                 _anim.SetBool("Dizzy", false);
                 break;
         }
-        if(GameManager.instance.State == GameManager.GameState.GameOver ||
-        GameManager.instance.State == GameManager.GameState.StageClear)
+        if(GameManager.instance.StateType == GameStateType.GameOver ||
+        GameManager.instance.StateType == GameStateType.StageClear)
         {
             this.enabled = false;
             gameObject.SetActive(false);

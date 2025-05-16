@@ -592,7 +592,7 @@ public class PlayerController : MonoBehaviour
                 CurrentHp += value;
                 for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
-                    _damageEffect.DamageEffectPlay();
+                    _damageEffect.PlayDamageEffect();
                     _rose.RemoveAt(0);
                 }
                 StartCoroutine(Invincible());

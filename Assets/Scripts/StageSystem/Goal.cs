@@ -48,7 +48,7 @@ public class Goal : MonoBehaviour
     {
         if (collision.gameObject.name == "goal")
         {
-            if (_gameManager.State == GameManager.GameState.StageClear)
+            if (_gameManager.StateType == GameStateType.StageClear)
             {
                 _rb.Sleep();
                 if(_goalPerformance != null) _goalPerformance.Perfomance(_warkTime);
