@@ -35,9 +35,6 @@ public class IsSelect : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ���Z�b�g�@�\
-    /// </summary>
     public void ResetGame()
     {
         GameProgressManager.HighestClearedStage = 0;
