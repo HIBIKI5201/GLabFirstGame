@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GameOver : MonoBehaviour
 {
-    [SerializeField, Header("RedImage������")] GameObject _redObject;
+    [SerializeField, Header("DeathOverlayController������")] GameObject _redObject;
     GameManager _gameManager;
 
     void Start()
