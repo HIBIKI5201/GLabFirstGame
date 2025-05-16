@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof (BoxCollider2D))]
 public class EnemyActionArea : MonoBehaviour
 {
-    [Header("Šm”F‚Å‚«‚½Enemy’B")]
+    [Header("ï¿½mï¿½Fï¿½Å‚ï¿½ï¿½ï¿½Enemyï¿½B")]
     [SerializeField] Enemy[] _enemies;
     Transform[] _enemiesTra;
     void Start()
@@ -18,8 +18,8 @@ public class EnemyActionArea : MonoBehaviour
             _enemiesTra[i] = _enemies[i].transform;
         }
     }
-    private void OnTriggerEnter2D(Collider2D col) => EnemyFunc(col, true, "“G‚ª“®‚«o‚µ‚½");
-    private void OnTriggerExit2D(Collider2D col) => EnemyFunc(col, false, "“G‚ðŽ~‚ß‚½");
+    private void OnTriggerEnter2D(Collider2D col) => EnemyFunc(col, true, "ï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½");
+    private void OnTriggerExit2D(Collider2D col) => EnemyFunc(col, false, "ï¿½Gï¿½ï¿½ï¿½~ï¿½ß‚ï¿½");
     void EnemyFunc(Collider2D col,bool enabled,string logStr)
     {
         Transform target = col.transform;
