@@ -6,7 +6,7 @@
 /// </summary>
 public class ButtonInteractionManager : MonoBehaviour
 {
-    [SerializeField] private SelectedButton[] _selectedButtons;
+    [SerializeField] private ButtonAnimationController[] _selectedButtons;
     
     /// <summary>
     /// ボタン操作後の処理を実行する
