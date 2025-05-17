@@ -1,28 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+
+/// <summary>
+/// 石アイテムが当たった時のスタンアニメーション
+/// </summary>
 [ExecuteInEditMode]
 public class StunAnime : MonoBehaviour
 {
     [SerializeField] List<Transform> _spritesTra;
     [SerializeField] Vector2 _a;
     [SerializeField] float _speed;
-    void Start()
+    
+    private void Start()
     {
         _spritesTra = GetComponentsInChildren<Transform>().ToList();
         _spritesTra.RemoveAt(0);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        AAAAAA();
+        Animation();
     }
-    void AAAAAA()
+    
+    private void Animation()
     {
         float t;
         float rot;
+        
         for(int i = 0; i < _spritesTra.Count; i++)
         {
             t = (float)i / _spritesTra.Count;
