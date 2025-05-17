@@ -1,21 +1,14 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
+/// <summary>
+/// 敵のクラス
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour
 {
-    AudioManager _audio;
-    Rigidbody2D _rb;
-    Transform _playerTra;
-    Transform _modelT;
-    SpriteRenderer[] spriteRenderers;
-    BoxCollider2D _boxCollider;
-    PlayerController _player;
-    GameObject _meatIcon;
-    GameObject _stunAnimeObj;
-
     [SerializeField] EnemyType _beast; // 敵の種類
     [SerializeField] Animator _anim;
     
@@ -31,90 +24,55 @@ public class Enemy : MonoBehaviour
     public float _currentSpeed; // 現在の移動スピード
 
     [SerializeField] EnemyStateType _state; // 状態
-    
     public EnemyStateType State
     {
         get => _state;
         set
         {
-            if (value == _state)
-                return;
-            //Debug.Log($"�G{stateType}����{value}�Ɉڍs");
+            if (value == _state) return; // ステートが変わらなければ処理を行わない
             _state = value;
         }
     }
 
-    [Tooltip("��щz����")]
-    [SerializeField] bool _jumpOver;
-
-    [Tooltip("�i�����~����")]
+    [SerializeField] bool _jumpOver; // 段差を乗り越えられるか
     [SerializeField] bool _goDown;
-
-    [Tooltip("�ǂ���������")]
     [SerializeField] bool _canChase;
-
-    [Tooltip("�_���[�W�󂯂��")]
     [SerializeField] bool _canDamage;
-
-    [Space]
-    [Tooltip("�n�ʂ��Q���̐ݒ�")]
     [SerializeField] GroundedRay _ground;
-    [Space]
-
-    [Tooltip("�i�s����")]
-    [SerializeField] Direction _dir;
-
-    [Tooltip("��Ƀf�o�b�O���")]
+    [SerializeField] Direction _dir; // どちらの方向に動くか
     [SerializeField] bool _alwaysDebug;
 
-    /// <summary>
-    /// My Transform
-    /// </summary>
+    AudioManager _audio;
+    Rigidbody2D _rb;
+    Transform _playerTra;
+    Transform _modelT;
+    SpriteRenderer[] spriteRenderers;
+    BoxCollider2D _boxCollider;
+    PlayerController _player;
+    GameObject _meatIcon;
+    GameObject _stunAnimeObj;
+    
     Transform _myTra;
-
-    /// <summary>
-    /// �{�g�����������ʒu
-    /// </summary>
     Vector2 _bottlePosi;
-
-    /// <summary>
-    /// �����������ʒu
-    /// </summary>
+    Vector2 _modelScale;
+    ContactPoint2D[] V;
+    
+    Coroutine _reactionCoro = null;
+    Coroutine damageCoro = null;
+    Coroutine coroutine = null;
+    
+    // 肉アイテム関連
     Vector2 _meatPosi;
-
-    /// <summary>
-    /// ����������߂�܂ł̃^�C�}�[
-    /// </summary>
     float _meatTimer;
-
-    /// <summary>
-    /// ����������߂�܂ł̒���
-    /// </summary>
     float _meatTime;
-
-    /// <summary>
-    /// ����H���n�߂����̃t���O
-    /// </summary>
     bool _meatEat;
 
-    /// <summary>
-    /// �J�n���ɍĐ���h���t���O
-    /// </summary>
     bool _canMoveSE;
-
-    /// <summary>
-    /// �������̏d����h���t���O
-    /// </summary>
     bool _canReset;
 
-    /// <summary>
-    /// �v���C���[���Ō�ɍU����������
-    /// </summary>
     float _attackedTimer;
-
-    Vector2 _modelScale;
     
-    void Awake()
+    private void Awake()
     {
         _canReset = true;
         ResetStatus();
@@ -122,9 +80,42 @@ public class Enemy : MonoBehaviour
         _meatIcon = transform.GetChild(1).gameObject;
     }
     
-    void ResetStatus()
+    private void OnEnable()
     {
-        //���C�Ɣ����͂�0�ɐݒ�
+        CacheComponents();
+        
+        if (_canReset)
+        {
+            ResetStatus();
+            MatchGround();
+            _canReset = false;
+        }
+
+        if (_rb == null)
+        {
+            _rb = GetComponent<Rigidbody2D>();
+        }
+        
+        _rb.isKinematic = false;
+        
+        if (_canMoveSE)
+        {
+            _audio.PlaySE(_beast switch
+            {
+                EnemyType.StrayDog => "strayDog",
+                EnemyType.Wolf_Normal or EnemyType.Wolf_Gray => "wolf",
+                EnemyType.Bear => "bare",
+                _ => "strayDog"
+            });
+            _canMoveSE = false;
+        } 
+    }
+    
+    /// <summary>
+    /// ステータスの初期化
+    /// </summary>
+    private void ResetStatus()
+    {
         PhysicsMaterial2D physicsMaterial2D = new()
         {
             friction = 0,
@@ -137,18 +128,21 @@ public class Enemy : MonoBehaviour
         _state = EnemyStateType.Normal;
         _canDamage = true;
 
-        //���s����0.2�b�Ԍ��ʉ����Đ������Ȃ�
         StartCoroutine(WaitAudio());
         IEnumerator WaitAudio()
         {
             _canMoveSE = false;
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.2f); // 開始後0.2秒は歩行時のSEを再生しない
             _canMoveSE = true;
         }
     }
-    void CacheComponents()
+    
+    /// <summary>
+    /// コンポーネントの参照を取得する
+    /// </summary>
+    private void CacheComponents()
     {
-        _stunAnimeObj = GetComponentInChildren<StunAnime>().gameObject;
+        // _stunAnimeObj = GetComponentInChildren<StunAnime>().gameObject; // TODO
         _myTra = transform;
         _audio = AudioManager.Instance;
 
@@ -164,7 +158,11 @@ public class Enemy : MonoBehaviour
 
         _boxCollider = (_boxCollider != null) ? _boxCollider : GetComponent<BoxCollider2D>();
     }
-    void MatchGround()
+    
+    /// <summary>
+    /// 接地地点
+    /// </summary>
+    private void MatchGround()
     {
         RaycastHit2D hit = Physics2D.BoxCast(_myTra.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
         if (hit)
@@ -174,19 +172,19 @@ public class Enemy : MonoBehaviour
             _myTra.position = pos;
         }
     }
+    
     void Update()
     {
         _rb.isKinematic = false;
         if (_currentHp <= 0)
         {
-            //Debug.Log("�G���S");
-            Destroy(this.gameObject);
+            Destroy(gameObject); // HPがゼロになったら自分を破棄する
         }
         var vec = _modelScale;
         vec.x *= _dir switch { Direction.Right => -1, Direction.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
         _modelT.localScale = vec;
 
-        _stunAnimeObj.SetActive(State == EnemyStateType.Faint);
+        // _stunAnimeObj.SetActive(State == EnemyStateType.Faint); // TODO: 素材を確認
 
         switch (State)
         {
@@ -196,12 +194,15 @@ public class Enemy : MonoBehaviour
                 _rb.velocity = velo;
                 _anim.SetBool("Dizzy", true);
                 break;
+            
             case EnemyStateType.Bite:
                 UpdateMeat();
                 break;
+            
             case EnemyStateType.Escape:
                 UpdateBottle();
                 break;
+            
             case EnemyStateType.Chase:
                 UpdateChase();
                 break;
@@ -215,10 +216,12 @@ public class Enemy : MonoBehaviour
                 _anim.SetBool("Dizzy", false);
                 break;
         }
+        
         if(GameManager.instance.StateType == GameStateType.GameOver ||
         GameManager.instance.StateType == GameStateType.StageClear)
         {
-            this.enabled = false;
+            // ゲームオーバー、もしくはゲームクリア時には敵を非表示にする
+            enabled = false;
             gameObject.SetActive(false);
         }
 
@@ -235,6 +238,7 @@ public class Enemy : MonoBehaviour
                     AttackToPlayer();
             }
         }
+        
         void UpdateBottle()
         {
             float x = _bottlePosi.x - _myTra.position.x;
@@ -243,15 +247,13 @@ public class Enemy : MonoBehaviour
 
             UpdateVelocity();
         }
+        
         void UpdateMeat()
         {
             _meatIcon.SetActive(true);
-            //���Ƃ̋���
             float x = _meatPosi.x - _myTra.position.x;
-            //���Ɍ�����
             _dir = x <= 0 ? Direction.Left : Direction.Right;
 
-            //���Ƃ̋���
             if (Mathf.Abs(x) <= 0.2f) 
             {
                 _dir = Direction.None;
@@ -259,18 +261,22 @@ public class Enemy : MonoBehaviour
                     _meatTimer = Time.time;
                 _meatEat = true;
             }
-            //���������Ă���5�b�o�߂�����
+            
             if (Time.time >= _meatTimer + _meatTime)
             {
                 State = EnemyStateType.Normal;
                 _meatIcon.SetActive(false);
                 _dir = Mathf.Sign(_modelT.localScale.x) switch { 1 => Direction.Left, -1 => Direction.Right, _ => Direction.None };
             }
-            //�W�����v���K�v�� �n�ʂɂ��ā@�W�����v���ł���
+
             if (IsJump() && IsGrounded() && _jumpOver)
+            {
                 VelocityJump();
+            }
+                
             UpdateVelocity();
         }
+        
         void UpdateChase()
         {
             float x = _playerTra.position.x - _myTra.position.x;
@@ -280,8 +286,11 @@ public class Enemy : MonoBehaviour
             {
                 _dir = Direction.None;
             }
-            if(!_goDown)
-                if(IsFrontGrounded(out bool right))
+
+            if (!_goDown)
+            {
+                if (IsFrontGrounded(out bool right))
+                {
                     switch (_dir)
                     {
                         case Direction.Left:
@@ -293,17 +302,29 @@ public class Enemy : MonoBehaviour
                                 _dir = Direction.None;
                             break;
                     }
+                }
+            }
 
             if (IsJump() && IsGrounded() && _jumpOver)
+            {
                 VelocityJump();
+            }
 
             if (Time.time >= _attackedTimer + 0.1f)
+            {
                 if (IsSideTouch(out bool playerHit))
+                {
                     if (playerHit)
+                    {
                         AttackToPlayer();
+                    }
+                }
+            }
+                
             UpdateVelocity();
             Search();
         }
+        
         void UpdateVelocity()
         {
             Vector2 velo = _rb.velocity;
@@ -313,12 +334,14 @@ public class Enemy : MonoBehaviour
             velo.x = _currentSpeed * _dir switch { Direction.Right => 1, Direction.Left => -1, _ => 0 };
             _rb.velocity = velo;
         }
+        
         void VelocityJump()
         {
             Vector2 velo = _rb.velocity;
             velo.y = _jumpPower;
             _rb.velocity = velo;
         }
+        
         void Search()
         {
             if (!_canChase)
@@ -327,6 +350,7 @@ public class Enemy : MonoBehaviour
             RaycastHit2D hit = Physics2D.Linecast(_myTra.position, _playerTra.position, _ground._mask);
             State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
         }
+        
         void AttackToPlayer()
         {
             _player = _player != null ? _player : FindAnyObjectByType<PlayerController>();
@@ -335,6 +359,7 @@ public class Enemy : MonoBehaviour
             _attackedTimer = Time.time;
             _player.FluctuationLife(-_attack);
         }
+        
         bool IsFrontGrounded(out bool isRightDir)
         {
 
@@ -352,10 +377,12 @@ public class Enemy : MonoBehaviour
             };*/
             //return Physics2D.Raycast(rayPos, Vector2.down, _ground._rayLong, _ground._mask);
         }
+        
         bool IsGrounded()
         {
             return Physics2D.BoxCast(_myTra.position, _boxCollider.size - new Vector2(0.1f,0.1f), 0, Vector2.down, 0.2f, _ground._mask);
         }
+        
         bool IsSideTouch(out bool playerHit)
         {
             Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
@@ -366,13 +393,15 @@ public class Enemy : MonoBehaviour
                 playerHit = hit.transform.CompareTag("Player");
             return hit;
         }
+        
         bool IsJump()
         {
             Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
             return Physics2D.Raycast(_myTra.position, dir, _ground._jumpRayLong, _ground._mask);
         }
     }
-    Coroutine _reactionCoro = null;
+    
+    
     public void ReactionStone(float stunTime)
     {
         if (State == EnemyStateType.Escape || State == EnemyStateType.Faint)
@@ -389,7 +418,7 @@ public class Enemy : MonoBehaviour
             State = EnemyStateType.Normal;
         }
     }
-    public void ReactionBottle(Vector3 bottlePosi) => ReactionBottle(bottlePosi, 5);
+    
     public void ReactionBottle(Vector3 bottlePosi,float effectTime)
     {
         if (State == EnemyStateType.Faint)
@@ -406,7 +435,7 @@ public class Enemy : MonoBehaviour
             State = EnemyStateType.Normal;
         }
     }
-    public void ReactionMeat(Vector3 meatPosi) => ReactionMeat(meatPosi, 5);
+    
     public void ReactionMeat(Vector3 meatPosi, float effectTime)
     {
         if (State == EnemyStateType.Bite|| State == EnemyStateType.Faint)
@@ -418,8 +447,7 @@ public class Enemy : MonoBehaviour
         _meatTimer = Time.time;
         _meatTime = effectTime;
     }
-
-    Coroutine coroutine = null;
+    
     public void SlowDownScale(float scale, float time)
     {
         if (coroutine != null)
@@ -440,7 +468,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    Coroutine damageCoro = null;
+    
     void DamageEffect()
     {
         if (damageCoro != null)
@@ -460,6 +488,7 @@ public class Enemy : MonoBehaviour
             _canDamage = true;
         }
     }
+    
     private void OnCollisionStay2D(Collision2D col)
     {
         switch (State)
@@ -486,20 +515,23 @@ public class Enemy : MonoBehaviour
                 }
         }
     }
-    ContactPoint2D[] V;
-    //private void OnCollisionStay2D(Collision2D collision) => V = collision.contacts;
+    
     public void LifeFluctuation(int value)
     {
-        if (!_canDamage&&value < 0)
+        if (!_canDamage && value < 0)
         {
-            Debug.Log("�G���G���Ԃ̂��߃_���[�W����");
+            Debug.Log("");
             return;
         }
+        
         _currentHp += value;
-        Debug.Log($"�GHP{value}����  �c��:{_currentHp}");
+        Debug.Log($"{value}  現在のHP:{_currentHp}");
         if (value < 0)
+        {
             DamageEffect();
+        }
     }
+    
     void OnDisable()
     {
         if (_rb == null)
@@ -507,33 +539,10 @@ public class Enemy : MonoBehaviour
         _rb.isKinematic = true;
         _rb.velocity = Vector2.zero;
     }
-    void OnEnable()
-    {
-        CacheComponents();
-        if (_canReset)
-        {
-            ResetStatus();
-            MatchGround();
-            _canReset = false;
-        }
 
+    #region ギズモの描画処理
 
-        if (_rb == null)
-            _rb = GetComponent<Rigidbody2D>();
-        _rb.isKinematic = false;
-        if (_canMoveSE)
-        {
-            _audio.PlaySE(_beast switch
-            {
-                EnemyType.StrayDog => "strayDog",
-                EnemyType.Wolf_Normal or EnemyType.Wolf_Gray => "wolf",
-                EnemyType.Bear => "bare",
-                _ => "strayDog"
-            });
-            _canMoveSE = false;
-        } 
-    }
-    private void OnDrawGizmos(){if(_alwaysDebug) DebugRendering(); }
+    private void OnDrawGizmos(){ if(_alwaysDebug) DebugRendering(); }
     private void OnDrawGizmosSelected() { if (!_alwaysDebug) DebugRendering(); }
     void DebugRendering()
     {
@@ -574,6 +583,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region デバッグ用のメソッド
+
     [ContextMenu("TestSlowDown")]
     void TestSlowDown() => SlowDownScale(0.5f, 10);
 
@@ -583,12 +596,13 @@ public class Enemy : MonoBehaviour
     void TestReactionBottle() => ReactionBottle(Vector2.zero, 5);
     [ContextMenu("TestReactionMeat")]
     void TestReactionMeat() => ReactionMeat(Vector2.zero,5);
-    [ContextMenu("InitializeGroundedRay(�����ݒ�)")]
+    
+    [ContextMenu("InitializeGroundedRay")]
     void InitializeGroundedRay()
     {
         if (!TryGetComponent<BoxCollider2D>(out _boxCollider)) 
         { 
-            Debug.Log("BoxCollider2D���݂���Ȃ�"); 
+            Debug.Log("BoxCollider2Dが取得できませんでした"); 
             return;
         }
 
@@ -602,7 +616,7 @@ public class Enemy : MonoBehaviour
         _ground._jumpRayLong = (size.x / 2f) + 0.2f;
     }
 
-    [ContextMenu("SettingStatus(�����ݒ�)")]
+    [ContextMenu("SettingStatus")]
     void SettingStatus()
     {
         PlayerController player = FindAnyObjectByType<PlayerController>();
@@ -619,6 +633,7 @@ public class Enemy : MonoBehaviour
                 _canChase = false;
                 _goDown = false;
                 break;
+            
             case EnemyType.Wolf_Normal:
                 _maxHp = 3;
                 _attack = 1;
@@ -628,6 +643,7 @@ public class Enemy : MonoBehaviour
                 _canChase = true;
                 _goDown = false;
                 break;
+            
             case EnemyType.Wolf_Gray:
                 _maxHp = 3;
                 _attack = 1;
@@ -637,6 +653,7 @@ public class Enemy : MonoBehaviour
                 _canChase = true;
                 _goDown = true;
                 break;
+            
             case EnemyType.Bear:
                 _maxHp = 4;
                 _attack = 2;
@@ -646,6 +663,7 @@ public class Enemy : MonoBehaviour
                 _canChase = false;
                 _goDown = false;
                 break;
+            
             case EnemyType.Boss_Wolf:
                 _maxHp = 6;
                 _attack = 2;
@@ -655,9 +673,12 @@ public class Enemy : MonoBehaviour
                 _canChase = true;
                 _goDown = true;
                 break;
+            
             default:
-                Debug.LogError("���݂��Ȃ�EnemyType���Q�Ƃ��Ă���");
+                Debug.LogError("想定されていない敵の種類です");
                 break;
         }
     }
+
+    #endregion
 }
