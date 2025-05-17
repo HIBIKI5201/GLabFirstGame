@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,61 +10,59 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, Tooltip("�v���C���[�̗̑͂̍ő�l")] int _maxHp;
+    [SerializeField] int _maxHp;
     public int CurrentHp { get; private set; }
-    [SerializeField, Tooltip("�̗͂̃o���̉Ԃт�")] public List<GameObject> _rose = new List<GameObject>();
-    [SerializeField, Tooltip("�v���C���[�̑��x�̍ő�l")] public float _maxSpeed;
-    [SerializeField, Tooltip("�v���C���[�̈ړ����x�̉����x")] public float _movePower;
-    [SerializeField, Tooltip("���͂��Ȃ����̌����x")] public float _deceleration;
-    [SerializeField, Tooltip("���n���Ɋ�����K�p����")] bool _landingInertia;
-    [SerializeField, Tooltip("�v���C���[�̃W�����v��")] float _jumpPower;
-    [SerializeField, Tooltip("�������x")] float _fallSpeed;
-    [SerializeField, Tooltip("�v���C���[�̖��G����")] int _damageCool;
-    [SerializeField, Tooltip("�ڒn����̈ʒu")] Vector2 _point;
-    [SerializeField, Tooltip("�ڒn����̑傫��")] Vector2 _size;
-    [SerializeField, Tooltip("�ڒn����̊p�x")] float _angle;
-    [SerializeField, Tooltip("�_�b�V���̉�")] AudioClip _dash;
-    [SerializeField, Tooltip("�����Ă鉹")] AudioClip _walk;
-    [SerializeField, Tooltip("<�A�C�e���𓊂���ݒ�>")] Throwsetting _throwsetting;
-    [SerializeField, Tooltip("<�A�C�e���̐ݒ�>")] ItemSetting _itemSetting;
+    [SerializeField] public List<GameObject> _rose = new List<GameObject>();
+    [SerializeField] public float _maxSpeed;
+    [SerializeField] public float _movePower;
+    [SerializeField] public float _deceleration;
+    [SerializeField] bool _landingInertia;
+    [SerializeField] float _jumpPower;
+    [SerializeField] float _fallSpeed;
+    [SerializeField] int _damageCool;
+    [SerializeField] Vector2 _point;
+    [SerializeField] Vector2 _size;
+    [SerializeField] float _angle;
+    [SerializeField] AudioClip _dash;
+    [SerializeField] AudioClip _walk;
+    [SerializeField] Throwsetting _throwsetting;
+    [SerializeField] ItemSetting _itemSetting;
+    
     [System.Serializable]
     struct Throwsetting
     {
-        [Tooltip("�܂����������鋭��")] public float ThrowStraightPower;
-        [Tooltip("�����I�ɓ����鋭��")] public float MaxThrowParabolaPower;
-        [Tooltip("�O��ɓ�����̑�����")] public float ThrowRate;
-        [Tooltip("�����I�ɓ��������")] public Vector2 ThrowParabolaDirection;
-        [Tooltip("�A�C�e���𓊂���ʒu")] public Vector2 ThrowPos;
-        [Tooltip("�e�������")] public LineRenderer BulletSimulationLine;
-        [Tooltip("�e��������̒���")] public int SimulateFrame;
-        [Tooltip("���̃I�u�W�F�N�g���܂Ƃ߂����")] public GameObject Platform;
+        public float ThrowStraightPower;
+        public float MaxThrowParabolaPower;
+        public float ThrowRate;
+        public Vector2 ThrowParabolaDirection;
+        public Vector2 ThrowPos;
+        public LineRenderer BulletSimulationLine;
+        public int SimulateFrame;
+        public GameObject Platform;
     }
     /// <summary>�A�C�e���̐ݒ�</summary>
     [System.Serializable]
     struct ItemSetting
     {
-        [Tooltip("���Ă�΂̍ő�l")] public int MaxRockCount;
-        [Tooltip("���Ă�󂫕r�̍ő�l")] public int MaxBottleCount;
-        [Tooltip("���Ă���̍ő�l")] public int MaxMeatCount;
-        [Tooltip("�΂�UI")] public GameObject RockUi;
-        [Tooltip("�󂫕r��UI")] public GameObject BottleUi;
-        [Tooltip("����UI")] public GameObject MeatUi;
-        [Tooltip("�΂̌���������e�L�X�g")] public Text RockCountText;
-        [Tooltip("�󂫕r�̌���������e�L�X�g")] public Text BottleCountText;
-        [Tooltip("���̌���������e�L�X�g")] public Text MeatCountText;
-        [Tooltip("�A�C�e���������Ă��Ȃ��Ƃ��̐F")] public Color ZeroItemColor;
-        [Tooltip("�΂ɑΉ�����t����")] public GameObject LeafRock;
-        [Tooltip("�󂫕r�ɑΉ�����t����")] public GameObject LeafBottle;
-        [Tooltip("���ɑΉ�����t����")] public GameObject LeafMeat;
-        [Tooltip("�t���ς̊g�嗦")] public float LeafSize;
+        public int MaxRockCount;
+        public int MaxBottleCount;
+        public int MaxMeatCount;
+        public GameObject RockUi;
+        public GameObject BottleUi;
+        public GameObject MeatUi;
+        public Text RockCountText;
+        public Text BottleCountText;
+        public Text MeatCountText;
+        public Color ZeroItemColor;
+        public GameObject LeafRock;
+        public GameObject LeafBottle;
+        public GameObject LeafMeat;
+        public float LeafSize;
     }
-    /// <summary>�����Ă���A�C�e���̃��X�g</summary>
+    
     List<ItemBase> _itemList = new List<ItemBase>();
-    /// <summary>�ڒn����</summary>
     [SerializeField] bool _isJump;
-    /// <summary>�G�𓥂񂾔���</summary>
     [SerializeField] bool _isStompEnemy;
-    /// <summary>���G���Ԓ����ǂ���</summary>
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
     [HideInInspector] public PlayerStatus _playerStatus = PlayerStatus.Normal;
@@ -84,11 +81,8 @@ public class PlayerController : MonoBehaviour
     AudioManager _audioManager;
     AudioSource _audioSource;
     Animator _animator;
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = new Color(1, 1, 1, 0.5f);
-        Gizmos.DrawWireCube((Vector2)transform.position + _point, _size);
-    }
+    
+    
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -98,15 +92,20 @@ public class PlayerController : MonoBehaviour
         _pauseManager = FindAnyObjectByType<PauseManager>();
         _damageEffect = GetComponent<DamageEffect>();
         if (_pauseManager != null)
+        {
             _pauseManager.OnPauseResume += PauseAction;
+        }
         else
-            Debug.LogError("���̃V�[����PauseManager�����݂��܂���");
+        {
+            Debug.LogError("PauseManagerが取得できませんでした");
+        }
+           
         if (_animator == null)
         {
             _animator = GetComponentInChildren<Animator>();
             if (_animator == null)
             {
-                Debug.LogError("Animator������܂���");
+                Debug.LogError("Animatorが取得できませんでした");
             }
         }
     }
@@ -122,14 +121,10 @@ public class PlayerController : MonoBehaviour
             Array.ForEach(platform.GetComponentsInChildren<Renderer>(), x => x.enabled = false);
             SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         }
-        else
-        {
-            Debug.LogError("_throwsetting.Platform�ɒn�ʂ̃I�u�W�F�N�g���Z�b�g���Ă�������");
-        }
         _cameraShakeController = FindAnyObjectByType<CameraShakeController>();
         if (_audioSource == null)
         {
-            Debug.LogError("AudioSourse������܂���");
+            Debug.LogError("AudioSourceが設定されていません");
         }
         else
         {
@@ -137,7 +132,7 @@ public class PlayerController : MonoBehaviour
         }
         if (_cameraShakeController == null)
         {
-            Debug.LogError("CameraShakeController������܂���");
+            Debug.LogError("CameraShakeControllerが設定されていません");
         }
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
@@ -237,10 +232,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
-        //���_:
-        //1:�n�ʂɂ��Ă�Ƃ��������ւ̈ړ����x���s����
-        //2:�v���C���[�𐁂���΂��ꍇ�ɉ����͂ɂ���Ă��܂萁����΂��Ȃ�����
-        //�����x�I�Ɍ���
         _horiInput = Input.GetAxisRaw("Horizontal");
         if (_horiInput == 0)
         {
@@ -335,10 +326,6 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log("StartCoroutine");
                 StartCoroutine(_jumpEnumerator);
             }
-            else
-            {
-                //Debug.Log("�W�����v�ł��Ȃ�����");
-            }
         }
         if (Input.GetKey(KeyCode.Space))
         {
@@ -362,10 +349,7 @@ public class PlayerController : MonoBehaviour
         }
         //Debug.Log(_isJump);
     }
-    /// <summary>
-    /// ���n�����m����
-    /// </summary>
-    /// <returns></returns>
+    
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
         if (_rb.velocity.y > 0)
@@ -396,7 +380,6 @@ public class PlayerController : MonoBehaviour
                     {
                         _rb.velocity = new Vector2(0, _rb.velocity.y);
                     }
-                    //�R���[�`����A���ŋN�������Ȃ����߂ɑ҂�
                     yield return new WaitForSeconds(0.5f);
                     _jumpEnumerator = null;
                     yield break;
@@ -414,10 +397,7 @@ public class PlayerController : MonoBehaviour
         }
         _jumpEnumerator = null;
     }
-    /// <summary>
-    /// �v���C���[���A�C�e������肵���Ƃ��ɌĂԃ��\�b�h
-    /// </summary>
-    /// <param name="item"></param>
+    
     public void GetItem(ItemBase item)
     {
         if (item as Rock)
@@ -460,22 +440,15 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    /// <summary>
-    /// Enter�������ꂽ���A�C�e���𓊂��邽�߂̃R���[�`�����X�^�[�g���܂�
-    /// </summary>
+    
     void UseItem()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
             _pauseManager.BeginCoroutine(ThrowItem());
-            //StartCoroutine(ThrowItem());
         }
     }
-    /// <summary>
-    /// �v���C���[�������Ă���A�C�e���ɉ�����_itemList����A�C�e��������Ă��܂��B
-    /// </summary>
-    /// <param name="item"></param>
-    /// <returns></returns>
+    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -494,6 +467,7 @@ public class PlayerController : MonoBehaviour
                 return false;
         }
     }
+    
     void ChangeItem()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -504,11 +478,6 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-                //for (int i = 0; i < _itemPos.Length; i++)
-                //{
-                //    _itemPos[i].transform.position = _afterItemPos2[i];
-                //}
-                Debug.Log("�΂��g��");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -519,11 +488,6 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-                //for (int i = 0; i < _itemPos.Length; i++)
-                //{
-                //    _itemPos[i].transform.position = _afterItemPos1[i];
-                //}
-                Debug.Log("�r���g��");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -534,11 +498,6 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale *= _itemSetting.LeafSize;
-                //for (int i = 0; i < _itemPos.Length; i++)
-                //{
-                //    _itemPos[i].transform.position = _afterItemPos0[i];
-                //}
-                Debug.Log("�����g��");
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
@@ -547,7 +506,6 @@ public class PlayerController : MonoBehaviour
             _itemSetting.LeafRock.transform.localScale = Vector3.one;
             _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-            Debug.Log("�A�C�e���������Ȃ�");
         }
     }
     void CreatePhysicsScene()
@@ -579,10 +537,7 @@ public class PlayerController : MonoBehaviour
     ColliderHit:
         Destroy(ghost.gameObject);
     }
-    /// <summary>
-    /// �v���C���[�̗̑͂������ɓn�������l�����������܂��B
-    /// </summary>
-    /// <param name="value"></param>
+    
     public void FluctuationLife(int value)
     {
         if (value < 0)
@@ -605,13 +560,7 @@ public class PlayerController : MonoBehaviour
             }
             if (CurrentHp <= 0)
             {
-                //Debug.Log(_playerStatus);
                 _playerStatus = PlayerStatus.Death;
-            }
-            else
-            {
-                //�_���[�W���󂯂����̏����A��U�ۗ�
-                //DOTween.To(() => new Color(), s => )
             }
         }
         else
@@ -622,7 +571,6 @@ public class PlayerController : MonoBehaviour
         {
             CurrentHp = _maxHp;
         }
-        //Debug.Log($"Player�̗̑�:{CurrentHp}");
     }
     IEnumerator Invincible()
     {
@@ -630,19 +578,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(_damageCool);
         _isInvincible = false;
     }
-    /// <summary>
-    /// �v���C���[�̑��x�𒲐�����
-    /// </summary>
-    /// <param name="multi">�{��</param>
-    /// <param name="slowtime">�p������</param>
+    
     public void Slow(float multi, float slowtime)
     {
         StartCoroutine(Slowing(multi, slowtime));
     }
-    /// <summary>
-    /// �v���C���[���s���ł��Ȃ��Ȃ鏈��
-    /// </summary>
-    /// <param name="time"></param>
+    
     public void StopAction(float time)
     {
         //StartCoroutine(StoppingAction(time));
@@ -664,6 +605,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();
         _pauseManager.OnComplete(enumerator);
     }
+    
     IEnumerator Slowing(float multi, float slowtime)
     {
         float defaultMovePower = _movePower;
@@ -674,6 +616,7 @@ public class PlayerController : MonoBehaviour
         _movePower = defaultMovePower;
         _maxSpeed = defaultMaxSpeed;
     }
+    
     IEnumerator ThrowItem()
     {
         IEnumerator enumerator = _pauseManager.GetCoroutine();
@@ -681,7 +624,6 @@ public class PlayerController : MonoBehaviour
         {
             goto EndCoroutine;
         }
-        //������A�C�e����Rigidbody�����ĂȂ����������
         if (!item.TryGetComponent(out Rigidbody2D rb))
         {
             rb = item.AddComponent<Rigidbody2D>();
@@ -690,17 +632,15 @@ public class PlayerController : MonoBehaviour
         //�܂�����������
         if (item.Throw == ThrowType.Straight)
         {
-            //�A�C�e�����v���C���[�̈ʒu�Ɏ����Ă���
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.gravityScale = 0;
             rb.AddForce(new Vector2(_throwsetting.ThrowStraightPower * transform.localScale.x, 0), ForceMode2D.Impulse);
         }
-        //�����I�ɓ�����
         else
         {
             if (_throwsetting.BulletSimulationLine == null)
             {
-                Debug.LogError("LineRenderer��null�œ�����܂���");
+                Debug.LogError("");
                 goto EndCoroutine;
             }
             float t = 0;
@@ -719,7 +659,6 @@ public class PlayerController : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
             _throwsetting.BulletSimulationLine.positionCount = 0;
-            //�A�C�e�����v���C���[�̈ʒu�Ɏ����Ă���
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.velocity = Vector3.zero;
             rb.AddForce(_throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale, ForceMode2D.Impulse);
@@ -762,5 +701,11 @@ public class PlayerController : MonoBehaviour
     EndCoroutine:
         yield return new WaitForEndOfFrame();
         _pauseManager.OnComplete(enumerator);
+    }
+    
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1, 1, 1, 0.5f);
+        Gizmos.DrawWireCube((Vector2)transform.position + _point, _size);
     }
 }
