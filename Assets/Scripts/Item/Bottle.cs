@@ -10,11 +10,6 @@ public class Bottle : ItemBase
     private bool _effected;
     private Rigidbody2D _rb;
 
-    private void Start()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-    }
-
     protected override void Activate()
     {
         // 投げていない時であれば、以降の処理は行わない
@@ -55,6 +50,7 @@ public class Bottle : ItemBase
         if (!_effected)
         {
             var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+            _rb = GetComponent<Rigidbody2D>();
 
             foreach (var obj in hit)
             {

@@ -10,11 +10,6 @@ public class Meat : ItemBase
     private bool _effected;
     private Rigidbody2D _rb;
 
-    private void Start()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-    }
-
     protected override void Activate()
     {
         // 投げていない時であれば、以降の処理は行わない
@@ -36,6 +31,8 @@ public class Meat : ItemBase
     private void CheckForLanding()
     {
         var hit = Physics2D.OverlapBoxAll(transform.position, _size, _angle);
+        _rb = GetComponent<Rigidbody2D>();
+        
         foreach (var obj in hit)
         {
             if (obj.gameObject.CompareTag("Ground"))
