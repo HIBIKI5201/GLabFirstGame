@@ -18,9 +18,9 @@ public class Rock : ItemBase
             {
                 if (obj.gameObject.CompareTag("Enemy"))
                 {
-                    //“G‚ğƒXƒ^ƒ“‚³‚¹‚éˆ—
+                    //ï¿½Gï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½éˆï¿½ï¿½
                     obj.gameObject.GetComponent<Enemy>().ReactionStone(ActivatetTime);
-                    if(obj.gameObject.GetComponent<Enemy>().State != Enemy.EnemyState.Faint)
+                    if(obj.gameObject.GetComponent<Enemy>().State != EnemyStateType.Faint)
                     AudioManager.Instance.PlaySE("damage_enemy");
                     Destroy(gameObject,0.3f);
                 }

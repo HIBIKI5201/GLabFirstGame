@@ -403,7 +403,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (obj.gameObject.CompareTag("Enemy"))
                 {
-                    if (obj.gameObject.GetComponent<Enemy>().State != Enemy.EnemyState.Faint)
+                    if (obj.gameObject.GetComponent<Enemy>().State != EnemyStateType.Faint)
                     {
                         FluctuationLife(-1);
                     }
