@@ -7,6 +7,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Playerの動きを管理するクラス
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
@@ -32,7 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _isStompEnemy;
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
-    [HideInInspector] public PlayerStatus _playerStatus = PlayerStatus.Normal;
+    [HideInInspector] public PlayerStatusType _playerStatus = PlayerStatusType.Normal;
     Rigidbody2D _rb;
     SpriteRenderer _spriteRenderer;
     Scene m_simulationScene;
@@ -44,6 +47,10 @@ public class PlayerController : MonoBehaviour
     PauseManager _pauseManager;
     AudioSource _audioSource;
     Animator _animator;
+    Vector2 _pauseVelocity;
+    float _veloX = 0;
+    float _acce = 1;
+    IEnumerator _jumpEnumerator;
     
     private void Awake()
     {
@@ -63,7 +70,7 @@ public class PlayerController : MonoBehaviour
             if (_animator == null) Debug.LogError("Animatorが取得できませんでした");
         }
     }
-    void Start()
+    private void Start()
     {
         CurrentHp = _maxHp;
         _rb = GetComponent<Rigidbody2D>();
@@ -86,9 +93,9 @@ public class PlayerController : MonoBehaviour
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
     }
 
-    void Update()
+    private void Update()
     {
-        if (_canAction && _playerStatus != PlayerStatus.Death)
+        if (_canAction && _playerStatus != PlayerStatusType.Death)
         {
             Move();
             Jump();
@@ -96,82 +103,12 @@ public class PlayerController : MonoBehaviour
             UseItem();
         }
     }
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "goal")
-        {
-            _isInvincible = true;
-        }
+        if (collision.gameObject.name == "goal") _isInvincible = true; // ゴールした時
     }
-    public enum PlayerStatus
-    {
-        Rock,
-        Bottle,
-        Meat,
-        Normal,
-        Damage,
-        Death
-    }
-    private void PauseAction(bool isPause)
-    {
-        if (isPause)
-        {
-            Pause();
-        }
-        else
-        {
-            Resume();
-        }
-    }
-    Vector2 _pauseVelocity;
-    void Pause()
-    {
-        Debug.Log("Pause");
-        _canAction = false;
-        //_pauseVelocity = _rb.velocity;
-        //_rb.Sleep();
-    }
-    void Resume()
-    {
-        Debug.Log("Resume");
-        //_rb.WakeUp();
-        _canAction = true;
-        //_rb.velocity = _pauseVelocity;
-    }
-    float _veloX = 0;
-    float _acce = 1;
-    void NewMove()//Made in Oikawa
-    {
-        _horiInput = Input.GetAxisRaw("Horizontal");
-        float x = _horiInput * Mathf.Round(Mathf.Abs(_horiInput));
-        float times = _isJump ? 0.2f : 1;
-        switch (x)
-        {
-            case 1:
-                _veloX = Mathf.Lerp(_veloX, _maxSpeed, Time.deltaTime * _acce * times);
-                break;
-            case 0:
-                _veloX = Mathf.Lerp(_veloX, 0, Time.deltaTime * _acce * times);
-                break;
-            case -1:
-                _veloX = Mathf.Lerp(_veloX, -_maxSpeed, Time.deltaTime * _acce * times);
-                break;
-        }
-
-        Vector2 vector2 = _rb.velocity;
-        vector2.x = _veloX;
-        _rb.velocity = vector2;
-
-        if (!_isJump)
-            if (x < 0)
-            {
-                transform.localScale = new Vector2(-1, 1);
-            }
-            else if (x > 0)
-            {
-                transform.localScale = new Vector2(1, 1);
-            }
-    }
+    
     private void Move()
     {
         _horiInput = Input.GetAxisRaw("Horizontal");
@@ -243,7 +180,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    IEnumerator _jumpEnumerator;
+    
     private void Jump()
     {
         if (_rb.velocity.y < -1f)
@@ -340,6 +277,9 @@ public class PlayerController : MonoBehaviour
         _jumpEnumerator = null;
     }
     
+    /// <summary>
+    /// アイテムを獲得した時の処理
+    /// </summary>
     public void GetItem(ItemBase item)
     {
         if (item as Rock)
@@ -383,25 +323,17 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    void UseItem()
-    {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            _pauseManager.BeginCoroutine(ThrowItem());
-        }
-    }
-    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
         {
-            case PlayerStatus.Rock:
+            case PlayerStatusType.Rock:
                 item = _itemList.Where(i => i as Rock).ToList().First();
                 return true;
-            case PlayerStatus.Bottle:
+            case PlayerStatusType.Bottle:
                 item = _itemList.Where(i => i as Bottle).ToList().First();
                 return true;
-            case PlayerStatus.Meat:
+            case PlayerStatusType.Meat:
                 item = _itemList.Where(i => i as Meat).ToList().First();
                 return true;
             default:
@@ -410,13 +342,16 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// アイテムを切り替える処理
+    /// </summary>
     void ChangeItem()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            if (_itemList.Any(i => i as Rock) && _playerStatus != PlayerStatus.Rock)
+            if (_itemList.Any(i => i as Rock) && _playerStatus != PlayerStatusType.Rock)
             {
-                _playerStatus = PlayerStatus.Rock;
+                _playerStatus = PlayerStatusType.Rock;
                 _itemSetting.LeafRock.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
@@ -424,9 +359,9 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            if (_itemList.Any(i => i as Bottle) && _playerStatus != PlayerStatus.Bottle)
+            if (_itemList.Any(i => i as Bottle) && _playerStatus != PlayerStatusType.Bottle)
             {
-                _playerStatus = PlayerStatus.Bottle;
+                _playerStatus = PlayerStatusType.Bottle;
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
@@ -434,9 +369,9 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            if (_itemList.Any(i => i as Meat) && _playerStatus != PlayerStatus.Meat)
+            if (_itemList.Any(i => i as Meat) && _playerStatus != PlayerStatusType.Meat)
             {
-                _playerStatus = PlayerStatus.Meat;
+                _playerStatus = PlayerStatusType.Meat;
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale *= _itemSetting.LeafSize;
@@ -444,17 +379,22 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            _playerStatus = PlayerStatus.Normal;
+            _playerStatus = PlayerStatusType.Normal;
             _itemSetting.LeafRock.transform.localScale = Vector3.one;
             _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             _itemSetting.LeafMeat.transform.localScale = Vector3.one;
         }
     }
+    
     void CreatePhysicsScene()
     {
         m_simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         m_physicsScene = m_simulationScene.GetPhysicsScene2D();
     }
+    
+    /// <summary>
+    /// アイテムを投げるときの予測線のシミュレーション
+    /// </summary>
     void ThrowLineSimulate(GameObject ballPrefab, Vector2 pos, Vector2 velocity)
     {
         var ghost = Instantiate(ballPrefab, pos, Quaternion.identity);
@@ -479,7 +419,12 @@ public class PlayerController : MonoBehaviour
     ColliderHit:
         Destroy(ghost.gameObject);
     }
-    
+
+    #region ダメージ
+
+    /// <summary>
+    /// HPの増減処理
+    /// </summary>
     public void FluctuationLife(int value)
     {
         if (value < 0)
@@ -502,30 +447,34 @@ public class PlayerController : MonoBehaviour
             }
             if (CurrentHp <= 0)
             {
-                _playerStatus = PlayerStatus.Death;
+                _playerStatus = PlayerStatusType.Death;
             }
         }
         else
         {
             CurrentHp += value;
         }
+        
         if (CurrentHp > _maxHp)
         {
             CurrentHp = _maxHp;
         }
     }
+    
     IEnumerator Invincible()
     {
         _isInvincible = true;
         yield return new WaitForSeconds(_damageCool);
         _isInvincible = false;
     }
-    
-    public void Slow(float multi, float slowtime)
-    {
-        StartCoroutine(Slowing(multi, slowtime));
-    }
-    
+
+    #endregion
+
+    #region Stop
+
+    /// <summary>
+    /// 歩くアニメーションを止める
+    /// </summary>
     public void StopAction(float time)
     {
         //StartCoroutine(StoppingAction(time));
@@ -547,16 +496,20 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();
         _pauseManager.OnComplete(enumerator);
     }
-    
-    IEnumerator Slowing(float multi, float slowtime)
+
+    #endregion
+
+    #region アイテム使用
+
+    /// <summary>
+    /// アイテムを使うときの処理
+    /// </summary>
+    void UseItem()
     {
-        float defaultMovePower = _movePower;
-        float defaultMaxSpeed = _maxSpeed;
-        _movePower *= multi;
-        _maxSpeed *= multi;
-        yield return new WaitForSeconds(slowtime);
-        _movePower = defaultMovePower;
-        _maxSpeed = defaultMaxSpeed;
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            _pauseManager.BeginCoroutine(ThrowItem());
+        }
     }
     
     IEnumerator ThrowItem()
@@ -571,7 +524,6 @@ public class PlayerController : MonoBehaviour
             rb = item.AddComponent<Rigidbody2D>();
         }
         item.gameObject.GetComponent<Collider2D>().isTrigger = false;
-        //�܂�����������
         if (item.Throw == ThrowType.Straight)
         {
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
@@ -612,7 +564,7 @@ public class PlayerController : MonoBehaviour
             _itemSetting.RockCountText.text = _itemList.Where(i => i as Rock).Count().ToString();
             if (_itemSetting.RockCountText.text == "0")
             {
-                _playerStatus = PlayerStatus.Normal;
+                _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
             }
@@ -623,7 +575,7 @@ public class PlayerController : MonoBehaviour
             _itemSetting.BottleCountText.text = _itemList.Where(i => i as Bottle).Count().ToString();
             if (_itemSetting.BottleCountText.text == "0")
             {
-                _playerStatus = PlayerStatus.Normal;
+                _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             }
@@ -634,7 +586,7 @@ public class PlayerController : MonoBehaviour
             _itemSetting.MeatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
             if (_itemSetting.MeatCountText.text == "0")
             {
-                _playerStatus = PlayerStatus.Normal;
+                _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
             }
@@ -644,10 +596,84 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();
         _pauseManager.OnComplete(enumerator);
     }
+
+    #endregion
+    
+    #region ポーズ関連の処理
+
+    private void PauseAction(bool isPause)
+    {
+        if (isPause)
+        {
+            Pause();
+        }
+        else
+        {
+            Resume();
+        }
+    }
+    
+    private void Pause()
+    {
+        Debug.Log("Pause");
+        _canAction = false;
+        //_pauseVelocity = _rb.velocity;
+        //_rb.Sleep();
+    }
+    
+    private void Resume()
+    {
+        Debug.Log("Resume");
+        //_rb.WakeUp();
+        _canAction = true;
+        //_rb.velocity = _pauseVelocity;
+    }
+
+    #endregion
     
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireCube((Vector2)transform.position + _point, _size);
     }
+
+    #region Unused
+
+    void NewMove()//Made in Oikawa
+    {
+        _horiInput = Input.GetAxisRaw("Horizontal");
+        float x = _horiInput * Mathf.Round(Mathf.Abs(_horiInput));
+        float times = _isJump ? 0.2f : 1;
+        switch (x)
+        {
+            case 1:
+                _veloX = Mathf.Lerp(_veloX, _maxSpeed, Time.deltaTime * _acce * times);
+                break;
+            case 0:
+                _veloX = Mathf.Lerp(_veloX, 0, Time.deltaTime * _acce * times);
+                break;
+            case -1:
+                _veloX = Mathf.Lerp(_veloX, -_maxSpeed, Time.deltaTime * _acce * times);
+                break;
+        }
+
+        Vector2 vector2 = _rb.velocity;
+        vector2.x = _veloX;
+        _rb.velocity = vector2;
+
+        if (!_isJump)
+        {
+            if (x < 0)
+            {
+                transform.localScale = new Vector2(-1, 1);
+            }
+            else if (x > 0)
+            {
+                transform.localScale = new Vector2(1, 1);
+            }
+        }
+    }
+
+    #endregion
+    
 }
