@@ -560,12 +560,6 @@ public class Enemy : MonoBehaviour
                 _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
             }
     }
-
-    [ContextMenu("Test")]
-    public void Test()
-    {
-        LifeFluctuation(-1);
-    }
     
     /// <summary>
     /// HPを減らすメソッド
