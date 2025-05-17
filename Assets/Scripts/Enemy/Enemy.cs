@@ -16,60 +16,23 @@ public class Enemy : MonoBehaviour
     GameObject _meatIcon;
     GameObject _stunAnimeObj;
 
-    [Tooltip("�����̎��")]
-    [SerializeField] Beast _beast;
-    enum Beast
-    {
-        /// <summary>
-        /// �쌢
-        /// </summary>
-        StrayDog,
-
-        /// <summary>
-        /// �T
-        /// </summary>
-        Wolf_Normal,
-
-        /// <summary>
-        /// �T(�D)
-        /// </summary>
-        Wolf_Gray,
-
-        /// <summary>
-        /// �F
-        /// </summary>
-        Bear,
-
-        /// <summary>
-        /// �X�e�[�W4�̃{�X�̘T
-        /// </summary>
-        Boss_Wolf
-    }
-    [Tooltip("�ő�HP"), Space]
-    [SerializeField] int _maxHp;
-    [Tooltip("����HP")]
-    [SerializeField] int _currentHp;
-
-    [Space, Tooltip("�����̑��x")]
-    public float _speed;
-    public float _chaseSpeed;
-    [Tooltip("���݂̑��x")]
-    public float _currentSpeed;
-
-    [Space, Tooltip("�U����")]
-    [SerializeField] int _attack;
-
-    [Space, Tooltip("�W�����v��")]
-    [SerializeField] float _jumpPower;
-
-    [Space, Tooltip("���")]
-    [SerializeField] EnemyState _state;
-    
+    [SerializeField] EnemyType _beast; // 敵の種類
     [SerializeField] Animator _anim;
-    /// <summary>
-    /// �f�o�b�O�o���悤��StateType�̃v���p�e�B
-    /// </summary>
-    public EnemyState State
+    
+    [Header("基本設定")]
+    [SerializeField] int _maxHp; // 最大HP
+    [SerializeField] int _currentHp; // 現在のHP
+    [SerializeField] int _attack; // 攻撃力
+    [SerializeField] float _jumpPower; // ジャンプ力
+    
+    [Header("移動スピード")]
+    public float _speed; // 通常時の移動スピード
+    public float _chaseSpeed; // プレイヤーを発見したときの移動スピード
+    public float _currentSpeed; // 現在の移動スピード
+
+    [SerializeField] EnemyStateType _state; // 状態
+    
+    public EnemyStateType State
     {
         get => _state;
         set
@@ -150,64 +113,7 @@ public class Enemy : MonoBehaviour
     float _attackedTimer;
 
     Vector2 _modelScale;
-    enum Direction
-    {
-        Right, Left, None
-    }
-    [System.Serializable]
-    struct GroundedRay
-    {
-        [Tooltip("Ray����������LayerMask")]
-        public LayerMask _mask;
-
-        [Tooltip("����Ray����������LayerMask")]
-        public LayerMask _sideMask;
-
-        [Tooltip("�ǂ�G�A�v���C���[�𔻒f����")]
-        public Vector2 _sideRayPos;
-
-        [Tooltip("�E���̊R�𔻒f����Ray�̒��S")]
-        public Vector2 _rightRayPos;
-
-        [Tooltip("�����̊R�𔻒f����Ray�̒��S")]
-        public Vector2 _leftRayPos;
-
-        [Space, Tooltip("�R�𔻒f����Ray�̒���")]
-        public float _rayLong;
-
-        [Tooltip("�ǂ𔻒f����Ray�̒���")]
-        public float _sideRayLong;
-
-        [Space, Tooltip("��Ԃ̂𔻒f����Ray�̒���")]
-        public float _jumpRayLong;
-    }
-    public enum EnemyState
-    {
-        /// <summary>
-        /// �ʏ�
-        /// </summary>
-        Normal,
-
-        /// <summary>
-        /// �΂ŋC��
-        /// </summary>
-        Faint,
-
-        /// <summary>
-        /// ���ɋC�Â���
-        /// </summary>
-        Bite,
-
-        /// <summary>
-        /// �{�g���̉��ɋC�Â���
-        /// </summary>
-        Escape,
-
-        /// <summary>
-        /// �v���C���[��������
-        /// </summary>
-        Chase,
-    }
+    
     void Awake()
     {
         _canReset = true;
@@ -215,6 +121,7 @@ public class Enemy : MonoBehaviour
         CacheComponents();
         _meatIcon = transform.GetChild(1).gameObject;
     }
+    
     void ResetStatus()
     {
         //���C�Ɣ����͂�0�ɐݒ�
@@ -227,7 +134,7 @@ public class Enemy : MonoBehaviour
 
         _currentHp = _maxHp;
         _currentSpeed = _speed;
-        _state = EnemyState.Normal;
+        _state = EnemyStateType.Normal;
         _canDamage = true;
 
         //���s����0.2�b�Ԍ��ʉ����Đ������Ȃ�
@@ -279,27 +186,27 @@ public class Enemy : MonoBehaviour
         vec.x *= _dir switch { Direction.Right => -1, Direction.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
         _modelT.localScale = vec;
 
-        _stunAnimeObj.SetActive(State == EnemyState.Faint);
+        _stunAnimeObj.SetActive(State == EnemyStateType.Faint);
 
         switch (State)
         {
-            case EnemyState.Faint:
+            case EnemyStateType.Faint:
                 Vector2 velo = _rb.velocity;
                 velo.x = 0;
                 _rb.velocity = velo;
                 _anim.SetBool("Dizzy", true);
                 break;
-            case EnemyState.Bite:
+            case EnemyStateType.Bite:
                 UpdateMeat();
                 break;
-            case EnemyState.Escape:
+            case EnemyStateType.Escape:
                 UpdateBottle();
                 break;
-            case EnemyState.Chase:
+            case EnemyStateType.Chase:
                 UpdateChase();
                 break;
 
-            case EnemyState.Normal:
+            case EnemyStateType.Normal:
             default:
                 UpdateReturn();
                 UpdateVelocity();
@@ -355,7 +262,7 @@ public class Enemy : MonoBehaviour
             //���������Ă���5�b�o�߂�����
             if (Time.time >= _meatTimer + _meatTime)
             {
-                State = EnemyState.Normal;
+                State = EnemyStateType.Normal;
                 _meatIcon.SetActive(false);
                 _dir = Mathf.Sign(_modelT.localScale.x) switch { 1 => Direction.Left, -1 => Direction.Right, _ => Direction.None };
             }
@@ -418,7 +325,7 @@ public class Enemy : MonoBehaviour
                 return;
 
             RaycastHit2D hit = Physics2D.Linecast(_myTra.position, _playerTra.position, _ground._mask);
-            State = hit ? EnemyState.Normal : EnemyState.Chase;
+            State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
         }
         void AttackToPlayer()
         {
@@ -468,7 +375,7 @@ public class Enemy : MonoBehaviour
     Coroutine _reactionCoro = null;
     public void ReactionStone(float stunTime)
     {
-        if (State == EnemyState.Escape || State == EnemyState.Faint)
+        if (State == EnemyStateType.Escape || State == EnemyStateType.Faint)
             return;
 
         if (_reactionCoro != null)
@@ -477,15 +384,15 @@ public class Enemy : MonoBehaviour
         _reactionCoro = StartCoroutine(Stun());
         IEnumerator Stun()
         {
-            State = EnemyState.Faint;
+            State = EnemyStateType.Faint;
             yield return new WaitForSeconds(stunTime);
-            State = EnemyState.Normal;
+            State = EnemyStateType.Normal;
         }
     }
     public void ReactionBottle(Vector3 bottlePosi) => ReactionBottle(bottlePosi, 5);
     public void ReactionBottle(Vector3 bottlePosi,float effectTime)
     {
-        if (State == EnemyState.Faint)
+        if (State == EnemyStateType.Faint)
             return;
 
         if(_reactionCoro != null)
@@ -493,19 +400,19 @@ public class Enemy : MonoBehaviour
         _reactionCoro = StartCoroutine(Bottle());
         IEnumerator Bottle()
         {
-            State = EnemyState.Escape;
+            State = EnemyStateType.Escape;
             _bottlePosi = bottlePosi;
             yield return new WaitForSeconds(effectTime);
-            State = EnemyState.Normal;
+            State = EnemyStateType.Normal;
         }
     }
     public void ReactionMeat(Vector3 meatPosi) => ReactionMeat(meatPosi, 5);
     public void ReactionMeat(Vector3 meatPosi, float effectTime)
     {
-        if (State == EnemyState.Bite|| State == EnemyState.Faint)
+        if (State == EnemyStateType.Bite|| State == EnemyStateType.Faint)
             return;
 
-        State = EnemyState.Bite;
+        State = EnemyStateType.Bite;
         _meatEat = false;
         _meatPosi = meatPosi;
         _meatTimer = Time.time;
@@ -557,10 +464,10 @@ public class Enemy : MonoBehaviour
     {
         switch (State)
         {
-            case EnemyState.Faint:
-            case EnemyState.Bite:
-            case EnemyState.Escape:
-            case EnemyState.Chase:
+            case EnemyStateType.Faint:
+            case EnemyStateType.Bite:
+            case EnemyStateType.Escape:
+            case EnemyStateType.Chase:
                 return;
         }
 
@@ -618,9 +525,9 @@ public class Enemy : MonoBehaviour
         {
             _audio.PlaySE(_beast switch
             {
-                Beast.StrayDog => "strayDog",
-                Beast.Wolf_Normal or Beast.Wolf_Gray => "wolf",
-                Beast.Bear => "bare",
+                EnemyType.StrayDog => "strayDog",
+                EnemyType.Wolf_Normal or EnemyType.Wolf_Gray => "wolf",
+                EnemyType.Bear => "bare",
                 _ => "strayDog"
             });
             _canMoveSE = false;
@@ -650,7 +557,7 @@ public class Enemy : MonoBehaviour
             Gizmos.DrawLine(lRayPos, lRayPos + Vector2.down * _ground._rayLong);
 
         Vector2 dir = _dir switch { Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero };
-        if (State == EnemyState.Chase)
+        if (State == EnemyStateType.Chase)
             Gizmos.color = Color.red;
         else
             Gizmos.color = Color.blue;
@@ -703,7 +610,7 @@ public class Enemy : MonoBehaviour
 
         switch (_beast)
         {
-            case Beast.StrayDog:
+            case EnemyType.StrayDog:
                 _maxHp = 1;
                 _attack = 1;
                 _speed = pSpeed * 0.7f;
@@ -712,7 +619,7 @@ public class Enemy : MonoBehaviour
                 _canChase = false;
                 _goDown = false;
                 break;
-            case Beast.Wolf_Normal:
+            case EnemyType.Wolf_Normal:
                 _maxHp = 3;
                 _attack = 1;
                 _speed = pSpeed * 0.9f;
@@ -721,7 +628,7 @@ public class Enemy : MonoBehaviour
                 _canChase = true;
                 _goDown = false;
                 break;
-            case Beast.Wolf_Gray:
+            case EnemyType.Wolf_Gray:
                 _maxHp = 3;
                 _attack = 1;
                 _speed = pSpeed * 0.9f;
@@ -730,7 +637,7 @@ public class Enemy : MonoBehaviour
                 _canChase = true;
                 _goDown = true;
                 break;
-            case Beast.Bear:
+            case EnemyType.Bear:
                 _maxHp = 4;
                 _attack = 2;
                 _speed = pSpeed * 0.5f;
@@ -739,7 +646,7 @@ public class Enemy : MonoBehaviour
                 _canChase = false;
                 _goDown = false;
                 break;
-            case Beast.Boss_Wolf:
+            case EnemyType.Boss_Wolf:
                 _maxHp = 6;
                 _attack = 2;
                 _speed = pSpeed * 1.2f;
@@ -749,7 +656,7 @@ public class Enemy : MonoBehaviour
                 _goDown = true;
                 break;
             default:
-                Debug.LogError("���݂��Ȃ�Beast���Q�Ƃ��Ă���");
+                Debug.LogError("���݂��Ȃ�EnemyType���Q�Ƃ��Ă���");
                 break;
         }
     }
