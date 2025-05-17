@@ -48,9 +48,11 @@ public class Enemy : MonoBehaviour
     Transform _playerTra;
     Transform _modelT;
     Vector2 _modelScale;
-    SpriteRenderer[] spriteRenderers;
+    SpriteRenderer[] _spriteRenderers;
     BoxCollider2D _boxCollider;
     PlayerController _player;
+    
+    private EnemyHPManager _hpManager;
     
     GameObject _stunAnimeObj; // スタンエフェクトのオブジェクト
     Vector2 _bottlePosi;
@@ -59,8 +61,7 @@ public class Enemy : MonoBehaviour
 
     // コルーチン
     Coroutine _reactionCoro = null; // アイテム効果
-    Coroutine damageCoro = null; // ダメージ演出
-    Coroutine coroutine = null;
+    Coroutine _coroutine = null;
 
     // 肉アイテム関連
     GameObject _meatIcon;
@@ -81,6 +82,8 @@ public class Enemy : MonoBehaviour
         _canReset = true;
         ResetStatus();
         CacheComponents();
+        
+        _hpManager = new EnemyHPManager(_currentHp, _canDamage, _spriteRenderers, this);
     }
 
     private void OnEnable()
@@ -157,7 +160,7 @@ public class Enemy : MonoBehaviour
         _modelScale = _modelT.localScale;
         _modelScale.x = MathF.Abs(_modelScale.x);
 
-        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
         if (_playerTra == null)
         {
@@ -189,10 +192,6 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         _rb.isKinematic = false;
-        if (_currentHp <= 0)
-        {
-            Destroy(gameObject); // HPがゼロになったら自分を破棄する
-        }
 
         // 移動
         var vec = _modelScale;
@@ -512,13 +511,13 @@ public class Enemy : MonoBehaviour
 
     public void SlowDownScale(float scale, float time)
     {
-        if (coroutine != null)
+        if (_coroutine != null)
         {
             // 再生中のコルーチンがあったら止める
-            StopCoroutine(coroutine);
+            StopCoroutine(_coroutine);
         }
 
-        coroutine = StartCoroutine(SlowDown(scale, time));
+        _coroutine = StartCoroutine(SlowDown(scale, time));
     }
     
     private IEnumerator SlowDown(float scale, float time)
@@ -533,31 +532,6 @@ public class Enemy : MonoBehaviour
         }
 
         _currentSpeed = _speed;
-    }
-    
-    private void DamageEffect()
-    {
-        if (damageCoro != null)
-            StopCoroutine(Damage());
-        damageCoro = StartCoroutine(Damage());
-    }
-    
-    /// <summary>
-    /// ダメージを受けたときの演出を行うコルーチン
-    /// </summary>
-    private IEnumerator Damage()
-    {
-        _canDamage = false;
-        float time = Time.time;
-        while (Time.time <= time + 0.5f)
-        {
-            spriteRenderers.ToList().ForEach(x => x.color = new Color(0.5f, 0.5f, 0.5f));
-            yield return new WaitForSeconds(0.1f);
-            spriteRenderers.ToList().ForEach(x => x.color = Color.white);
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        _canDamage = true;
     }
 
     private void OnCollisionStay2D(Collision2D col)
@@ -587,22 +561,17 @@ public class Enemy : MonoBehaviour
             }
     }
 
-    public void LifeFluctuation(int value)
-    {
-        if (!_canDamage && value < 0)
-        {
-            Debug.Log("");
-            return;
-        }
+    /// <summary>
+    /// HPを減らすメソッド
+    /// </summary>
+    /// <param name="value">ダメージを受ける場合は負の数を渡す</param>
+    public void LifeFluctuation(int value) => _hpManager.LifeFluctuation(value);
 
-        _currentHp += value;
-        Debug.Log($"{value}  現在のHP:{_currentHp}");
-        if (value < 0)
-        {
-            DamageEffect();
-        }
-    }
-
+    /// <summary>
+    /// 自身を破棄する
+    /// </summary>
+    public void DestroyThis() => Destroy(gameObject);
+    
     private void OnDisable()
     {
         _rb.isKinematic = true;
