@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -44,7 +43,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] bool _alwaysDebug;
 
     Rigidbody2D _rb;
-    Transform _myTra;
     Transform _playerTra;
     Transform _modelT;
     Vector2 _modelScale;
@@ -143,34 +141,17 @@ public class Enemy : MonoBehaviour
     private void CacheComponents()
     {
         // _stunAnimeObj = GetComponentInChildren<StunAnime>().gameObject; // TODO
-        _myTra = transform;
-
-        if (TryGetComponent(out _rb))
-        {
-            _rb.isKinematic = false;
-        }
-
+        if (TryGetComponent(out _rb)) _rb.isKinematic = false;
+        if (_boxCollider == null) _boxCollider = GetComponent<BoxCollider2D>();
         _meatIcon = transform.GetChild(1).gameObject;
-
-        if (_modelT == null)
-        {
-            _modelT = GetComponentInChildren<Animator>().transform;
-        }
-
+        
+        if (_modelT == null) _modelT = GetComponentInChildren<Animator>().transform;
         _modelScale = _modelT.localScale;
         _modelScale.x = MathF.Abs(_modelScale.x);
 
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
-        if (_playerTra == null)
-        {
-            _playerTra = FindAnyObjectByType<PlayerController>().transform;
-        }
-
-        if (_boxCollider == null)
-        {
-            _boxCollider = GetComponent<BoxCollider2D>();
-        }
+        if (_playerTra == null) _playerTra = FindAnyObjectByType<PlayerController>().transform;
     }
 
     /// <summary>
@@ -178,12 +159,12 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void MatchGround()
     {
-        RaycastHit2D hit = Physics2D.BoxCast(_myTra.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
         if (hit)
         {
-            Vector2 pos = _myTra.position;
+            Vector2 pos = transform.position;
             pos.y = hit.point.y + _boxCollider.size.y / 2;
-            _myTra.position = pos;
+            transform.position = pos;
         }
     }
 
@@ -204,10 +185,7 @@ public class Enemy : MonoBehaviour
         switch (State)
         {
             case EnemyStateType.Faint:
-                Vector2 velo = _rb.velocity;
-                velo.x = 0;
-                _rb.velocity = velo;
-                _anim.SetBool("Dizzy", true);
+                UpdateStone();
                 break;
 
             case EnemyStateType.Bite:
@@ -224,8 +202,8 @@ public class Enemy : MonoBehaviour
 
             case EnemyStateType.Normal:
             default:
-                UpdateReturn();
-                UpdateVelocity();
+                ChangeDirection();
+                UpdateHorizontalMovement();
                 Search();
                 _anim.SetBool("Gallop", false);
                 _anim.SetBool("Dizzy", false);
@@ -241,7 +219,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void UpdateReturn()
+    /// <summary>
+    /// 方向転換のためのメソッド
+    /// </summary>
+    private void ChangeDirection()
     {
         if (IsFrontGrounded(out bool isRightDir))
         {
@@ -259,63 +240,14 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
-    /// <summary>
-    /// 空き瓶の効果の処理
-    /// </summary>
-    private void UpdateBottle()
-    {
-        float x = _bottlePosi.x - _myTra.position.x;
-        _dir = x >= 0 ? Direction.Left : Direction.Right; // プレイヤーとは逆の方向に逃げ出す
-        _anim.SetBool("Gallop", true); // 逃げ出すアニメーションを再生する
-
-        UpdateVelocity();
-    }
-
-    /// <summary>
-    /// 肉の効果の処理
-    /// </summary>
-    private void UpdateMeat()
-    {
-        _meatIcon.SetActive(true);
-        float x = _meatPosi.x - _myTra.position.x;
-        _dir = x <= 0 ? Direction.Left : Direction.Right; // 肉がある方へ方向をセットする
-
-        if (Mathf.Abs(x) <= 0.2f)
-        {
-            _dir = Direction.None;
-            if (!_meatEat)
-            {
-                _meatTimer = Time.time;
-            }
-            _meatEat = true;
-        }
-
-        if (Time.time >= _meatTimer + _meatTime)
-        {
-            State = EnemyStateType.Normal; // 状態を戻す
-            _meatIcon.SetActive(false);
-            _dir = Mathf.Sign(_modelT.localScale.x) switch
-            {
-                1 => Direction.Left, -1 => Direction.Right, _ => Direction.None
-            };
-        }
-
-        if (IsJump() && IsGrounded() && _jumpOver)
-        {
-            VelocityJump();
-        }
-
-        UpdateVelocity();
-    }
-
+    
     /// <summary>
     /// プレイヤー追跡状態の処理
     /// </summary>
     private void UpdateChase()
     {
-        float x = _playerTra.position.x - _myTra.position.x;
-        float y = _playerTra.position.y - _myTra.position.y;
+        float x = _playerTra.position.x - transform.position.x;
+        float y = _playerTra.position.y - transform.position.y;
         _dir = x <= 0 ? Direction.Left : Direction.Right;
         if (Mathf.Abs(x) <= 0.1f)
         {
@@ -342,7 +274,7 @@ public class Enemy : MonoBehaviour
 
         if (IsJump() && IsGrounded() && _jumpOver)
         {
-            VelocityJump();
+            Jump();
         }
 
         if (Time.time >= _attackedTimer + 0.1f)
@@ -356,18 +288,24 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        UpdateVelocity();
+        UpdateHorizontalMovement();
         Search();
     }
 
-    private void UpdateVelocity()
+    /// <summary>
+    /// 進行方向を更新する
+    /// </summary>
+    private void UpdateHorizontalMovement()
     {
         Vector2 velo = _rb.velocity;
         velo.x = _currentSpeed * _dir switch { Direction.Right => 1, Direction.Left => -1, _ => 0 };
         _rb.velocity = velo;
     }
 
-    private void VelocityJump()
+    /// <summary>
+    /// ジャンプ
+    /// </summary>
+    private void Jump()
     {
         Vector2 velo = _rb.velocity;
         velo.y = _jumpPower;
@@ -381,7 +319,7 @@ public class Enemy : MonoBehaviour
     {
         if (!_canChase) return;
 
-        RaycastHit2D hit = Physics2D.Linecast(_myTra.position, _playerTra.position, _ground._mask);
+        RaycastHit2D hit = Physics2D.Linecast(transform.position, _playerTra.position, _ground._mask);
         State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
     }
 
@@ -401,8 +339,8 @@ public class Enemy : MonoBehaviour
 
     private bool IsFrontGrounded(out bool isRightDir)
     {
-        Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
-        Vector2 lRayPos = _myTra.position + (Vector3)_ground._leftRayPos;
+        Vector2 rRayPos = transform.position + (Vector3)_ground._rightRayPos;
+        Vector2 lRayPos = transform.position + (Vector3)_ground._leftRayPos;
         bool isHitR = Physics2D.Raycast(rRayPos, Vector2.down, _ground._rayLong, _ground._mask);
         bool isHitL = Physics2D.Raycast(lRayPos, Vector2.down, _ground._rayLong, _ground._mask);
         isRightDir = isHitR;
@@ -415,7 +353,7 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     private bool IsGrounded()
     {
-        return Physics2D.BoxCast(_myTra.position, _boxCollider.size - new Vector2(0.1f, 0.1f),
+        return Physics2D.BoxCast(transform.position, _boxCollider.size - new Vector2(0.1f, 0.1f),
             0, Vector2.down, 0.2f, _ground._mask);
     }
 
@@ -429,7 +367,7 @@ public class Enemy : MonoBehaviour
             Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero
         };
 
-        RaycastHit2D hit = Physics2D.Raycast(_myTra.position, dir, _ground._sideRayLong, _ground._sideMask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, _ground._sideRayLong, _ground._sideMask);
         playerHit = false;
         if (hit)
             playerHit = hit.transform.CompareTag("Player");
@@ -446,12 +384,22 @@ public class Enemy : MonoBehaviour
         {
             Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero
         };
-        return Physics2D.Raycast(_myTra.position, dir, _ground._jumpRayLong, _ground._mask);
+        return Physics2D.Raycast(transform.position, dir, _ground._jumpRayLong, _ground._mask);
     }
 
-　　/// <summary>
-　　/// 石の効果
-　　/// </summary>
+    #region 石
+
+    private void UpdateStone()
+    {
+        Vector2 velo = _rb.velocity;
+        velo.x = 0;
+        _rb.velocity = velo;
+        _anim.SetBool("Dizzy", true);
+    }
+    
+    /// <summary>
+    /// 石の効果
+    /// </summary>
     public void ReactionStone(float stunTime)
     {
         if (State == EnemyStateType.Escape || State == EnemyStateType.Faint)
@@ -473,6 +421,22 @@ public class Enemy : MonoBehaviour
         State = EnemyStateType.Normal;
     }
 
+    #endregion
+
+    #region 空き瓶
+
+    /// <summary>
+    /// 空き瓶の効果の処理
+    /// </summary>
+    private void UpdateBottle()
+    {
+        float x = _bottlePosi.x - transform.position.x;
+        _dir = x >= 0 ? Direction.Left : Direction.Right; // プレイヤーとは逆の方向に逃げ出す
+        _anim.SetBool("Gallop", true); // 逃げ出すアニメーションを再生する
+
+        UpdateHorizontalMovement();
+    }
+    
     public void ReactionBottle(Vector3 bottlePosi, float effectTime)
     {
         if (State == EnemyStateType.Faint) return;
@@ -497,6 +461,47 @@ public class Enemy : MonoBehaviour
         State = EnemyStateType.Normal;
     }
 
+    #endregion
+
+    #region 肉
+
+    /// <summary>
+    /// 肉の効果の処理
+    /// </summary>
+    private void UpdateMeat()
+    {
+        _meatIcon.SetActive(true);
+        float x = _meatPosi.x - transform.position.x;
+        _dir = x <= 0 ? Direction.Left : Direction.Right; // 肉がある方へ方向をセットする
+
+        if (Mathf.Abs(x) <= 0.2f)
+        {
+            _dir = Direction.None;
+            if (!_meatEat)
+            {
+                _meatTimer = Time.time;
+            }
+            _meatEat = true;
+        }
+
+        if (Time.time >= _meatTimer + _meatTime)
+        {
+            State = EnemyStateType.Normal; // 状態を戻す
+            _meatIcon.SetActive(false);
+            _dir = Mathf.Sign(_modelT.localScale.x) switch
+            {
+                1 => Direction.Left, -1 => Direction.Right, _ => Direction.None
+            };
+        }
+
+        if (IsJump() && IsGrounded() && _jumpOver)
+        {
+            Jump();
+        }
+
+        UpdateHorizontalMovement();
+    }
+    
     public void ReactionMeat(Vector3 meatPosi, float effectTime)
     {
         if (State == EnemyStateType.Bite || State == EnemyStateType.Faint)
@@ -508,6 +513,10 @@ public class Enemy : MonoBehaviour
         _meatTimer = Time.time;
         _meatTime = effectTime;
     }
+
+    #endregion
+    
+    #region 減速（沼）
 
     public void SlowDownScale(float scale, float time)
     {
@@ -534,6 +543,9 @@ public class Enemy : MonoBehaviour
         _currentSpeed = _speed;
     }
 
+    #endregion
+    
+
     private void OnCollisionStay2D(Collision2D col)
     {
         switch (State)
@@ -551,7 +563,7 @@ public class Enemy : MonoBehaviour
     
     private void CollisionReturn(Vector2 normal, Vector2 point)
     {
-        float x = point.x - _myTra.position.x;
+        float x = point.x - transform.position.x;
         bool isLeft = x < 0;
         bool isTrue = _dir switch { Direction.Right => !isLeft, Direction.Left => isLeft, _ => false };
         if (Mathf.Abs(normal.y) <= 0.2f)
@@ -592,12 +604,11 @@ public class Enemy : MonoBehaviour
 
     void DebugRendering()
     {
-        _myTra = transform;
         Gizmos.color = Color.yellow;
-        Vector3 dirPos = _myTra.position + Vector3.up;
+        Vector3 dirPos = transform.position + Vector3.up;
         Gizmos.DrawLine(dirPos, dirPos + (_dir == Direction.Right ? Vector3.right : Vector3.left));
-        Vector2 rRayPos = _myTra.position + (Vector3)_ground._rightRayPos;
-        Vector2 lRayPos = _myTra.position + (Vector3)_ground._leftRayPos;
+        Vector2 rRayPos = transform.position + (Vector3)_ground._rightRayPos;
+        Vector2 lRayPos = transform.position + (Vector3)_ground._leftRayPos;
 
         RaycastHit2D hit = Physics2D.Raycast(rRayPos, Vector2.down, _ground._rayLong, _ground._mask);
         if (hit)
@@ -619,7 +630,7 @@ public class Enemy : MonoBehaviour
             Gizmos.color = Color.red;
         else
             Gizmos.color = Color.blue;
-        Gizmos.DrawLine(_myTra.position, _myTra.position + (Vector3)(dir * _ground._jumpRayLong));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(dir * _ground._jumpRayLong));
         if (V == null)
             return;
         if (V.Length <= 0)
