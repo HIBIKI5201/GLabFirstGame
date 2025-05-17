@@ -25,41 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _angle;
     [SerializeField] AudioClip _dash;
     [SerializeField] AudioClip _walk;
-    [SerializeField] Throwsetting _throwsetting;
+    [SerializeField] ThrowSetting _throwsetting;
     [SerializeField] ItemSetting _itemSetting;
-    
-    [System.Serializable]
-    struct Throwsetting
-    {
-        public float ThrowStraightPower;
-        public float MaxThrowParabolaPower;
-        public float ThrowRate;
-        public Vector2 ThrowParabolaDirection;
-        public Vector2 ThrowPos;
-        public LineRenderer BulletSimulationLine;
-        public int SimulateFrame;
-        public GameObject Platform;
-    }
-    /// <summary>�A�C�e���̐ݒ�</summary>
-    [System.Serializable]
-    struct ItemSetting
-    {
-        public int MaxRockCount;
-        public int MaxBottleCount;
-        public int MaxMeatCount;
-        public GameObject RockUi;
-        public GameObject BottleUi;
-        public GameObject MeatUi;
-        public Text RockCountText;
-        public Text BottleCountText;
-        public Text MeatCountText;
-        public Color ZeroItemColor;
-        public GameObject LeafRock;
-        public GameObject LeafBottle;
-        public GameObject LeafMeat;
-        public float LeafSize;
-    }
-    
     List<ItemBase> _itemList = new List<ItemBase>();
     [SerializeField] bool _isJump;
     [SerializeField] bool _isStompEnemy;
@@ -71,42 +38,29 @@ public class PlayerController : MonoBehaviour
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
     GameObject[] _itemPos = new GameObject[3];
-    Vector3[] _afterItemPos0 = new Vector3[3];
-    Vector3[] _afterItemPos1 = new Vector3[3];
-    Vector3[] _afterItemPos2 = new Vector3[3];
     float _horiInput = 0;
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
     PauseManager _pauseManager;
-    AudioManager _audioManager;
     AudioSource _audioSource;
     Animator _animator;
-    
     
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _audioSource = GetComponent<AudioSource>();
-        _animator = GetComponent<Animator>();
-        _audioManager = FindAnyObjectByType<AudioManager>();
-        _pauseManager = FindAnyObjectByType<PauseManager>();
         _damageEffect = GetComponent<DamageEffect>();
-        if (_pauseManager != null)
-        {
-            _pauseManager.OnPauseResume += PauseAction;
-        }
-        else
-        {
-            Debug.LogError("PauseManagerが取得できませんでした");
-        }
+        
+        if (!TryGetComponent(out _audioSource)) Debug.LogError("AudioSourceが設定されていません");
+        
+        // PauseManager
+        _pauseManager = FindAnyObjectByType<PauseManager>();
+        if (_pauseManager != null) _pauseManager.OnPauseResume += PauseAction; // ポーズイベントを購読
+        else Debug.LogError("PauseManagerが取得できませんでした");
            
-        if (_animator == null)
+        if (!TryGetComponent(out _animator))
         {
             _animator = GetComponentInChildren<Animator>();
-            if (_animator == null)
-            {
-                Debug.LogError("Animatorが取得できませんでした");
-            }
+            if (_animator == null) Debug.LogError("Animatorが取得できませんでした");
         }
     }
     void Start()
@@ -114,6 +68,7 @@ public class PlayerController : MonoBehaviour
         CurrentHp = _maxHp;
         _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
+        
         GameObject platform;
         if (_throwsetting.Platform != null)
         {
@@ -121,26 +76,14 @@ public class PlayerController : MonoBehaviour
             Array.ForEach(platform.GetComponentsInChildren<Renderer>(), x => x.enabled = false);
             SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         }
+        
         _cameraShakeController = FindAnyObjectByType<CameraShakeController>();
-        if (_audioSource == null)
-        {
-            Debug.LogError("AudioSourceが設定されていません");
-        }
-        else
-        {
-            Debug.Log(_audioSource);
-        }
-        if (_cameraShakeController == null)
-        {
-            Debug.LogError("CameraShakeControllerが設定されていません");
-        }
+        if (_cameraShakeController == null) Debug.LogError("CameraShakeControllerが設定されていません");
+        
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
-        //_afterItemPos0 = new Vector3[] { _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position };
-        //_afterItemPos1 = new Vector3[] { _itemSetting._rockUi.transform.position, _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position };
-        //_afterItemPos2 = new Vector3[] { _itemSetting._bottleUi.transform.position, _itemSetting._meatUi.transform.position, _itemSetting._rockUi.transform.position };
     }
 
     void Update()
@@ -148,7 +91,6 @@ public class PlayerController : MonoBehaviour
         if (_canAction && _playerStatus != PlayerStatus.Death)
         {
             Move();
-            //NewMove();
             Jump();
             ChangeItem();
             UseItem();
