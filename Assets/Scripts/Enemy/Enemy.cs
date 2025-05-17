@@ -51,6 +51,7 @@ public class Enemy : MonoBehaviour
     PlayerController _player;
     
     private EnemyDamageHandler _damageHandler;
+    private EnemyAttackHandler _attackHandler;
     
     GameObject _stunAnimeObj; // スタンエフェクトのオブジェクト
     Vector2 _bottlePosi;
@@ -82,6 +83,7 @@ public class Enemy : MonoBehaviour
         CacheComponents();
         
         _damageHandler = new EnemyDamageHandler(_currentHp, _canDamage, _spriteRenderers, this);
+        _attackHandler = new EnemyAttackHandler(_attack, ref _attackedTimer);
     }
 
     private void OnEnable()
@@ -323,19 +325,10 @@ public class Enemy : MonoBehaviour
         State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
     }
 
-    private void AttackToPlayer()
-    {
-        // 攻撃のクールタイム中であれば以降の処理は行わない
-        if (Time.time <= _attackedTimer + 0.1f) return;
-        
-        if (_player == null)
-        {
-            _player = FindAnyObjectByType<PlayerController>();
-        }
-        
-        _attackedTimer = Time.time;
-        _player.FluctuationLife(-_attack);
-    }
+    /// <summary>
+    /// プレイヤーへ攻撃する
+    /// </summary>
+    private void AttackToPlayer() => _attackHandler.Attack();
 
     private bool IsFrontGrounded(out bool isRightDir)
     {
