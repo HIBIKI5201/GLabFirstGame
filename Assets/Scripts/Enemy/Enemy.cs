@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
     BoxCollider2D _boxCollider;
     PlayerController _player;
     
-    private EnemyHPManager _hpManager;
+    private EnemyDamageHandler _damageHandler;
     
     GameObject _stunAnimeObj; // スタンエフェクトのオブジェクト
     Vector2 _bottlePosi;
@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
         ResetStatus();
         CacheComponents();
         
-        _hpManager = new EnemyHPManager(_currentHp, _canDamage, _spriteRenderers, this);
+        _damageHandler = new EnemyDamageHandler(_currentHp, _canDamage, _spriteRenderers, this);
     }
 
     private void OnEnable()
@@ -561,16 +561,22 @@ public class Enemy : MonoBehaviour
             }
     }
 
+    [ContextMenu("Test")]
+    public void Test()
+    {
+        LifeFluctuation(-1);
+    }
+    
     /// <summary>
     /// HPを減らすメソッド
     /// </summary>
     /// <param name="value">ダメージを受ける場合は負の数を渡す</param>
-    public void LifeFluctuation(int value) => _hpManager.LifeFluctuation(value);
+    public void LifeFluctuation(int value) => _damageHandler.LifeFluctuation(value);
 
     /// <summary>
-    /// 自身を破棄する
+    /// 死亡時自身を破棄する
     /// </summary>
-    public void DestroyThis() => Destroy(gameObject);
+    public void Die() => Destroy(gameObject);
     
     private void OnDisable()
     {
