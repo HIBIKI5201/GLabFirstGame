@@ -68,9 +68,9 @@ public class CurrentItemUI : MonoBehaviour
         
         return _playerController._playerStatus switch
         {
-            PlayerController.PlayerStatus.Rock => 0,
-            PlayerController.PlayerStatus.Bottle => 1,
-            PlayerController.PlayerStatus.Meat => 2,
+            PlayerStatusType.Rock => 0,
+            PlayerStatusType.Bottle => 1,
+            PlayerStatusType.Meat => 2,
             _ => -1,
         };
     }
