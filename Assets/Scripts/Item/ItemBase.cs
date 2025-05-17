@@ -22,6 +22,7 @@ public abstract class ItemBase : MonoBehaviour
     protected bool IsThrowing => _isThrowing;
     private bool _isThrowing;
     
+    /// <summary>地面に落ちているか</summary>
     public bool Landing { get; protected set; }
     public GameObject Player { get; private set; }
     
