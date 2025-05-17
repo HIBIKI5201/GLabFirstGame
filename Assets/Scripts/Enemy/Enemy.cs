@@ -367,10 +367,6 @@ public class Enemy : MonoBehaviour
         return hit;
     }
 
-    /// <summary>
-    /// ジャンプできるか
-    /// </summary>
-    /// <returns></returns>
     private bool IsJump()
     {
         Vector2 dir = _dir switch
@@ -538,7 +534,9 @@ public class Enemy : MonoBehaviour
 
     #endregion
     
-
+    /// <summary>
+    /// 何かに衝突しているときの処理
+    /// </summary>
     private void OnCollisionStay2D(Collision2D col)
     {
         switch (State)
@@ -551,7 +549,10 @@ public class Enemy : MonoBehaviour
         }
 
         for (int i = 0; i < col.contacts.Length; i++)
+        {
             CollisionReturn(col.GetContact(i).normal, col.GetContact(i).point);
+        }
+        
     }
     
     private void CollisionReturn(Vector2 normal, Vector2 point)
@@ -559,11 +560,10 @@ public class Enemy : MonoBehaviour
         float x = point.x - transform.position.x;
         bool isLeft = x < 0;
         bool isTrue = _dir switch { Direction.Right => !isLeft, Direction.Left => isLeft, _ => false };
-        if (Mathf.Abs(normal.y) <= 0.2f)
-            if (isTrue)
-            {
-                _dir = (_dir == Direction.Right) ? Direction.Left : Direction.Right;
-            }
+        if (Mathf.Abs(normal.y) <= 0.2f && isTrue)
+        {
+            _dir = _dir == Direction.Right ? Direction.Left : Direction.Right;
+        }
     }
     
     /// <summary>
@@ -633,105 +633,6 @@ public class Enemy : MonoBehaviour
         {
             Gizmos.DrawSphere(v.point, 0.2f);
             Gizmos.DrawLine(v.point, v.point + v.normal);
-        }
-    }
-
-    #endregion
-
-    #region デバッグ用のメソッド
-
-    [ContextMenu("TestSlowDown")]
-    void TestSlowDown() => SlowDownScale(0.5f, 10);
-
-    [ContextMenu("TestReactionStone")]
-    void TestReactionStone() => ReactionStone(5);
-
-    [ContextMenu("TestReactionBottle")]
-    void TestReactionBottle() => ReactionBottle(Vector2.zero, 5);
-
-    [ContextMenu("TestReactionMeat")]
-    void TestReactionMeat() => ReactionMeat(Vector2.zero, 5);
-
-    [ContextMenu("InitializeGroundedRay")]
-    void InitializeGroundedRay()
-    {
-        if (!TryGetComponent<BoxCollider2D>(out _boxCollider))
-        {
-            Debug.Log("BoxCollider2Dが取得できませんでした");
-            return;
-        }
-
-        Vector2 size = _boxCollider.size * transform.localScale;
-        _ground._mask = Convert.ToInt32("10010000000", 2);
-        _ground._sideMask = Convert.ToInt32("110000000", 2);
-        _ground._rightRayPos.x = size.x / 2f;
-        _ground._leftRayPos.x = -size.x / 2f;
-        _ground._rayLong = (size.y / 2f) + 0.2f;
-        _ground._sideRayLong = (size.x / 2f) + 0.1f;
-        _ground._jumpRayLong = (size.x / 2f) + 0.2f;
-    }
-
-    [ContextMenu("SettingStatus")]
-    void SettingStatus()
-    {
-        PlayerController player = FindAnyObjectByType<PlayerController>();
-        float pSpeed = player._maxSpeed;
-
-        switch (_beast)
-        {
-            case EnemyType.StrayDog:
-                _maxHp = 1;
-                _attack = 1;
-                _speed = pSpeed * 0.7f;
-                _chaseSpeed = pSpeed * 0.7f;
-                _jumpOver = false;
-                _canChase = false;
-                _goDown = false;
-                break;
-
-            case EnemyType.Wolf_Normal:
-                _maxHp = 3;
-                _attack = 1;
-                _speed = pSpeed * 0.9f;
-                _chaseSpeed = pSpeed * 1.1f;
-                _jumpOver = false;
-                _canChase = true;
-                _goDown = false;
-                break;
-
-            case EnemyType.Wolf_Gray:
-                _maxHp = 3;
-                _attack = 1;
-                _speed = pSpeed * 0.9f;
-                _chaseSpeed = pSpeed * 1.1f;
-                _jumpOver = true;
-                _canChase = true;
-                _goDown = true;
-                break;
-
-            case EnemyType.Bear:
-                _maxHp = 4;
-                _attack = 2;
-                _speed = pSpeed * 0.5f;
-                _chaseSpeed = pSpeed * 1.1f;
-                _jumpOver = false;
-                _canChase = false;
-                _goDown = false;
-                break;
-
-            case EnemyType.Boss_Wolf:
-                _maxHp = 6;
-                _attack = 2;
-                _speed = pSpeed * 1.2f;
-                _chaseSpeed = pSpeed * 1.2f;
-                _jumpOver = true;
-                _canChase = true;
-                _goDown = true;
-                break;
-
-            default:
-                Debug.LogError("想定されていない敵の種類です");
-                break;
         }
     }
 
