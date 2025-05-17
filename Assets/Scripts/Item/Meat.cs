@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Meat : ItemBase
 {
-    [SerializeField, Header("Ú’n”»’è‚Ì‘å‚«‚³")] Vector2 _size;
-    [SerializeField, Header("Ú’n”»’è‚ÌŠp“x")] float _angle;
+    [SerializeField, Header("ï¿½Ú’nï¿½ï¿½ï¿½ï¿½Ì‘å‚«ï¿½ï¿½")] Vector2 _size;
+    [SerializeField, Header("ï¿½Ú’nï¿½ï¿½ï¿½ï¿½ÌŠpï¿½x")] float _angle;
     bool _effected;
     Rigidbody2D _rb;
     private void OnDrawGizmosSelected()
@@ -14,7 +14,8 @@ public class Meat : ItemBase
         Gizmos.DrawWireSphere(transform.position, EffectRange);
         Gizmos.DrawWireCube(transform.position, _size);
     }
-    public override void Activate()
+
+    protected override void Activate()
     {
         if (IsThrowing)
         {
@@ -26,7 +27,7 @@ public class Meat : ItemBase
                     if (obj.gameObject.CompareTag("Ground"))
                     {
                         Landing = true;
-                        //’n–Ê‚É‚Â‚¢‚½‚çƒRƒ‰ƒCƒ_[‚ğ•œŠˆ
+                        //ï¿½nï¿½Ê‚É‚Â‚ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½Cï¿½_ï¿½[ï¿½ğ•œŠï¿½
                         GetComponent<Collider2D>().enabled = true;
                         AudioManager.Instance.PlaySE("meat");
                     }
@@ -42,11 +43,11 @@ public class Meat : ItemBase
                     {
                         if (obj.gameObject.CompareTag("Enemy"))
                         {
-                            //“G‚ğ—U“±‚·‚éˆ—
-                            obj.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position, ActivatetTime);
+                            //ï¿½Gï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½éˆï¿½ï¿½
+                            obj.gameObject.GetComponent<Enemy>().ReactionMeat(transform.position, ActiveTime);
                         }
                     }
-                    Destroy(gameObject, ActivatetTime);
+                    Destroy(gameObject, ActiveTime);
                     _effected = true;
                 }
                 if (_effected && _rb.velocity.y == 0)

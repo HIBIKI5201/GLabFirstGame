@@ -9,7 +9,8 @@ public class Rock : ItemBase
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireSphere(transform.position, EffectRange);
     }
-    public override void Activate()
+
+    protected override void Activate()
     {
         if (IsThrowing)
         {
@@ -19,7 +20,7 @@ public class Rock : ItemBase
                 if (obj.gameObject.CompareTag("Enemy"))
                 {
                     //�G���X�^�������鏈��
-                    obj.gameObject.GetComponent<Enemy>().ReactionStone(ActivatetTime);
+                    obj.gameObject.GetComponent<Enemy>().ReactionStone(ActiveTime);
                     if(obj.gameObject.GetComponent<Enemy>().State != EnemyStateType.Faint)
                     AudioManager.Instance.PlaySE("damage_enemy");
                     Destroy(gameObject,0.3f);

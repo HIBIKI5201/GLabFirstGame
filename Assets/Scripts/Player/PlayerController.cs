@@ -688,7 +688,7 @@ public class PlayerController : MonoBehaviour
         }
         item.gameObject.GetComponent<Collider2D>().isTrigger = false;
         //�܂�����������
-        if (item.Throw == ItemBase.ThrowType.Straight)
+        if (item.Throw == ThrowType.Straight)
         {
             //�A�C�e�����v���C���[�̈ʒu�Ɏ����Ă���
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;

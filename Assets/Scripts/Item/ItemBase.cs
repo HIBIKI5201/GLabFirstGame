@@ -1,41 +1,82 @@
 using UnityEngine;
 
 /// <summary>
-/// ƒAƒCƒeƒ€‚ğ§Œä‚·‚éŠî’êƒNƒ‰ƒX
-/// ƒAƒCƒeƒ€‚Ì‹¤’Ê‹@”\‚ğÀ‘•‚·‚é
+/// ã‚¢ã‚¤ãƒ†ãƒ ã®ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public abstract class ItemBase : MonoBehaviour
 {
-    /// <summary>ƒAƒCƒeƒ€‚ğ‚Ç‚¤“Š‚°‚é‚©/summary>
-    [Tooltip("Straight ‚Ü‚Á‚·‚®AParabola •ú•¨“I")]
-    [SerializeField] ThrowType _throwType = ThrowType.Straight;
-    /// <summary>ƒAƒCƒeƒ€”­“®’†‚ÌŒø‰Ê”ÍˆÍ/summary>
-    [Tooltip("ƒAƒCƒeƒ€”­“®’†‚ÌŒø‰Ê”ÍˆÍ")]
-    [SerializeField] float _effectRange = 1f;
-    [Tooltip("ƒAƒCƒeƒ€‚ÌŒø‰ÊŠÔ")]
-    [SerializeField] static float _activateTime = 5;
-    public float ActivatetTime => _activateTime;
-    public float EffectRange => _effectRange;
+    /// <summary>æŠ•ã’ãŸæ™‚ã®æŒ™å‹•</summary>
     public ThrowType Throw => _throwType;
-    bool _isThrowing;
-    public bool IsThrowing => _isThrowing;
-    public bool Landing { get; set; }
+    [SerializeField] ThrowType _throwType = ThrowType.Straight;
+    
+    /// <summary>ã‚¢ã‚¤ãƒ†ãƒ ã®åŠ¹æœç¯„å›²</summary>
+    protected float EffectRange => _effectRange;
+    [SerializeField] float _effectRange = 1f;
+    
+    /// <summary>åŠ¹æœæ™‚é–“</summary>
+    protected float ActiveTime => _activeTime;
+    private static float _activeTime = 5;
+    
+    /// <summary>ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŠ•ã’ã¦ã„ã‚‹ã‹</summary>
+    protected bool IsThrowing => _isThrowing;
+    private bool _isThrowing;
+    
+    public bool Landing { get; protected set; }
     public GameObject Player { get; private set; }
-    PauseManager _pauseManager;
+    
+    private PauseManager _pauseManager;
+    private Vector2 _keepVelocity;
+    
     /// <summary>
-    /// ƒAƒCƒeƒ€‚ª”­“®‚·‚éŒø‰Ê‚ğÀ‘•‚·‚é
+    /// ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä½¿ç”¨ã—ãŸæ™‚ã®å‡¦ç†
     /// </summary>
-    public abstract void Activate();
+    protected abstract void Activate();
+    
     private void Awake()
     {
         _pauseManager = FindAnyObjectByType<PauseManager>();
-        _pauseManager.OnPauseResume += PauseAction;
+        _pauseManager.OnPauseResume += PauseAction; // ãƒãƒ¼ã‚ºã‚¤ãƒ™ãƒ³ãƒˆã‚’è³¼èª­
     }
+    
+    private void Update()
+    {
+        Activate();
+    }
+    
     private void OnDisable()
     {
-        _pauseManager.OnPauseResume -= PauseAction;
+        _pauseManager.OnPauseResume -= PauseAction; // è³¼èª­è§£é™¤
     }
+    
+    /// <summary>
+    /// ã‚¢ã‚¤ãƒ†ãƒ ç²å¾—å‡¦ç†
+    /// </summary>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!_isThrowing)
+        {
+            if (collision.CompareTag("Player"))
+            {
+                Player = collision.gameObject;
+                AudioManager.Instance.PlaySE("itemGet");
+                transform.position = Camera.main.transform.position;
+                GetComponent<Collider2D>().enabled = false;
+                collision.gameObject.GetComponent<PlayerController>().GetItem(this);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŠ•ã’ã‚‹
+    /// </summary>
+    public void Throwing() => _isThrowing = true;
+
+    #region ãƒãƒ¼ã‚ºé–¢é€£ã®å‡¦ç†
+
+    /// <summary>
+    /// ãƒãƒ¼ã‚º/ãƒãƒ¼ã‚ºè§£é™¤ã®çŠ¶æ…‹ãŒå¤‰æ›´ã•ã‚ŒãŸã¨ãã«å‘¼ã°ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    /// </summary>
     private void PauseAction(bool isPause)
     {
         if (isPause)
@@ -47,7 +88,10 @@ public abstract class ItemBase : MonoBehaviour
             Resume();
         }
     }
-    Vector2 _keepVelocity;
+    
+    /// <summary>
+    /// ãƒãƒ¼ã‚ºçŠ¶æ…‹ã«ãªã£ãŸæ™‚ã®å‡¦ç†
+    /// </summary>
     private void Pause()
     {
         if (gameObject.TryGetComponent(out Rigidbody2D rb))
@@ -56,6 +100,10 @@ public abstract class ItemBase : MonoBehaviour
             rb.Sleep();
         }
     }
+    
+    /// <summary>
+    /// ãƒãƒ¼ã‚ºçŠ¶æ…‹ãŒè§£é™¤ã•ã‚ŒãŸã¨ãã®å‡¦ç†
+    /// </summary>
     private void Resume()
     {
         if (gameObject.TryGetComponent(out Rigidbody2D rb))
@@ -64,36 +112,6 @@ public abstract class ItemBase : MonoBehaviour
             rb.velocity = _keepVelocity;
         }
     }
-    private void Update()
-    {
-        Activate();
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!_isThrowing)
-        {
-            if (collision.gameObject.tag.Equals("Player"))
-            {
-                Player = collision.gameObject;
-                AudioManager.Instance.PlaySE("itemGet");
-                // Œ©‚¦‚È‚¢Š‚ÉˆÚ“®‚·‚é
-                this.transform.position = Camera.main.transform.position;
-                // ƒRƒ‰ƒCƒ_[‚ğ–³Œø‚É‚·‚é
-                GetComponent<Collider2D>().enabled = false;
-                // ƒvƒŒƒCƒ„[‚ÉƒAƒCƒeƒ€‚ğ“n‚·
-                collision.gameObject.GetComponent<PlayerController>().GetItem(this);
-            }
-        }
-    }
-    /// <summary>
-    /// ƒAƒCƒeƒ€‚ğ“Š‚°‚½‚ÉŒÄ‚Ô
-    /// </summary>
-    public void Throwing() => _isThrowing = true;
-    public enum ThrowType
-    {
-        /// <summary>^‚Á’¼‚®“Š‚°‚é</summary>
-        Straight,
-        /// <summary>•ú•¨ü‚ğ•`‚­‚æ‚¤‚É“Š‚°‚é</summary>
-        Parabola
-    }
+
+    #endregion
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SampleItem : ItemBase
 {
-    /// <summary>ƒvƒŒƒCƒ„[‚ğÁ‚µ‚Ü‚·</summary>
-    public override void Activate()
+    /// <summary>ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½</summary>
+    protected override void Activate()
     {
         Destroy(Player);
     }
