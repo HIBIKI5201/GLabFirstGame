@@ -1,51 +1,55 @@
 using UnityEngine;
+
+/// <summary>
+/// èƒŒæ™¯ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹
+/// </summary>
 public class BackgroundScroll : MonoBehaviour
 {
-    [Tooltip("”wŒi‚ÌX²‚Ì‘å‚«‚³")] float _length;
-    [Tooltip("Å‰‚ÌÀ•W")]float _startpos;
-    /// <summary> ƒXƒNƒ[ƒ‹‚³‚¹‚é‘¬‚³</summary>
-    [Header("ƒXƒNƒ[ƒ‹‚Ì‘¬‚³")]
+    private float _length; // SpriteRendererã®æ¨ªè»¸ã®é•·ã•ï¼ˆèƒŒæ™¯ç”»åƒã®å¹…ï¼‰
+    private float _startpos; // èƒŒæ™¯ã®åˆæœŸä½ç½®ã‚’ä¿å­˜ã™ã‚‹ãŸã‚ã®å¤‰æ•°
+    
+    [Header("åŸºæœ¬è¨­å®š")]
     [SerializeField] private float _scrollSpeed;
-    [SerializeField, Tooltip("ƒXƒNƒ[ƒ‹‚³‚¹‚é”wŒi‘fŞ")] GameObject _background;
-    SpriteRenderer _backgroundSprite;
-    /// <summary>”wŒi‚Ì•¡»</summary>
-    SpriteRenderer _backgroundClone1;
-    /// <summary>”wŒi‚Ì•¡»</summary>
-    SpriteRenderer _backgroundClone2;
+    [SerializeField] private GameObject _background;
+    private SpriteRenderer _backgroundSprite; // ãƒ¡ã‚¤ãƒ³èƒŒæ™¯ã®SpriteRendererã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
+    private SpriteRenderer _backgroundClone1; // å·¦å´ã®ã‚¯ãƒ­ãƒ¼ãƒ³èƒŒæ™¯
+    private SpriteRenderer _backgroundClone2; // å³å´ã®ã‚¯ãƒ­ãƒ¼ãƒ³èƒŒæ™¯
 
     private void Start()
     {
-        //ƒXƒs[ƒh‚Ì+-‚ğ‡‚í‚¹‚é
-        _scrollSpeed *= -1;
-
-        // ”wŒi‰æ‘œ‚ÌxÀ•W
+        _scrollSpeed *= -1; 
         _startpos = _background.transform.position.x;
 
         _backgroundSprite = _background.GetComponent<SpriteRenderer>();
-        // ”wŒi‰æ‘œ‚Ìx²•ûŒü‚Ì•
-        _length = _backgroundSprite.GetComponent<SpriteRenderer>().bounds.size.x;
+        _length = _backgroundSprite.GetComponent<SpriteRenderer>().bounds.size.x; // èƒŒæ™¯ç”»åƒã®å¹…ã‚’å–å¾—
 
-        //”wŒi‚ğ¶‰E‚É•¡»‚µ‚Ä”wŒiƒIƒuƒWƒFƒNƒg‚ÌqƒIƒuƒWƒFƒNƒg‚É‚·‚é
-        _backgroundClone1 = Instantiate(_backgroundSprite);
+        // å·¦å´ã®ã‚¯ãƒ­ãƒ¼ãƒ³èƒŒæ™¯ã‚’ç”Ÿæˆï¼ˆãƒ¡ã‚¤ãƒ³èƒŒæ™¯ã®å·¦å´ã«é…ç½®ï¼‰
+        _backgroundClone1 = Instantiate(_backgroundSprite, _backgroundSprite.transform, true);
         _backgroundClone1.transform.Translate(-_length, 0, 0);
-        _backgroundClone1.transform.SetParent(_backgroundSprite.transform);
-        _backgroundClone2 = Instantiate(_backgroundSprite);
-        _backgroundClone2.transform.Translate(_length, 0, 0);
-        _backgroundClone2.transform.SetParent(_backgroundSprite.transform);
 
+        // å³å´ã®ã‚¯ãƒ­ãƒ¼ãƒ³èƒŒæ™¯ã‚’ç”Ÿæˆï¼ˆãƒ¡ã‚¤ãƒ³èƒŒæ™¯ã®å³å´ã«é…ç½®ï¼‰
+        _backgroundClone2 = Instantiate(_backgroundSprite, _backgroundSprite.transform, true);
+        _backgroundClone2.transform.Translate(_length, 0, 0);
     }
+    
     private void FixedUpdate()
     {
-        // –³ŒÀƒXƒNƒ[ƒ‹‚Ég—p‚·‚éƒpƒ‰ƒ[ƒ^[
-        float temp = (Camera.main.transform.position.x * (1 - _scrollSpeed));
-        // ”wŒi‚Ì‹·Œø‰Ê‚Ég—p‚·‚éƒpƒ‰ƒ[ƒ^[
-        float dist = (Camera.main.transform.position.x * _scrollSpeed);
-        // ‹·Œø‰Ê‚ğ—^‚¦‚éˆ—
-        // ”wŒi‰æ‘œ‚ÌxÀ•W‚ğdist‚Ì•ªˆÚ“®‚³‚¹‚é
+        // ã‚«ãƒ¡ãƒ©ã®å‹•ãã«åˆã‚ã›ã¦èƒŒæ™¯ã‚’ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã•ã›ã€å¿…è¦ã«å¿œã˜ã¦ä½ç½®ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
+        
+        float temp = Camera.main.transform.position.x * (1 - _scrollSpeed); // ã‚«ãƒ¡ãƒ©ã®å‹•ãã¨ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«é€Ÿåº¦ã«åŸºã¥ãè£œæ­£å€¤ã®è¨ˆç®—
+        float dist = Camera.main.transform.position.x * _scrollSpeed; // ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«è·é›¢ã®è¨ˆç®—
+        
+        // ãƒ¡ã‚¤ãƒ³èƒŒæ™¯ã®ä½ç½®ã‚’æ›´æ–°ï¼ˆY, Zåº§æ¨™ã¯å¤‰æ›´ã—ãªã„ï¼‰
         _background.transform.position = new Vector3(_startpos + dist, _background.transform.position.y, _background.transform.position.z);
-        // –³ŒÀƒXƒNƒ[ƒ‹
-        // ‰æ–ÊŠO‚É‚È‚Á‚½‚ç”wŒi‰æ‘œ‚ğˆÚ“®‚³‚¹‚é
-        if (temp > _startpos + _length) _startpos += _length;
-        else if (temp < _startpos - _length) _startpos -= _length;
+
+        // ã‚«ãƒ¡ãƒ©ãŒä¸€å®šè·é›¢ç§»å‹•ã—ãŸã‚‰èƒŒæ™¯ã®èµ·ç‚¹ä½ç½®ã‚’ãƒªã‚»ãƒƒãƒˆ
+        if (temp > _startpos + _length)
+        {
+            _startpos += _length; 
+        }
+        else if (temp < _startpos - _length)
+        {
+            _startpos -= _length;
+        }
     }
 }
