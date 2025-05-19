@@ -15,7 +15,7 @@ public class Stage3GoalSequence : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera _cam;
     [SerializeField] GameObject[] _fukidasi;
     [SerializeField] Text _text;
-    [SerializeField] Goal _goal;
+    [SerializeField] GoalSequenceManager _goal;
     [SerializeField] Volume _volume;
 
     void Start()
@@ -30,7 +30,7 @@ public class Stage3GoalSequence : MonoBehaviour
 
         int panelTime = 2; //パネルを表示する秒数
 
-        _goal.Clear();
+        _goal.ShowClearUI();
 
         _cam.gameObject.SetActive(true);
         _vignette.gameObject.SetActive(true);
@@ -97,7 +97,7 @@ public class Stage3GoalSequence : MonoBehaviour
 
             yield return new WaitForSeconds(2f);
 
-            _goal.StartCoroutine(_goal.LoadScene(1f));
+            _goal.StartCoroutine(_goal.LoadNextScene(1f));
 
         }
         else //HappyEnd
@@ -116,7 +116,7 @@ public class Stage3GoalSequence : MonoBehaviour
 
             yield return new WaitForSeconds(2f);
 
-            _goal.StartCoroutine(_goal.LoadScene(1f));
+            _goal.StartCoroutine(_goal.LoadNextScene(1f));
         }
     }
 }

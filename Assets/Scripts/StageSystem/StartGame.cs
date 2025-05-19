@@ -12,10 +12,10 @@ public class StartGame : MonoBehaviour
     Timer _timer;
     GameOverSystem _gameOver;
     Checkpoint _checkpoint;
-    Goal _goal;
+    GoalSequenceManager _goal;
     void Start()
     {
-        _goal = GetComponent<Goal>();
+        _goal = GetComponent<GoalSequenceManager>();
         _checkpoint = FindAnyObjectByType<Checkpoint>();
         _gameManager = FindAnyObjectByType<GameManager>();
         _gameOver = FindAnyObjectByType<GameOverSystem>();

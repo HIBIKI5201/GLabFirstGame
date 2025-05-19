@@ -1,13 +1,11 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
-/// ゴール時の演出
+/// ステージゴール到達時の演出と処理を制御するクラス
 /// </summary>
-public class GoalPerformance : MonoBehaviour
+public class GoalSequenceManager : MonoBehaviour
 {
     [SerializeField] private GameManager _gameManager;
     [SerializeField] private SceneLoader _sceneLoader;
@@ -39,13 +37,14 @@ public class GoalPerformance : MonoBehaviour
 
     private void Start()
     {
+        _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponentInChildren<Animator>();
         _gameProgressManager = FindAnyObjectByType<GameProgressManager>();
-        _rb = GetComponent<Rigidbody2D>();
-        _clearText.SetActive(false);
-        _clearTime.enabled = false;
         _playerController = FindAnyObjectByType<PlayerController>();
         _timer = FindAnyObjectByType<Timer>();
+        _clearText.SetActive(false);
+        _clearTime.enabled = false;
+        
     }
 
     private void Update()
@@ -71,19 +70,19 @@ public class GoalPerformance : MonoBehaviour
             }
             else
             {
-                Invoke(nameof(Clear), _warkTime);
+                Invoke(nameof(ShowClearUI), _warkTime);
             }
             
             _playerController.StopAction(_warkTime + 120f); // プレイヤーが歩くのを止める
-            StartCoroutine(Walk(_warkTime));
+            StartCoroutine(PlayWalkAnimation(_warkTime));
             _timer.enabled = false;
         }
     }
 
     /// <summary>
-    /// クリアUIを表示する
+    /// クリアUIを表示し、クリアタイムを計算して表示する
     /// </summary>
-    public void Clear()
+    public void ShowClearUI()
     {
         AudioManager.Instance.PlaySE("stageclear");
         _timerTxt.enabled = false; // 残り時間を表示しているテキストの更新を止める
@@ -98,7 +97,10 @@ public class GoalPerformance : MonoBehaviour
         _gameProgressManager.StageClear(_nowStage);
     }
 
-    private IEnumerator Walk(float time)
+    /// <summary>
+    /// 歩行アニメーションを実行し、指定時間後にフェードアウトを開始する
+    /// </summary>
+    private IEnumerator PlayWalkAnimation(float time)
     {
         _isWalk = true;
         
@@ -115,14 +117,14 @@ public class GoalPerformance : MonoBehaviour
 
         if (goal3Sequence == null)
         {
-            StartCoroutine(FadeOut(2f));
+            StartCoroutine(StartFadeOut(2f));
         }
     }
 
     /// <summary>
-    /// 引数に渡した時間も待ってからフェードアウトを行う
+    /// 指定時間待機後、フェードアウト効果を開始する
     /// </summary>
-    private IEnumerator FadeOut(float time)
+    private IEnumerator StartFadeOut(float time)
     {
         yield return new WaitForSeconds(time);
         
@@ -130,11 +132,14 @@ public class GoalPerformance : MonoBehaviour
         FadeOut fadeOut = _fadeImage.GetComponent<FadeOut>();
         if (goal3Sequence == null)
         {
-            StartCoroutine(LoadScene(fadeOut._fadeTime));
+            StartCoroutine(LoadNextScene(fadeOut._fadeTime));
         }
     }
 
-    public IEnumerator LoadScene(float time)
+    /// <summary>
+    /// 指定時間待機後、次のシーンを読み込む
+    /// </summary>
+    public IEnumerator LoadNextScene(float time)
     {
         yield return new WaitForSeconds(time);
         
