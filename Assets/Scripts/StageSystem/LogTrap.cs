@@ -8,7 +8,7 @@ public class LogTrap : MonoBehaviour
     [SerializeField] private float _swingSpeed; // 振り子のスピード
     private float _currentAngle = 90; // 現在の覚悟
     private bool _isSwinginRight; // 右側に振れている状態か
-    bool _isActive = false; // トラップが作動中か
+    private bool _isActive = false; // トラップが作動中か
 
     private void Update()
     {
