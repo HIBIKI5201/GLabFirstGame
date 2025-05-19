@@ -1,23 +1,33 @@
 using UnityEngine;
 
+/// <summary>
+/// ゴールオブジェクトを管理するクラス
+/// </summary>
 public class GoalObject : MonoBehaviour
 {
-    [SerializeField] GameManager _gameManager;
-    [SerializeField] GameObject _rightEnd;
-    bool _isFirst;
-    void Start()
+    [SerializeField] private GameManager _gameManager;
+    [SerializeField] private GameObject _rightEnd; // ゴール付近の配置しているステージの右端の判定
+    private bool _isFirst; // 初めて通過したか
+
+    private void Start()
     {
-        if(_gameManager == null)
+        if (_gameManager == null)
+        {
             _gameManager = GameManager.instance;
+        }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("Player"))
         {
-            _gameManager.StateType = GameStateType.StageClear;
-            Destroy(_rightEnd);
-            if(!_isFirst) AudioManager.Instance.PlaySE("goal");
+            if (!_isFirst)
+            {
+                AudioManager.Instance.PlaySE("goal");
+            }
+            
+            _gameManager.StateType = GameStateType.StageClear; // ゲームの状態を変更
+            Destroy(_rightEnd); // 右端のコライダーを削除して、演出中先に進めるようにする
             _isFirst = true;
         }
     }
