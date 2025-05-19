@@ -1,40 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
-    [FormerlySerializedAs("_state")] public GameStateType stateType;
     public static GameManager instance;
+    
+    public GameStateType stateType;
     public GameStateType StateType 
     { 
         get => stateType; 
         set 
         {
             if (stateType == value)
-                return;
-            //Debug.Log($"{stateType}����{value}�Ɉڍs"); 
+            {
+                return; // 既にその状態だったら代入処理は行わない
+            }
+            
             stateType = value;
         } 
     }
     
-    [Space,Tooltip("FPS�l���w�肷��")]
     [SerializeField] bool _settingFPS;
-    [Tooltip("FPS�l")]
     [SerializeField,Range(10,120)] int _targetFPS;
     
-    void Start()
+    private void Start()
     {
         instance = this;
     }
 
-    void Update()
+    private void Update()
     {
         if (_settingFPS)
+        {
             Application.targetFrameRate = _targetFPS;
+        }
         else
+        {
             Application.targetFrameRate = -1;
+        }
     }
 }
