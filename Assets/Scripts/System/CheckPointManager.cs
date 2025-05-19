@@ -1,11 +1,13 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-
+/// <summary>
+/// リスポーン地点を管理するクラス
+/// </summary>
 public class CheckPointManager : MonoBehaviour
 {
     public static CheckPointManager Instance = default;
     public static Vector2[] _checkPoint = new Vector2[3];
+    
     private void Start()
     {
         if (Instance)

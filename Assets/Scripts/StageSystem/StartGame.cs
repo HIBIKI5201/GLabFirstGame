@@ -9,14 +9,12 @@ public class StartGame : MonoBehaviour
     public static bool _isFirst = true; //1��ڂȂ�true(���X�|�[������false�ɂ��Ă���)
     PlayerController _player;
     GameManager _gameManager;
-    CheckPointManager _checkPointManager;
     Timer _timer;
     GameOverSystem _gameOver;
     Checkpoint _checkpoint;
     Goal _goal;
     void Start()
     {
-        _checkPointManager = FindAnyObjectByType<CheckPointManager>();
         _goal = GetComponent<Goal>();
         _checkpoint = FindAnyObjectByType<Checkpoint>();
         _gameManager = FindAnyObjectByType<GameManager>();
