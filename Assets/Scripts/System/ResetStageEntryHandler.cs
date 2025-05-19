@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// ステージ選択をしたタイミングで、ステージに初めて入るフラグをリセットする
 /// </summary>
-public class StageTitleActive : MonoBehaviour
+public class ResetStageEntryHandler : MonoBehaviour
 {
     /// <summary>
     /// ステージが選択された際に呼び出され、初回進入フラグをリセットする

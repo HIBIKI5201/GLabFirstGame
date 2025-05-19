@@ -847,7 +847,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1918890376}
         m_TargetAssemblyTypeName: StageTitleActive, Assembly-CSharp
-        m_MethodName: StageSelect
+        m_MethodName: ResetStageEntryState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1107,7 +1107,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1918890376}
         m_TargetAssemblyTypeName: StageTitleActive, Assembly-CSharp
-        m_MethodName: StageSelect
+        m_MethodName: ResetStageEntryState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4675,7 +4675,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1918890376}
         m_TargetAssemblyTypeName: StageTitleActive, Assembly-CSharp
-        m_MethodName: StageSelect
+        m_MethodName: ResetStageEntryState
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
