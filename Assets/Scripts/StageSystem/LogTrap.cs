@@ -1,59 +1,62 @@
-using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 丸太トラップを制御するクラス
+/// </summary>
 public class LogTrap : MonoBehaviour
 {
-    [SerializeField, Header("�ۑ��̑���")] private float _swingSpeed;
-    private float _rotationz = 90;
-    private bool _isSwingRight;
-    bool _isSwing = false;
+    [SerializeField] private float _swingSpeed; // 振り子のスピード
+    private float _currentAngle = 90; // 現在の覚悟
+    private bool _isSwinginRight; // 右側に振れている状態か
+    bool _isActive = false; // トラップが作動中か
 
-    void Update()
+    private void Update()
     {
-        if (_isSwing)
+        if (_isActive)
         {
-            //�ۑ��̎���U��
-            Swing();
+            UpdatePendulumMovement();
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
-            _isSwing = true;
+            _isActive = true; // プレイヤーがコライダーに触れたら動作を開始する
         }
     }
 
-    void Swing()
+    /// <summary>
+    /// 振り子の動きを更新する
+    /// </summary>
+    private void UpdatePendulumMovement()
     {
-        //Z���W�̃��[�e�[�V������90�ɂȂ�܂ő��₷
-        if (_isSwingRight && _rotationz < 90)
+        float swingAmount = Time.deltaTime * _swingSpeed;
+        
+        if (_isSwinginRight && _currentAngle < 90)
         {
-            _rotationz += Time.deltaTime + _swingSpeed / 10;
+            _currentAngle += swingAmount / 10; // 右方向への揺れ
         }
         else
         {
-            if (_rotationz >= 90 && _isSwingRight == true)
+            if (_currentAngle >= 90 && _isSwinginRight)
             {
-                _isSwing = false;
+                _isActive = false;
             }
-            _isSwingRight = false;
+            _isSwinginRight = false;　// 最大角度に達したら方向転換
         }
-        //Z���W�̃��[�e�[�V������-90�ɂȂ�܂Ō��炷
-        if (_isSwingRight == false && _rotationz > -90)
+        
+        if (!_isSwinginRight && _currentAngle > -90)
         {
-            _rotationz -= Time.deltaTime + _swingSpeed / 10;
+            _currentAngle -= swingAmount / 10; // 左方向への揺れ
         }
         else
         {
-            _isSwingRight = true;
+            _isSwinginRight = true; // 最小角度に達したら方向転換
         }
 
-        //���ۂɃ��[�e�[�V�����𓮂���
+        // オブジェクトの回転を変更する
         transform.localEulerAngles
-               = new(transform.localEulerAngles.x, transform.localEulerAngles.y, _rotationz);
+               = new(transform.localEulerAngles.x, transform.localEulerAngles.y, _currentAngle);
     }
 }
