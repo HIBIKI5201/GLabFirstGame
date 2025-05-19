@@ -1,39 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
-using System;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+/// <summary>
+/// ゲームオーバーの判定を行うクラス
+/// </summary>
 public class GameOverSystem : MonoBehaviour
 {
-    GameManager _gameManager;
-    SceneLoader _sceneLoader;
-    PlayerController _playerController;
-    Timer _timer;
-    bool _called;
-    void Start()
+    private GameManager _gameManager;
+    private PlayerController _playerController;
+    private Timer _timer;
+    private bool _isCalled;
+    
+    private void Start()
     {
-        _called = false;
+        _isCalled = false;
         _gameManager = FindAnyObjectByType<GameManager>();
-        _sceneLoader = FindAnyObjectByType<SceneLoader>();
         _playerController = FindAnyObjectByType<PlayerController>();
         _timer = FindAnyObjectByType<Timer>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        int currentHP = _playerController.CurrentHp;
-        float currentTime = _timer._currentTime;
-
-        if (
-            (_gameManager.StateType == GameStateType.GameOver
-            || currentHP <= 0
-            || currentTime <= 0) && !_called)
+        // ゲームオーバー状態、現在のHPが0以下、制限時間が0秒以下
+        // かつ、まだ条件を満たしていない時
+        if ((_gameManager.StateType == GameStateType.GameOver
+             || _playerController.CurrentHp <= 0
+             || _timer._currentTime <= 0) && !_isCalled)
         {
             _gameManager.StateType = GameStateType.GameOver; 
-            _called = true;
+            _isCalled = true;
         }
     }
 }
