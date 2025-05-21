@@ -2247,7 +2247,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4451364201195101637}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: Surrender
+        m_MethodName: ReturnToStageSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2667,7 +2667,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4451364201195101637}
         m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
-        m_MethodName: PauseResumeByClick
+        m_MethodName: TogglePauseByUIButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -480,11 +480,11 @@ public class PlayerController : MonoBehaviour
         //StartCoroutine(StoppingAction(time));
         _audioSource.Stop();
         _animator.SetFloat("isWalk", 0);
-        _pauseManager.BeginCoroutine(StoppingAction(time));
+        _pauseManager.RegisterAndStartCoroutine(StoppingAction(time));
     }
     IEnumerator StoppingAction(float time)
     {
-        IEnumerator enumerator = _pauseManager.GetCoroutine();
+        IEnumerator enumerator = _pauseManager.GetLatestCoroutine();
         _canAction = false;
         float timer = 0;
         while (timer < time)
@@ -508,13 +508,13 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            _pauseManager.BeginCoroutine(ThrowItem());
+            _pauseManager.RegisterAndStartCoroutine(ThrowItem());
         }
     }
     
     IEnumerator ThrowItem()
     {
-        IEnumerator enumerator = _pauseManager.GetCoroutine();
+        IEnumerator enumerator = _pauseManager.GetLatestCoroutine();
         if (!Item(out ItemBase item))
         {
             goto EndCoroutine;

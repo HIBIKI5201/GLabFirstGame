@@ -4,24 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// ポーズ機能を管理するクラス
+/// </summary>
 public class PauseManager : MonoBehaviour
 {
-    [SerializeField,Header("�|�[�Y���ɗL��������UI"),Tooltip("�|�[�Y���ɗL��������UI")] GameObject[] PauseUI;
-    [Header("���^�C�A�������̃t�F�[�h�A�E�g�̐ݒ�")]
-    [SerializeField] SceneLoader _loader;
-    [SerializeField] GameObject _fadePanel;
-    [SerializeField] Color _color;
-    [SerializeField] float _fadeTime;
-    [SerializeField] Checkpoint _checkpoint;
-    /// <summary>true �̎��͈ꎞ��~�Ƃ���</summary>
-    bool _pauseFlg = false;
-    /// <summary>�f���Q�[�g�����Ă����ϐ�</summary>
-    Action<bool> _onPauseResume;
-    /// <summary>�R���[�`��������郊�X�g</summary>
-    List<IEnumerator> _coroutines = new List<IEnumerator>();
-    /// <summary>
-    /// �ꎞ��~�E�ĊJ������f���Q�[�g�v���p�e�B
-    /// </summary>
+    [SerializeField] private  GameObject[] PauseUI;
+    [SerializeField] private SceneLoader _loader;
+    [SerializeField] private GameObject _fadePanel;
+    [SerializeField] private Color _color;
+    [SerializeField] private float _fadeTime;
+    [SerializeField] private Checkpoint _checkpoint;
+    private bool _pauseFlg = false;
+    private List<IEnumerator> _coroutines = new List<IEnumerator>();
+    
+    private Action<bool> _onPauseResume;
     public Action<bool> OnPauseResume
     {
         get { return _onPauseResume; }
@@ -30,69 +27,63 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        // ESC �L�[�������ꂽ��ꎞ��~�E�ĊJ��؂�ւ���
         if (Input.GetButtonDown("Cancel") && !SceneLoader.IsFading)
         {
-            PauseResume();
+            TogglePauseState();
         }
     }
+    
     /// <summary>
-    /// �{�^���N���b�N�ňꎞ��~�E�ĊJ���邽�߂̃��\�b�h
+    /// ポーズ解除ボタン用の処理
     /// </summary>
-    public void PauseResumeByClick()
-    {
-        PauseResume();
-    }
+    public void TogglePauseByUIButton() => TogglePauseState();
+    
     /// <summary>
-    /// �{�^���N���b�N�Ń��^�C�A���邽�߂̃��\�b�h
+    /// ポーズの状態を変更する
     /// </summary>
-    public void Surrender()
-    {
-        _checkpoint.ResetPoint();
-        _fadePanel.SetActive(true);
-        _loader.FadeAndLoadScene(_fadePanel.GetComponent<Image>(), _color, _fadeTime, SceneType.SelectStage);
-    }
-    /// <summary>
-    /// �ꎞ��~�E�ĊJ��؂�ւ���
-    /// </summary>
-    void PauseResume()
+    private void TogglePauseState()
     {
         _pauseFlg = !_pauseFlg;
-        _onPauseResume(_pauseFlg);  // ����ŕϐ��ɑ�������֐����i�S�āj�Ăяo����
+        _onPauseResume?.Invoke(_pauseFlg);
+        
         foreach (var i in PauseUI)
         {
             i.SetActive(_pauseFlg);
         }
+        
         if (_pauseFlg)
         {
-            PauseAllCoroutine();
+            SuspendAllCoroutines();
             Time.timeScale = 0;
         }
         else
         {
-            ResumeAllCoroutine();
+            RestartAllCoroutine();
             Time.timeScale = 1;
         }
     }
+    
     /// <summary>
-    /// �|�[�Y���ė~�����R���[�`���������B(WaitForSeconds���g��Ȃ����Ƃ𐄏�)
-    /// �R���[�`�����n�܂�������ɕK��GetCoroutine()���Ăяo����IEnumerator�^�̕ϐ��ɕۑ�����
-    /// �R���[�`�����I�������K��1�t���[���҂��ĕK��OnComplete(�ۑ�����IEnumerator�^�̕ϐ�)���Ăяo������
+    /// 新しいコルーチンを開始し、管理リストに追加する
     /// </summary>
-    /// <param name="enumerator"></param>
-    public void BeginCoroutine(IEnumerator enumerator)
+    public void RegisterAndStartCoroutine(IEnumerator routine)
     {
-        _coroutines.Add(enumerator);
-        StartCoroutine(enumerator);
+        _coroutines.Add(routine);
+        StartCoroutine(routine);
     }
+    
     /// <summary>
-    /// ���������R���[�`�������҂����o���Ă������\�b�h
+    /// 最後に追加されたコルーチンを取得する
     /// </summary>
-    public IEnumerator GetCoroutine()
+    public IEnumerator GetLatestCoroutine()
     {
         return _coroutines[_coroutines.Count - 1];
     }
-    void PauseAllCoroutine()
+    
+    /// <summary>
+    /// ポーズ状態になった際に全てのコルーチンを一時停止する
+    /// </summary>
+    private void SuspendAllCoroutines()
     {
         foreach (IEnumerator enumerator in _coroutines)
         {
@@ -100,20 +91,33 @@ public class PauseManager : MonoBehaviour
             StopCoroutine(enumerator);
         }
     }
-    void ResumeAllCoroutine()
+    
+    /// <summary>
+    /// ポーズ解除時に一時停止中の全てのコルーチンを再開する
+    /// </summary>
+    private void RestartAllCoroutine()
     {
         foreach (IEnumerator enumerator in _coroutines)
         {
             StartCoroutine(enumerator);
         }
     }
+    
     /// <summary>
-    /// �R���[�`�����I��������Ă�
-    /// �ĂԑO��yield return new WaitForEndOfFrame()����������
+    /// コルーチンの完了を通知し、管理リストから削除する
     /// </summary>
-    /// <param name="enumerator"></param>
     public void OnComplete(IEnumerator enumerator)
     {
         _coroutines.Remove(enumerator);
+    }
+    
+    /// <summary>
+    /// ゲームを諦めて選択画面に戻る処理
+    /// </summary>
+    public void ReturnToStageSelect()
+    {
+        _checkpoint.ResetPoint();
+        _fadePanel.SetActive(true);
+        _loader.FadeAndLoadScene(_fadePanel.GetComponent<Image>(), _color, _fadeTime, SceneType.SelectStage);
     }
 }
