@@ -17,11 +17,15 @@ public class DeathOverlayController : MonoBehaviour
     private void Awake()
     {
         _image = GetComponent<Image>();
-        gameObject.SetActive(false); // ?
+        gameObject.SetActive(false);
     }
     
-    private void Start()
+    /// <summary>
+    /// アニメーションを再生する
+    /// </summary>
+    public void OnActive()
     {
+        gameObject.SetActive(true);
         _image.DOFade(1f, _fadeTime);
         Invoke(nameof(FadeOut), _fadeTime + _displayTime);
     }
@@ -40,4 +44,10 @@ public class DeathOverlayController : MonoBehaviour
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
     }
+    
+    void OnDisable()
+        {
+            // 自身の非アクティブ化を検出
+            Debug.Log($"GameObject '{gameObject.name}' was deactivated by: {new System.Diagnostics.StackTrace().ToString()}");
+        }
 }
