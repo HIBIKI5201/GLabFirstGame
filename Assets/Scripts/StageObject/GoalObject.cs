@@ -13,7 +13,7 @@ public class GoalObject : MonoBehaviour
     {
         if (_gameManager == null)
         {
-            _gameManager = GameManager.instance;
+            _gameManager = GameManager.Instance;
         }
     }
 

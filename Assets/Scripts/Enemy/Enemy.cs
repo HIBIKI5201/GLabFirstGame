@@ -212,8 +212,8 @@ public class Enemy : MonoBehaviour
                 break;
         }
 
-        if (GameManager.instance.StateType == GameStateType.GameOver ||
-            GameManager.instance.StateType == GameStateType.StageClear)
+        if (GameManager.Instance.StateType == GameStateType.GameOver ||
+            GameManager.Instance.StateType == GameStateType.StageClear)
         {
             // ゲームオーバー、もしくはゲームクリア時には敵を非表示にする
             enabled = false;

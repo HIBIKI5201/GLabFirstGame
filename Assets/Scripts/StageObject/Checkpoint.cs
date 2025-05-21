@@ -21,7 +21,7 @@ public class Checkpoint : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.instance.StateType == GameStateType.StageClear)
+        if (GameManager.Instance.StateType == GameStateType.StageClear)
         {
             ResetPoint();
         }

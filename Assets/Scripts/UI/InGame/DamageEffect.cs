@@ -20,7 +20,7 @@ public class DamageEffect : MonoBehaviour
 
     private void Update()
     {
-        if(GameManager.instance.stateType == GameStateType.StageClear)
+        if(GameManager.Instance.stateType == GameStateType.StageClear)
         {
             // ステージクリア時はビネットエフェクトを非表示にする
             _vignette.gameObject.SetActive(false);

@@ -11,7 +11,7 @@ public class DeathZone : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             // プレイヤーが触れたらゲームオーバー状態にする
-            GameManager.instance.StateType = GameStateType.GameOver;
+            GameManager.Instance.StateType = GameStateType.GameOver;
         }
         else
         {

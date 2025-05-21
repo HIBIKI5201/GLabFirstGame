@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 8720984371906042246}
   - component: {fileID: 6137959432642280803}
   - component: {fileID: 6208238465189826764}
-  - component: {fileID: 173168629995687400}
   - component: {fileID: 6706891255903934831}
   - component: {fileID: 4887498352881986486}
+  - component: {fileID: 173168629995687400}
+  - component: {fileID: 4639294179933146380}
   m_Layer: 0
   m_Name: ==GameManager==
   m_TagString: Untagged
@@ -49,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40232fc8c59472419303230282f617b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _state: 0
+  stateType: 0
   _settingFPS: 0
   _targetFPS: 10
 --- !u!114 &6137959432642280803
@@ -64,7 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4313f90f1f0c14abf4ecc1bdeb97a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scene: 1
+  _targetSceneType: 0
   _fadePanel: {fileID: 0}
   _fadeTime: 1
   _fadeColor: {r: 1, g: 1, b: 1, a: 1}
@@ -85,18 +86,7 @@ MonoBehaviour:
   _fadePanel: {fileID: 0}
   _color: {r: 0, g: 0, b: 0, a: 0}
   _fadeTime: 0
---- !u!114 &173168629995687400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8285528669498667913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 417e99097e19027418ddf89039a7f503, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _checkpoint: {fileID: 0}
 --- !u!114 &6706891255903934831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063b7be0ad6c10647a6814924be738a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stageNum: 0
+  _stageType: 0
 --- !u!114 &4887498352881986486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,7 +116,30 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  _leafUI:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  _selectedScale: {x: 1.05, y: 1.05, z: 1.05}
+  _selectedOffset: {x: 40, y: -10, z: 0}
+--- !u!114 &173168629995687400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8285528669498667913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 417e99097e19027418ddf89039a7f503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4639294179933146380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8285528669498667913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 689c01af7117bb449a272c08d516e717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _deathOverlayController: {fileID: 0}
