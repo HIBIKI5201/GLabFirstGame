@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] bool _canChase;
     [SerializeField] bool _canDamage;
     [SerializeField] GroundedRay _ground;
-    [SerializeField] Direction _dir; // どちらの方向に動くか
+    [SerializeField] DirectionType _dir; // どちらの方向に動くか
     [SerializeField] bool _alwaysDebug;
 
     Rigidbody2D _rb;
@@ -178,7 +178,7 @@ public class Enemy : MonoBehaviour
 
         // 移動
         var vec = _modelScale;
-        vec.x *= _dir switch { Direction.Right => -1, Direction.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
+        vec.x *= _dir switch { DirectionType.Right => -1, DirectionType.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
         _modelT.localScale = vec;
 
         // _stunAnimeObj.SetActive(State == EnemyStateType.Faint); // TODO: 素材を確認
@@ -229,13 +229,13 @@ public class Enemy : MonoBehaviour
         if (IsFrontGrounded(out bool isRightDir))
         {
             // もし目の前が崖なら移動方向を反転させる
-            _dir = isRightDir ? Direction.Right : Direction.Left;
+            _dir = isRightDir ? DirectionType.Right : DirectionType.Left;
         }
 
         if (IsSideTouch(out bool playerHit))
         {
             // もし壁などに触れたら移動方向を反転させる
-            _dir = _dir == Direction.Right ? Direction.Left : Direction.Right;
+            _dir = _dir == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
             if (playerHit)
             {
                 AttackToPlayer(); // プレイヤーに当たっていたら攻撃を行う
@@ -250,10 +250,10 @@ public class Enemy : MonoBehaviour
     {
         float x = _playerTra.position.x - transform.position.x;
         float y = _playerTra.position.y - transform.position.y;
-        _dir = x <= 0 ? Direction.Left : Direction.Right;
+        _dir = x <= 0 ? DirectionType.Left : DirectionType.Right;
         if (Mathf.Abs(x) <= 0.1f)
         {
-            _dir = Direction.None;
+            _dir = DirectionType.None;
         }
 
         if (!_goDown)
@@ -262,13 +262,13 @@ public class Enemy : MonoBehaviour
             {
                 switch (_dir)
                 {
-                    case Direction.Left:
+                    case DirectionType.Left:
                         if (right)
-                            _dir = Direction.None;
+                            _dir = DirectionType.None;
                         break;
-                    case Direction.Right:
+                    case DirectionType.Right:
                         if (!right)
-                            _dir = Direction.None;
+                            _dir = DirectionType.None;
                         break;
                 }
             }
@@ -300,7 +300,7 @@ public class Enemy : MonoBehaviour
     private void UpdateHorizontalMovement()
     {
         Vector2 velo = _rb.velocity;
-        velo.x = _currentSpeed * _dir switch { Direction.Right => 1, Direction.Left => -1, _ => 0 };
+        velo.x = _currentSpeed * _dir switch { DirectionType.Right => 1, DirectionType.Left => -1, _ => 0 };
         _rb.velocity = velo;
     }
 
@@ -357,7 +357,7 @@ public class Enemy : MonoBehaviour
     {
         Vector2 dir = _dir switch
         {
-            Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
         };
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, _ground._sideRayLong, _ground._sideMask);
@@ -371,7 +371,7 @@ public class Enemy : MonoBehaviour
     {
         Vector2 dir = _dir switch
         {
-            Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
         };
         return Physics2D.Raycast(transform.position, dir, _ground._jumpRayLong, _ground._mask);
     }
@@ -420,7 +420,7 @@ public class Enemy : MonoBehaviour
     private void UpdateBottle()
     {
         float x = _bottlePosi.x - transform.position.x;
-        _dir = x >= 0 ? Direction.Left : Direction.Right; // プレイヤーとは逆の方向に逃げ出す
+        _dir = x >= 0 ? DirectionType.Left : DirectionType.Right; // プレイヤーとは逆の方向に逃げ出す
         _anim.SetBool("Gallop", true); // 逃げ出すアニメーションを再生する
 
         UpdateHorizontalMovement();
@@ -461,11 +461,11 @@ public class Enemy : MonoBehaviour
     {
         _meatIcon.SetActive(true);
         float x = _meatPosi.x - transform.position.x;
-        _dir = x <= 0 ? Direction.Left : Direction.Right; // 肉がある方へ方向をセットする
+        _dir = x <= 0 ? DirectionType.Left : DirectionType.Right; // 肉がある方へ方向をセットする
 
         if (Mathf.Abs(x) <= 0.2f)
         {
-            _dir = Direction.None;
+            _dir = DirectionType.None;
             if (!_meatEat)
             {
                 _meatTimer = Time.time;
@@ -479,7 +479,7 @@ public class Enemy : MonoBehaviour
             _meatIcon.SetActive(false);
             _dir = Mathf.Sign(_modelT.localScale.x) switch
             {
-                1 => Direction.Left, -1 => Direction.Right, _ => Direction.None
+                1 => DirectionType.Left, -1 => DirectionType.Right, _ => DirectionType.None
             };
         }
 
@@ -559,10 +559,10 @@ public class Enemy : MonoBehaviour
     {
         float x = point.x - transform.position.x;
         bool isLeft = x < 0;
-        bool isTrue = _dir switch { Direction.Right => !isLeft, Direction.Left => isLeft, _ => false };
+        bool isTrue = _dir switch { DirectionType.Right => !isLeft, DirectionType.Left => isLeft, _ => false };
         if (Mathf.Abs(normal.y) <= 0.2f && isTrue)
         {
-            _dir = _dir == Direction.Right ? Direction.Left : Direction.Right;
+            _dir = _dir == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
         }
     }
     
@@ -599,7 +599,7 @@ public class Enemy : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Vector3 dirPos = transform.position + Vector3.up;
-        Gizmos.DrawLine(dirPos, dirPos + (_dir == Direction.Right ? Vector3.right : Vector3.left));
+        Gizmos.DrawLine(dirPos, dirPos + (_dir == DirectionType.Right ? Vector3.right : Vector3.left));
         Vector2 rRayPos = transform.position + (Vector3)_ground._rightRayPos;
         Vector2 lRayPos = transform.position + (Vector3)_ground._leftRayPos;
 
@@ -617,7 +617,7 @@ public class Enemy : MonoBehaviour
 
         Vector2 dir = _dir switch
         {
-            Direction.Left => Vector2.left, Direction.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
         };
         if (State == EnemyStateType.Chase)
             Gizmos.color = Color.red;
