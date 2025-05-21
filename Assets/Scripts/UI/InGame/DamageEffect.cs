@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,20 +13,23 @@ public class DamageEffect : MonoBehaviour
     [SerializeField] private float _damageEffectDuration = 0.3f; // ダメージエフェクトの点滅間隔
     private bool _isDying; // プレイヤーが現在瀕死状態かどうかのフラグ
     private PlayerController _playerController;
+    private CompositeDisposable _stateDisposable = new CompositeDisposable();
 
     private void Start()
     {
         _playerController = GetComponent<PlayerController>();
+        GameManager.Instance.CurrentStateProp
+            .Where(state => state == GameStateType.StageClear) // ステートがStageClearになったら実行する
+            .Subscribe(_ =>
+            {
+                // ステージクリア時はビネットエフェクトを非表示にする
+                _vignette.gameObject.SetActive(false);
+            })
+            .AddTo(_stateDisposable);
     }
 
     private void Update()
     {
-        if(GameManager.Instance.stateType == GameStateType.StageClear)
-        {
-            // ステージクリア時はビネットエフェクトを非表示にする
-            _vignette.gameObject.SetActive(false);
-        }
-
         if(!_isDying && _playerController.CurrentHp == 1) 
         {
             // HPが1になった時、まだ瀕死状態になっていなければ瀕死エフェクトを開始
@@ -73,5 +77,10 @@ public class DamageEffect : MonoBehaviour
         _isDying = true;
         _vignette.gameObject.SetActive(true); // ビネットを表示
         _vignette.DOFade(0, 1f).SetEase(Ease.OutQuart).SetLoops(-1, LoopType.Yoyo); // 明滅するアニメーション
+    }
+
+    private void OnDestroy()
+    {
+        _stateDisposable?.Dispose();
     }
 }

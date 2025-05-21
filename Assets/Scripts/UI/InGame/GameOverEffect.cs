@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 /// <summary>
@@ -6,22 +7,14 @@ using UnityEngine;
 public class GameOverEffect : MonoBehaviour
 {
     [SerializeField] private DeathOverlayController _deathOverlayController; // 死亡時に表示される赤いオーバーレイを管理するクラス
-    private GameManager _gameManager;
-    private bool _isActive = false; // 一度だけ処理を行うためのフラグ
+    private CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Start()
     {
-        _gameManager = FindAnyObjectByType<GameManager>();
-    }
-
-    private void Update()
-    {
-        // ゲームオーバー状態かチェックする
-        if (!_isActive && _gameManager.StateType == GameStateType.GameOver)
-        {
-            ApplyGameOverEffects();
-            _isActive = true;
-        }
+        GameManager.Instance.CurrentStateProp
+            .Where(state => state == GameStateType.GameOver) // ゲームオーバーになった時に
+            .Subscribe(_ => ApplyGameOverEffects()) // ゲームオーバー演出を行う
+            .AddTo(_disposable);
     }
 
     /// <summary>
@@ -31,5 +24,10 @@ public class GameOverEffect : MonoBehaviour
     {
         _deathOverlayController.OnActive(); // オーバーレイを表示
         AudioManager.Instance.PlaySE("dead");
+    }
+
+    private void OnDestroy()
+    {
+        _disposable?.Dispose();
     }
 }

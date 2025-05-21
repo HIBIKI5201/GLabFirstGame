@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 /// <summary>
@@ -8,23 +9,19 @@ public class Checkpoint : MonoBehaviour
     [SerializeField] private GameObject _player;
     [Header("チェックポイント通過後のイラスト"), SerializeField] private Sprite _changeSprite;
     [SerializeField] private int nowStage;
-    private GameManager _gameManager;   
     private SpriteRenderer _spriteRenderer;
     private CapsuleCollider2D _capsuleCollider;
     private bool _isFirstCheck = false; // 通過済みかどうか
+    private CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Start()
     {        
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    private void Update()
-    {
-        if (GameManager.Instance.StateType == GameStateType.StageClear)
-        {
-            ResetPoint();
-        }
+        GameManager.Instance.CurrentStateProp
+            .Where(state => state == GameStateType.StageClear) // ゲームクリア時に
+            .Subscribe(_ => ResetPoint())
+            .AddTo(_disposable);
     }
     
     /// <summary>
@@ -43,5 +40,10 @@ public class Checkpoint : MonoBehaviour
             if (_changeSprite) _spriteRenderer.sprite = _changeSprite; // 画像を変更
             _isFirstCheck = true; // 通過済みとする
         }
+    }
+
+    private void OnDestroy()
+    {
+        _disposable?.Dispose();
     }
 }
