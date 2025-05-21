@@ -58,9 +58,9 @@ public class GoalSequenceManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "goal" && _gameManager.StateType == GameStateType.StageClear)
+        if (collision.gameObject.name == "goal" && GameManager.Instance.CurrentState  == GameStateType.StageClear)
         {
-            _rb.Sleep(); // 物理演算は止める
+            _rb.Sleep(); // 物理演算を止める
             
             // コンポーネントがアサインされている方のシーケンスを実行する（ステージ3だけ特殊なゴール演出があるため）
             if (goalSequence != null) goalSequence.StartSequence(_warkTime);

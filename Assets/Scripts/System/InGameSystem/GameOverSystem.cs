@@ -5,7 +5,6 @@ using UnityEngine;
 /// </summary>
 public class GameOverSystem : MonoBehaviour
 {
-    private GameManager _gameManager;
     private PlayerController _playerController;
     private Timer _timer;
     private bool _isCalled;
@@ -13,7 +12,6 @@ public class GameOverSystem : MonoBehaviour
     private void Start()
     {
         _isCalled = false;
-        _gameManager = FindAnyObjectByType<GameManager>();
         _playerController = FindAnyObjectByType<PlayerController>();
         _timer = FindAnyObjectByType<Timer>();
     }
@@ -22,11 +20,11 @@ public class GameOverSystem : MonoBehaviour
     {
         // ゲームオーバー状態、現在のHPが0以下、制限時間が0秒以下
         // かつ、まだ条件を満たしていない時
-        if ((_gameManager.StateType == GameStateType.GameOver
+        if ((GameManager.Instance.CurrentState == GameStateType.GameOver
              || _playerController.CurrentHp <= 0
              || _timer._currentTime <= 0) && !_isCalled)
         {
-            _gameManager.StateType = GameStateType.GameOver; 
+            GameManager.Instance.ChangeState(GameStateType.GameOver); 
             _isCalled = true;
         }
     }

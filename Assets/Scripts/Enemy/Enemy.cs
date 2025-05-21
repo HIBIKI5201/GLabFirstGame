@@ -172,7 +172,7 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
-    void Update()
+    private void Update()
     {
         _rb.isKinematic = false;
 
@@ -212,8 +212,7 @@ public class Enemy : MonoBehaviour
                 break;
         }
 
-        if (GameManager.Instance.StateType == GameStateType.GameOver ||
-            GameManager.Instance.StateType == GameStateType.StageClear)
+        if (GameManager.Instance.CurrentState == GameStateType.GameOver || GameManager.Instance.CurrentState == GameStateType.StageClear)
         {
             // ゲームオーバー、もしくはゲームクリア時には敵を非表示にする
             enabled = false;

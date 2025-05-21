@@ -13,7 +13,6 @@ public class InGameStartSequence : MonoBehaviour
     public static bool _isFirstEntry = true; // ステージに初めて入った時のみtrue（リスポーン時はfalse）
     
     private PlayerController _player;
-    private GameManager _gameManager;
     private Timer _timer;
     private GameOverSystem _gameOverSystem;
     
@@ -29,7 +28,6 @@ public class InGameStartSequence : MonoBehaviour
     /// </summary>
     private void InitializeReferences()
     {
-        _gameManager = FindAnyObjectByType<GameManager>();
         _gameOverSystem = FindAnyObjectByType<GameOverSystem>();
         _timer = FindAnyObjectByType<Timer>();
         _player = GetComponent<PlayerController>();
@@ -40,7 +38,7 @@ public class InGameStartSequence : MonoBehaviour
     /// </summary>
     private void SetupStageEntry()
     {
-        _gameManager.StateType = GameStateType.Playing; // ゲームの進行状況を変更
+        GameManager.Instance.ChangeState(GameStateType.Playing); // ゲームの進行状況を変更
         _player.StopAction(2f); // プレイヤーを少しだけ動けないようにする
         _stageText.gameObject.SetActive(false);
         StartCoroutine(InitializeGameSystems(2.5f)); // 開始演出とタイマー起動のコルーチンを開始
