@@ -44,10 +44,4 @@ public class DeathOverlayController : MonoBehaviour
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
     }
-    
-    void OnDisable()
-        {
-            // 自身の非アクティブ化を検出
-            Debug.Log($"GameObject '{gameObject.name}' was deactivated by: {new System.Diagnostics.StackTrace().ToString()}");
-        }
 }
