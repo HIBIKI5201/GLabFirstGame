@@ -605,30 +605,14 @@ public class PlayerController : MonoBehaviour
     {
         if (isPause)
         {
-            Pause();
+            _canAction = false;
         }
         else
         {
-            Resume();
+            _canAction = true;
         }
     }
     
-    private void Pause()
-    {
-        Debug.Log("Pause");
-        _canAction = false;
-        //_pauseVelocity = _rb.velocity;
-        //_rb.Sleep();
-    }
-    
-    private void Resume()
-    {
-        Debug.Log("Resume");
-        //_rb.WakeUp();
-        _canAction = true;
-        //_rb.velocity = _pauseVelocity;
-    }
-
     #endregion
     
     private void OnDrawGizmosSelected()
