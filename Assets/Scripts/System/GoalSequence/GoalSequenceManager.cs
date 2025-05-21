@@ -90,8 +90,8 @@ public class GoalSequenceManager : MonoBehaviour
         _clearText.SetActive(true);
         _clearTime.enabled = true;
         
-        int min = Mathf.FloorToInt(_timer._currentTime / 60); // 小数点以下切り捨て
-        int sec = Mathf.FloorToInt(_timer._currentTime % 60);
+        int min = Mathf.FloorToInt(_timer.CurrentTime / 60); // 小数点以下切り捨て
+        int sec = Mathf.FloorToInt(_timer.CurrentTime % 60);
         _clearTime.text = $"クリアタイム {min:00}:{sec:00}";
         
         _gameProgressManager.StageClear(_nowStage);

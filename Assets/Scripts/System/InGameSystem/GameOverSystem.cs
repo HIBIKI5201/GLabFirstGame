@@ -22,7 +22,7 @@ public class GameOverSystem : MonoBehaviour
         // かつ、まだ条件を満たしていない時
         if ((GameManager.Instance.CurrentState == GameStateType.GameOver
              || _playerController.CurrentHp <= 0
-             || _timer._currentTime <= 0) && !_isCalled)
+             || _timer.CurrentTime <= 0) && !_isCalled)
         {
             GameManager.Instance.ChangeState(GameStateType.GameOver); 
             _isCalled = true;

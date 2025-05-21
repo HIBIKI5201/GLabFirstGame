@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 /// <summary>
@@ -12,11 +13,11 @@ public class SecretRouteManager : MonoBehaviour
     private void Start()
     {
         _time = FindAnyObjectByType<Timer>();
-    }
 
-    private void Update()
-    {
-        if (_time._currentTime <= 0) IsAnother();
+        _time.CurrentTimeProp
+            .Where(time => time <= 0)
+            .Subscribe(_ => IsAnother())
+            .AddTo(this);
     }
     
     /// <summary>
