@@ -15,6 +15,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private Color _color;
     [SerializeField] private float _fadeTime;
     [SerializeField] private Checkpoint _checkpoint;
+    [SerializeField] private Timer _timer;
     private bool _pauseFlg = false;
     private List<IEnumerator> _coroutines = new List<IEnumerator>();
     
@@ -55,11 +56,13 @@ public class PauseManager : MonoBehaviour
         {
             SuspendAllCoroutines();
             Time.timeScale = 0;
+            _timer.StopTimer();
         }
         else
         {
             RestartAllCoroutine();
             Time.timeScale = 1;
+            _timer.StartTimer();
         }
     }
     
@@ -87,7 +90,6 @@ public class PauseManager : MonoBehaviour
     {
         foreach (IEnumerator enumerator in _coroutines)
         {
-            Debug.Log(enumerator);
             StopCoroutine(enumerator);
         }
     }
