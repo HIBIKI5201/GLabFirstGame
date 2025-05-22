@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 
@@ -7,14 +8,13 @@ using UnityEngine;
 public class GameOverEffect : MonoBehaviour
 {
     [SerializeField] private DeathOverlayController _deathOverlayController; // 死亡時に表示される赤いオーバーレイを管理するクラス
-    private CompositeDisposable _disposable = new CompositeDisposable();
 
     private void Start()
     {
         GameManager.Instance.CurrentStateProp
             .Where(state => state == GameStateType.GameOver) // ゲームオーバーになった時に
             .Subscribe(_ => ApplyGameOverEffects()) // ゲームオーバー演出を行う
-            .AddTo(_disposable);
+            .AddTo(this);
     }
 
     /// <summary>
@@ -22,12 +22,7 @@ public class GameOverEffect : MonoBehaviour
     /// </summary>
     private void ApplyGameOverEffects()
     {
-        _deathOverlayController.OnActive(); // オーバーレイを表示
         AudioManager.Instance.PlaySE("dead");
-    }
-
-    private void OnDestroy()
-    {
-        _disposable?.Dispose();
+        _deathOverlayController.OnActive().Forget(); // 赤いオーバーパネルを表示
     }
 }

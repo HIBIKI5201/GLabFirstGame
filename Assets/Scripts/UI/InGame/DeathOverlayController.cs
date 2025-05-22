@@ -1,3 +1,5 @@
+using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,23 +19,23 @@ public class DeathOverlayController : MonoBehaviour
     private void Awake()
     {
         _image = GetComponent<Image>();
-        gameObject.SetActive(false);
+        
     }
     
     /// <summary>
     /// アニメーションを再生する
     /// </summary>
-    public void OnActive()
+    public async UniTask OnActive()
     {
-        gameObject.SetActive(true);
         _image.DOFade(1f, _fadeTime);
-        Invoke(nameof(FadeOut), _fadeTime + _displayTime);
-    }
-
-    private void FadeOut()
-    {
+        
+        await UniTask.Delay(TimeSpan.FromSeconds(_fadeTime + _displayTime));
+        
         _fadeOutObject.SetActive(true);
-        Invoke(nameof(ReloadScene), _reloadDelay); // _fadeOutObjectのアニメーションを待ってからシーンを読み込みリトライ
+     
+        await UniTask.Delay(TimeSpan.FromSeconds(_reloadDelay));
+        
+        ReloadScene();
     }
 
     /// <summary>
