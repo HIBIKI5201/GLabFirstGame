@@ -14,6 +14,11 @@ public class CursorController : MonoBehaviour
     static public bool _openCredit = false;
     private bool _isSelected = false;
 
+    private void Start()
+    {
+        _buttons[0].Select();
+    }
+    
     private void SelectButton(int _index)
     {
         EventSystem.current.SetSelectedGameObject(_buttons[_index].gameObject);

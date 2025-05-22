@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 1680830982943481570}
   - component: {fileID: 690250466149926189}
   m_Layer: 6
-  m_Name: "\u6C17\u7D76"
+  m_Name: StunAnimation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
