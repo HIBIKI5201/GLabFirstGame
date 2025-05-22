@@ -14,11 +14,6 @@ public class GameProgressManager : MonoBehaviour
     // 定数
     private const int FINAL_STAGE_INDEX = 3; // 最後のステージ数
 
-    private void Start()
-    {
-        DontDestroyOnLoad(gameObject); // シーンをまたいで利用したいのでDDOLに登録
-    }
-    
     private void Update()
     {
         // デバッグ用のキー入力処理
