@@ -9,7 +9,8 @@ using System;
 /// </summary>
 public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] private SceneType _targetSceneType; // 移行したいシーンタイプ
+    [Header("遷移の設定")]
+    [SerializeField, Tooltip("移行したいシーンタイプ")] private SceneType _targetSceneType;
     [SerializeField] private Image _fadePanel;
     [SerializeField] private float _fadeTime;
     [SerializeField] private Color _fadeColor;
