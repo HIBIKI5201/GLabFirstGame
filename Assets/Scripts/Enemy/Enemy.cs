@@ -298,9 +298,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void UpdateHorizontalMovement()
     {
-        Vector2 velo = _rb.velocity;
+        Vector2 velo = _rb.linearVelocity;
         velo.x = _currentSpeed * _dir switch { DirectionType.Right => 1, DirectionType.Left => -1, _ => 0 };
-        _rb.velocity = velo;
+        _rb.linearVelocity = velo;
     }
 
     /// <summary>
@@ -308,9 +308,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        Vector2 velo = _rb.velocity;
+        Vector2 velo = _rb.linearVelocity;
         velo.y = _jumpPower;
-        _rb.velocity = velo;
+        _rb.linearVelocity = velo;
     }
 
     /// <summary>
@@ -379,9 +379,9 @@ public class Enemy : MonoBehaviour
 
     private void UpdateStone()
     {
-        Vector2 velo = _rb.velocity;
+        Vector2 velo = _rb.linearVelocity;
         velo.x = 0;
-        _rb.velocity = velo;
+        _rb.linearVelocity = velo;
         _anim.SetBool("Dizzy", true);
     }
     
@@ -395,7 +395,7 @@ public class Enemy : MonoBehaviour
 
         if (_reactionCoro != null)
             StopCoroutine(_reactionCoro);
-        _rb.velocity = Vector2.zero;
+        _rb.linearVelocity = Vector2.zero;
         _reactionCoro = StartCoroutine(Stun(stunTime));
     }
   
@@ -579,7 +579,7 @@ public class Enemy : MonoBehaviour
     private void OnDisable()
     {
         _rb.isKinematic = true;
-        _rb.velocity = Vector2.zero;
+        _rb.linearVelocity = Vector2.zero;
     }
 
     #region ギズモの描画処理

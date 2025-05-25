@@ -97,7 +97,7 @@ public abstract class ItemBase : MonoBehaviour
     {
         if (gameObject.TryGetComponent(out Rigidbody2D rb))
         {
-            _keepVelocity = rb.velocity;
+            _keepVelocity = rb.linearVelocity;
             rb.Sleep();
         }
     }
@@ -110,7 +110,7 @@ public abstract class ItemBase : MonoBehaviour
         if (gameObject.TryGetComponent(out Rigidbody2D rb))
         {
             rb.WakeUp();
-            rb.velocity = _keepVelocity;
+            rb.linearVelocity = _keepVelocity;
         }
     }
 

@@ -117,9 +117,9 @@ public class PlayerController : MonoBehaviour
             if (!_isJump)
             {
                 float x = 0;
-                if (_rb.velocity.x != 0)
+                if (_rb.linearVelocity.x != 0)
                 {
-                    x = _rb.velocity.x - (_deceleration + Mathf.Abs(_rb.velocity.x)) * Mathf.Sign(_rb.velocity.x) * Time.deltaTime;
+                    x = _rb.linearVelocity.x - (_deceleration + Mathf.Abs(_rb.linearVelocity.x)) * Mathf.Sign(_rb.linearVelocity.x) * Time.deltaTime;
                 }
                 if (Mathf.Abs(x) < 0.2)
                 {
@@ -131,13 +131,13 @@ public class PlayerController : MonoBehaviour
                     _audioSource.clip = _walk;
                     _audioSource.Play();
                 }
-                _rb.velocity = new Vector2(x, _rb.velocity.y);
+                _rb.linearVelocity = new Vector2(x, _rb.linearVelocity.y);
                 _animator.SetFloat("isWalk", Mathf.Abs(x));
             }
         }
         else
         {
-            float x = _rb.velocity.x + _movePower * _horiInput * Time.deltaTime;
+            float x = _rb.linearVelocity.x + _movePower * _horiInput * Time.deltaTime;
             if (Mathf.Abs(x) > _maxSpeed)
             {
                 x = _maxSpeed * Mathf.Sign(x);
@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            _rb.velocity = new Vector2(x, _rb.velocity.y);
+            _rb.linearVelocity = new Vector2(x, _rb.linearVelocity.y);
         }
         if (_isJump)
         {
@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviour
     
     private void Jump()
     {
-        if (_rb.velocity.y < -1f)
+        if (_rb.linearVelocity.y < -1f)
         {
             if (_jumpEnumerator == null)
             {
@@ -210,31 +210,31 @@ public class PlayerController : MonoBehaviour
             if (_isStompEnemy)
             {
                 _isStompEnemy = false;
-                _rb.velocity = new Vector2(_rb.velocity.x, 0);
+                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
             }
         }
         else if (_isStompEnemy)
         {
-            _rb.velocity = new Vector2(_rb.velocity.x, 0);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
         }
-        else if (_rb.velocity.y > 0)
+        else if (_rb.linearVelocity.y > 0)
         {
-            _rb.velocity = new Vector2(_rb.velocity.x, _rb.velocity.y * 0.99f);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _rb.linearVelocity.y * 0.99f);
         }
         //Debug.Log(_isJump);
     }
     
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
-        if (_rb.velocity.y > 0)
+        if (_rb.linearVelocity.y > 0)
         {
             _animator.SetBool("isJump", true);
         }
         _audioSource.Stop();
-        while (_rb.velocity.y > 0)
+        while (_rb.linearVelocity.y > 0)
         {
             yield return new WaitForEndOfFrame();
         }
@@ -255,7 +255,7 @@ public class PlayerController : MonoBehaviour
                     _animator.SetBool("isFall", false);
                     if (_landingInertia && _horiInput == 0)
                     {
-                        _rb.velocity = new Vector2(0, _rb.velocity.y);
+                        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
                     }
                     yield return new WaitForSeconds(0.5f);
                     _jumpEnumerator = null;
@@ -552,7 +552,7 @@ public class PlayerController : MonoBehaviour
             }
             _throwsetting.BulletSimulationLine.positionCount = 0;
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             rb.AddForce(_throwsetting.ThrowParabolaDirection.normalized * throwParabolaPower * transform.localScale, ForceMode2D.Impulse);
         }
         item.Throwing();
@@ -639,9 +639,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        Vector2 vector2 = _rb.velocity;
+        Vector2 vector2 = _rb.linearVelocity;
         vector2.x = _veloX;
-        _rb.velocity = vector2;
+        _rb.linearVelocity = vector2;
 
         if (!_isJump)
         {

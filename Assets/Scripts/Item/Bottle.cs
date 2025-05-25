@@ -65,9 +65,9 @@ public class Bottle : ItemBase
             Destroy(gameObject, ActiveTime);
         }
 
-        if (_effected && _rb.velocity.y == 0)
+        if (_effected && _rb.linearVelocity.y == 0)
         {
-            _rb.velocity = Vector2.zero;
+            _rb.linearVelocity = Vector2.zero;
             _rb.bodyType = RigidbodyType2D.Kinematic;
             gameObject.GetComponent<Collider2D>().enabled = false;
         }
