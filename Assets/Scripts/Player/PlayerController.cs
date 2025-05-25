@@ -197,7 +197,6 @@ public class PlayerController : MonoBehaviour
         {
             if (!_isJump)
             {
-                //Debug.Log("�W�����v����");
                 AudioManager.Instance.PlaySE("jump");
                 _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
@@ -217,7 +216,6 @@ public class PlayerController : MonoBehaviour
         }
         else if (_isStompEnemy)
         {
-            //Debug.Log("�G�𓥂�ŏ��W�����v");
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
