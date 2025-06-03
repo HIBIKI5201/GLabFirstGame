@@ -52,8 +52,8 @@ public class Enemy : MonoBehaviour
     
     private EnemyDamageHandler _damageHandler;
     private EnemyAttackHandler _attackHandler;
-    
-    GameObject _stunAnimeObj; // スタンエフェクトのオブジェクト
+
+    [SerializeField] private GameObject _stunAnimationObject; // スタンエフェクトのオブジェクト
     Vector2 _bottlePosi;
     
     ContactPoint2D[] V;
@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour
     Coroutine _coroutine = null;
 
     // 肉アイテム関連
-    GameObject _meatIcon;
+    [SerializeField] private GameObject _meatIcon;
     Vector2 _meatPosi;
     float _meatTimer;
     float _meatTime;
@@ -142,10 +142,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void CacheComponents()
     {
-        // _stunAnimeObj = GetComponentInChildren<StunAnime>().gameObject; // TODO
         if (TryGetComponent(out _rb)) _rb.isKinematic = false;
         if (_boxCollider == null) _boxCollider = GetComponent<BoxCollider2D>();
-        _meatIcon = transform.GetChild(1).gameObject;
         
         if (_modelT == null) _modelT = GetComponentInChildren<Animator>().transform;
         _modelScale = _modelT.localScale;
@@ -181,7 +179,10 @@ public class Enemy : MonoBehaviour
         vec.x *= _dir switch { DirectionType.Right => -1, DirectionType.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
         _modelT.localScale = vec;
 
-        // _stunAnimeObj.SetActive(State == EnemyStateType.Faint); // TODO: 素材を確認
+        if (_stunAnimationObject)
+        {
+            _stunAnimationObject.gameObject.SetActive(State == EnemyStateType.Faint);
+        }
 
         // 状態に応じた処理
         switch (State)
@@ -458,7 +459,10 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void UpdateMeat()
     {
-        _meatIcon.SetActive(true);
+        if (_meatIcon)
+        {
+            _meatIcon.SetActive(true);
+        }
         float x = _meatPosi.x - transform.position.x;
         _dir = x <= 0 ? DirectionType.Left : DirectionType.Right; // 肉がある方へ方向をセットする
 
@@ -475,7 +479,10 @@ public class Enemy : MonoBehaviour
         if (Time.time >= _meatTimer + _meatTime)
         {
             State = EnemyStateType.Normal; // 状態を戻す
-            _meatIcon.SetActive(false);
+            if (_meatIcon)
+            {
+                _meatIcon.SetActive(false);
+            }
             _dir = Mathf.Sign(_modelT.localScale.x) switch
             {
                 1 => DirectionType.Left, -1 => DirectionType.Right, _ => DirectionType.None
@@ -532,7 +539,16 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion
-    
+
+    public void ReactFromTuta(float stunTime)
+    {
+        // 1. SE を再生する（AudioManager Prefab に AudioClip を入れるのが必要）
+        // AudioManager.Instance.PlaySE("???");
+
+        // 2. エネミーをスタンする（一応既存関数を借りて使う）
+        ReactionStone(stunTime);
+    }
+
     /// <summary>
     /// 何かに衝突しているときの処理
     /// </summary>
