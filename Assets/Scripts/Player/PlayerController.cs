@@ -14,6 +14,9 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] int _maxHp;
+    public int CurrentPetal;
+    public int InitPetal = 0;
+    public int MaxPetal = 5;
     public int CurrentHp { get; private set; }
     [SerializeField] public List<GameObject> _rose = new List<GameObject>();
     [SerializeField] public float _maxSpeed;
@@ -319,8 +322,31 @@ public class PlayerController : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
+        else if (item as Petal)
+        {
+            PetalGetAction();
+        }
     }
-    
+    /// <summary>
+    /// 花びらを取得時の処理
+    /// </summary>
+    private void PetalGetAction()
+    {
+        CurrentPetal++;
+        if (CurrentPetal >= MaxPetal)
+        {
+            CurrentPetal = 0;
+            // TODO 花びらゲージを0にする
+            //InitPetalGauge();
+            // TODO 回復処理
+            //HealHp();
+        }
+        else
+        {
+            // TODO 花びらゲージを更新する
+            //UpdatePetalGauge();
+        }
+    }
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
