@@ -9,6 +9,7 @@ public class Bottle : ItemBase
     [SerializeField] private float _angle;
     private bool _effected;
     private Rigidbody2D _rb;
+    private string _seNameGet = "getBottle"; // アイテム取得時に再生するSEの名称
 
     protected override void Activate()
     {
@@ -24,7 +25,10 @@ public class Bottle : ItemBase
             HandleLandedBottle(); // 地面に落ちたあとの処理
         }
     }
-
+    protected override void PlaySE()
+    {
+        AudioManager.Instance.PlaySE(_seNameGet);
+    }
     /// <summary>
     /// 地面に衝突したかの判定
     /// </summary>
