@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class tuta
+public partial class tuta
 {
     
 }
