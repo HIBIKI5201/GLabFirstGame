@@ -5,26 +5,27 @@ using UnityEngine;
 /// </summary>
 public class EnemyAttackHandler
 {
-    private int _attack;
-    private float _attackedTimer;
-    private PlayerController _player;
+    private int _attackPoint;
+    private float _lastAttackingTime;
 
-    public EnemyAttackHandler(int attack, ref float attackedTimer)
+    public EnemyAttackHandler(int attackPoint, ref float attackedTimer)
     {
-        _attack = attack;
-        _attackedTimer = attackedTimer;
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        _attackPoint = attackPoint;
+        _lastAttackingTime = attackedTimer;
     }
     
     /// <summary>
     /// 攻撃
     /// </summary>
-    public void Attack()
+    public void Attack(PlayerController player)
     {
         // 攻撃のクールタイム中であれば以降の処理は行わない
-        if (Time.time <= _attackedTimer + 0.1f) return;
-        
-        _attackedTimer = Time.time;
-        _player.FluctuationLife(-_attack);
+        if (Time.time <= _lastAttackingTime + 0.1f || player == null)
+        {
+            return;
+        }
+
+        _lastAttackingTime = Time.time;
+        player.FluctuationLife(-_attackPoint);
     }
 }

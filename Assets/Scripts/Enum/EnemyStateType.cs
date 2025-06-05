@@ -16,7 +16,7 @@ public enum EnemyStateType
     /// <summary>
     /// 食いついている（アイテム：肉の効果）
     /// </summary>
-    Bite,
+    EatingMeat,
 
     /// <summary>
     /// 逃げている（アイテム：空き瓶の効果）
@@ -26,5 +26,5 @@ public enum EnemyStateType
     /// <summary>
     /// 追跡中
     /// </summary>
-    Chase,
+    ChasingPlayer,
 }

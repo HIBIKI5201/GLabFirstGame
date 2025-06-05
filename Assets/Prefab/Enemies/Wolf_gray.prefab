@@ -121,37 +121,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449ebfaab24753844aa8fa10c546a673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _beast: 2
-  _anim: {fileID: 9136254508628768455}
-  _maxHp: 3
-  _currentHp: 0
-  _attack: 1
-  _jumpPower: 5
-  _speed: 5.4
-  _chaseSpeed: 6.6
-  _currentSpeed: 0
-  _state: 0
-  _jumpOver: 1
-  _goDown: 1
-  _canChase: 1
-  _canDamage: 0
-  _ground:
-    _mask:
-      serializedVersion: 2
-      m_Bits: 1152
-    _sideMask:
-      serializedVersion: 2
-      m_Bits: 384
-    _sideRayPos: {x: 0, y: 0}
-    _rightRayPos: {x: 1.199, y: 0}
-    _leftRayPos: {x: -1.199, y: 0}
-    _rayLong: 0.8325
-    _sideRayLong: 1.299
-    _jumpRayLong: 1.399
-  _dir: 1
-  _alwaysDebug: 0
+  _rigidbody2D: {fileID: 8499751680148161099}
+  _boxCollider2D: {fileID: 4045802866010182147}
+  _animator: {fileID: 9136254508628768455}
   _stunAnimationObject: {fileID: 6252742837799401948}
   _meatIcon: {fileID: 6259288999184973331}
+  _enemyType: 2
+  _maxHp: 3
+  _attackPoint: 1
+  _jumpPower: 5
+  _normalSpeed: 5.4
+  _speedWhenChasingPlayer: 6.6
+  _canJumpOver: 1
+  _canJumpDown: 1
+  _canChasePlayer: 1
+  _canReceiveDamage: 1
+  _raycastData:
+    RaycastGroundMask:
+      serializedVersion: 2
+      m_Bits: 1152
+    RaycastSideMask:
+      serializedVersion: 2
+      m_Bits: 384
+    RightRayOriginOffset: {x: 1.199, y: 0}
+    LeftRayOriginOffset: {x: -1.199, y: 0}
+    GroundCheckRayDistance: 0.8325
+    SideCheckRayDistance: 1.299
+    MaxJumpDistanceFromWall: 1.399
+  _currentHp: 0
+  _currentSpeed: 0
+  _currentDirection: 0
+  _currentState: 0
+  _alwaysDebug: 0
 --- !u!1 &2664935169506575907
 GameObject:
   m_ObjectHideFlags: 0
