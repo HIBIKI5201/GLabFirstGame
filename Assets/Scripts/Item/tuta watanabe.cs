@@ -1,14 +1,10 @@
 using UnityEngine;
 
-
-/// <summary>
-/// プレイヤーの下からオブジェクトを真下に落とす
-/// </summary>
-public partial class tuta : MonoBehaviour
+public partial class TutaWatanabe : MonoBehaviour
 {
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private float _checkRadius = 0.2f;
     [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private string _landSE = "thump"; // 接地時の効果音名
     private Rigidbody2D _rb;
     private bool _landed = false;
 
@@ -17,6 +13,7 @@ public partial class tuta : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
     }
 
+    [System.Obsolete]
     private void Update()
     {
         if (_landed) return;
@@ -29,7 +26,6 @@ public partial class tuta : MonoBehaviour
             _landed = true;
             _rb.velocity = Vector2.zero;
             _rb.bodyType = RigidbodyType2D.Kinematic;
-            AudioManager.Instance?.PlaySE(_landSE);
         }
     }
 
@@ -39,4 +35,3 @@ public partial class tuta : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, _checkRadius);
     }
 }
-
