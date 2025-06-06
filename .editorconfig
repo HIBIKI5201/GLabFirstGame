@@ -1,0 +1,10 @@
+root = true
+
+# C# file extension
+[*.cs]
+
+# Set end of line to CRLF (Windows-based)
+end_of_line = crlf
+
+# Set encoding to UTF-8
+charset = utf-8-bom
