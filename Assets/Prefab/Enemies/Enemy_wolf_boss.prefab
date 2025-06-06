@@ -113,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 575531580702606178}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.38036963, y: 0.087973624, z: 0}
+  m_LocalPosition: {x: 0.7742456, y: -0.025169361, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -249,37 +249,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449ebfaab24753844aa8fa10c546a673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _beast: 4
-  _anim: {fileID: 2162880028303419733}
-  _maxHp: 6
-  _currentHp: 10
-  _attack: 2
-  _jumpPower: 5
-  _speed: 7.2
-  _chaseSpeed: 7.2
-  _currentSpeed: 0
-  _state: 0
-  _jumpOver: 1
-  _goDown: 1
-  _canChase: 1
-  _canDamage: 0
-  _ground:
-    _mask:
-      serializedVersion: 2
-      m_Bits: 1152
-    _sideMask:
-      serializedVersion: 2
-      m_Bits: 384
-    _sideRayPos: {x: 0, y: 0}
-    _rightRayPos: {x: 1.833333, y: 0}
-    _leftRayPos: {x: -1.833333, y: 0}
-    _rayLong: 1.241667
-    _sideRayLong: 1.933333
-    _jumpRayLong: 2.033333
-  _dir: 1
-  _alwaysDebug: 0
+  _rigidbody2D: {fileID: 6506657504292992731}
+  _boxCollider2D: {fileID: 6421892462430893437}
+  _animator: {fileID: 2162880028303419733}
   _stunAnimationObject: {fileID: 5572939186209602490}
   _meatIcon: {fileID: 7116440794939183048}
+  _enemyType: 4
+  _maxHp: 6
+  _attackPoint: 2
+  _jumpPower: 5
+  _normalSpeed: 7.2
+  _speedWhenChasingPlayer: 7.2
+  _canJumpOver: 1
+  _canJumpDown: 1
+  _canChasePlayer: 1
+  _canReceiveDamage: 1
+  _raycastData:
+    RaycastGroundMask:
+      serializedVersion: 2
+      m_Bits: 1152
+    RaycastSideMask:
+      serializedVersion: 2
+      m_Bits: 384
+    RightRayOriginOffset: {x: 1.833333, y: 0}
+    LeftRayOriginOffset: {x: -1.833333, y: 0}
+    GroundCheckRayDistance: 1.241667
+    SideCheckRayDistance: 1.933333
+    MaxJumpDistanceFromWall: 2.033333
+  _currentHp: 10
+  _currentSpeed: 0
+  _currentDirection: 0
+  _currentState: 0
+  _alwaysDebug: 0
 --- !u!61 &6421892462430893437
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -352,7 +353,7 @@ Transform:
   m_GameObject: {fileID: 4266001105178525830}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.41931573, y: -0.08516293, z: 0}
+  m_LocalPosition: {x: -0.5615017, y: -0.07122981, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -498,7 +499,7 @@ Transform:
   m_GameObject: {fileID: 5668095888101129686}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.4193142, y: 0.08516305, z: 0}
+  m_LocalPosition: {x: 0.5614981, y: 0.071230255, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -585,7 +586,7 @@ Transform:
   m_GameObject: {fileID: 6310431837563748103}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7996839, y: 0.002810772, z: 0}
+  m_LocalPosition: {x: 0.21274796, y: -0.0963991, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -672,7 +673,7 @@ Transform:
   m_GameObject: {fileID: 6447130521583686939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.38036874, y: -0.087973684, z: 0}
+  m_LocalPosition: {x: -0.77424586, y: 0.025169237, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -847,7 +848,7 @@ Transform:
   m_GameObject: {fileID: 7456422171926914625}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7996839, y: -0.0028107394, z: 0}
+  m_LocalPosition: {x: -0.21274698, y: 0.096399136, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
