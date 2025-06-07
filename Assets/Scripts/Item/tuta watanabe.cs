@@ -1,37 +1,27 @@
 using UnityEngine;
 
-public partial class TutaWatanabe : MonoBehaviour
+public class VineDropper : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [SerializeField] private float _checkRadius = 0.2f;
-    [SerializeField] private LayerMask _groundLayer;
-    private Rigidbody2D _rb;
-    private bool _landed = false;
+    public GameObject vinePrefab; // �c�^�̃v���n�u
+    public Transform dropPoint;   // �c�^�𗎂Ƃ��J�n�ʒu�i��: �v���C���[�̉��j
 
-    private void Awake()
+    void Update()
     {
-        _rb = GetComponent<Rigidbody2D>();
-    }
-
-    [System.Obsolete]
-    private void Update()
-    {
-        if (_landed) return;
-
-        // �n�ʂƂ̐ڐG�`�F�b�N
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, _checkRadius, _groundLayer);
-
-        if (hit != null)
+        if (Input.GetKeyDown(KeyCode.Return)) // �G���^�[�L�[����������
         {
-            _landed = true;
-            _rb.velocity = Vector2.zero;
-            _rb.bodyType = RigidbodyType2D.Kinematic;
+            DropVine();
         }
     }
 
-    private void OnDrawGizmosSelected()
+    void DropVine()
     {
-        Gizmos.color = new Color(1f, 1f, 0f, 0.4f);
-        Gizmos.DrawWireSphere(transform.position, _checkRadius);
+        GameObject vine = Instantiate(vinePrefab, dropPoint.position, Quaternion.identity);
+
+        // Rigidbody2D �����݂���ꍇ�A�^���ɗ͂�������i�C�Ӂj
+        Rigidbody2D rb = vine.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.down * 5f; // �^���ɃX�s�[�h��^����i�����j
+        }
     }
 }
