@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -378,8 +378,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void ApplyIvyItemEffect(float stunTime)
     {
-        // TODO: SE を再生する（AudioManager Prefab に AudioClip を入れるのが必要）
-        // AudioManager.Instance.PlaySE("???");
+        // SE を再生する
+        AudioManager.Instance.PlaySE("damage_enemy");
 
         // エネミーをスタンする
         SetStunStateForDuration(stunTime);
