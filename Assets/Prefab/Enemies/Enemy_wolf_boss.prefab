@@ -49,6 +49,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -110,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 575531580702606178}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.24189535, y: 0.09531909, z: 0}
+  m_LocalPosition: {x: 0.7742456, y: -0.025169361, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -133,6 +136,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -206,7 +212,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6506657504292992731
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -217,8 +223,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -243,34 +249,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449ebfaab24753844aa8fa10c546a673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _beast: 4
+  _rigidbody2D: {fileID: 6506657504292992731}
+  _boxCollider2D: {fileID: 6421892462430893437}
+  _animator: {fileID: 2162880028303419733}
+  _stunAnimationObject: {fileID: 5572939186209602490}
+  _meatIcon: {fileID: 7116440794939183048}
+  _enemyType: 4
   _maxHp: 6
-  _currentHp: 10
-  _speed: 7.2
-  _chaseSpeed: 7.2
-  _currentSpeed: 0
-  _attack: 2
+  _attackPoint: 2
   _jumpPower: 5
-  _state: 0
-  _anim: {fileID: 2162880028303419733}
-  _jumpOver: 1
-  _goDown: 1
-  _canChase: 1
-  _canDamage: 0
-  _ground:
-    _mask:
+  _normalSpeed: 7.2
+  _speedWhenChasingPlayer: 7.2
+  _canJumpOver: 1
+  _canJumpDown: 1
+  _canChasePlayer: 1
+  _canReceiveDamage: 1
+  _raycastData:
+    RaycastGroundMask:
       serializedVersion: 2
       m_Bits: 1152
-    _sideMask:
+    RaycastSideMask:
       serializedVersion: 2
       m_Bits: 384
-    _sideRayPos: {x: 0, y: 0}
-    _rightRayPos: {x: 1.833333, y: 0}
-    _leftRayPos: {x: -1.833333, y: 0}
-    _rayLong: 1.241667
-    _sideRayLong: 1.933333
-    _jumpRayLong: 2.033333
-  _dir: 1
+    RightRayOriginOffset: {x: 1.833333, y: 0}
+    LeftRayOriginOffset: {x: -1.833333, y: 0}
+    GroundCheckRayDistance: 1.241667
+    SideCheckRayDistance: 1.933333
+    MaxJumpDistanceFromWall: 2.033333
+  _currentHp: 10
+  _currentSpeed: 0
+  _currentDirection: 0
+  _currentState: 0
   _alwaysDebug: 0
 --- !u!61 &6421892462430893437
 BoxCollider2D:
@@ -280,6 +289,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3780141631592928989}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -303,7 +313,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -314,7 +325,6 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 3.6666667, y: 2.0833333}
   m_EdgeRadius: 0
 --- !u!1 &4266001105178525830
@@ -343,7 +353,7 @@ Transform:
   m_GameObject: {fileID: 4266001105178525830}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7813377, y: -0.021473596, z: 0}
+  m_LocalPosition: {x: -0.5615017, y: -0.07122981, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -366,6 +376,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -486,7 +499,7 @@ Transform:
   m_GameObject: {fileID: 5668095888101129686}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.78133786, y: 0.021473534, z: 0}
+  m_LocalPosition: {x: 0.5614981, y: 0.071230255, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -509,6 +522,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -570,7 +586,7 @@ Transform:
   m_GameObject: {fileID: 6310431837563748103}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5394421, y: 0.07384551, z: 0}
+  m_LocalPosition: {x: 0.21274796, y: -0.0963991, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -593,6 +609,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -654,7 +673,7 @@ Transform:
   m_GameObject: {fileID: 6447130521583686939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.24189559, y: -0.095319085, z: 0}
+  m_LocalPosition: {x: -0.77424586, y: 0.025169237, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -677,6 +696,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -762,6 +784,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -823,7 +848,7 @@ Transform:
   m_GameObject: {fileID: 7456422171926914625}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.53944206, y: -0.07384552, z: 0}
+  m_LocalPosition: {x: -0.21274698, y: 0.096399136, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -846,6 +871,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

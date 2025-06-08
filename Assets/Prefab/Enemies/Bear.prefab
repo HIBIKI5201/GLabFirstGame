@@ -49,6 +49,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -133,6 +136,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -217,6 +223,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -301,6 +310,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -385,6 +397,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -464,6 +479,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7035789270281987898}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -487,7 +503,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.28}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -498,12 +515,11 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 3.31, y: 2.45}
   m_EdgeRadius: 0
 --- !u!50 &6139974580360656746
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -514,8 +530,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -540,34 +556,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449ebfaab24753844aa8fa10c546a673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _beast: 3
+  _rigidbody2D: {fileID: 6139974580360656746}
+  _boxCollider2D: {fileID: 6118147795551929335}
+  _animator: {fileID: 2900664036183304068}
+  _stunAnimationObject: {fileID: 7877947970571165175}
+  _meatIcon: {fileID: 8584512801645483830}
+  _enemyType: 3
   _maxHp: 4
-  _currentHp: 0
-  _speed: 3
-  _chaseSpeed: 6.6
-  _currentSpeed: 0
-  _attack: 2
+  _attackPoint: 2
   _jumpPower: 5
-  _state: 0
-  _anim: {fileID: 2900664036183304068}
-  _jumpOver: 0
-  _goDown: 0
-  _canChase: 0
-  _canDamage: 0
-  _ground:
-    _mask:
+  _normalSpeed: 3
+  _speedWhenChasingPlayer: 6.6
+  _canJumpOver: 0
+  _canJumpDown: 0
+  _canChasePlayer: 0
+  _canReceiveDamage: 1
+  _raycastData:
+    RaycastGroundMask:
       serializedVersion: 2
       m_Bits: 1152
-    _sideMask:
+    RaycastSideMask:
       serializedVersion: 2
       m_Bits: 384
-    _sideRayPos: {x: 0, y: 0}
-    _rightRayPos: {x: 1.655, y: 0}
-    _leftRayPos: {x: -1.655, y: 0}
-    _rayLong: 1.425
-    _sideRayLong: 1.755
-    _jumpRayLong: 1.855
-  _dir: 1
+    RightRayOriginOffset: {x: 1.655, y: 0}
+    LeftRayOriginOffset: {x: -1.655, y: 0}
+    GroundCheckRayDistance: 1.425
+    SideCheckRayDistance: 1.755
+    MaxJumpDistanceFromWall: 1.855
+  _currentHp: 0
+  _currentSpeed: 0
+  _currentDirection: 0
+  _currentState: 0
   _alwaysDebug: 0
 --- !u!1 &7345540008336704695
 GameObject:
@@ -618,6 +637,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -702,6 +724,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -846,6 +871,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

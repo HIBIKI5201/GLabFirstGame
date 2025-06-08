@@ -1,306 +1,511 @@
-using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// 敵のクラス
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] EnemyType _beast; // 敵の種類
-    [SerializeField] Animator _anim;
+    // 常数・読み取り専用・静的な変数などはクラス共通なので、クラス構成の頭に入れておく
+    private const string k_playerTag = "Player";
+    private static readonly int s_dizzyParameter = Animator.StringToHash("Dizzy");
+    private static readonly int s_gallopParameter = Animator.StringToHash("Gallop");
+    private static PlayerController s_playerController;
+    private static Transform s_playerTransform;
+    private static PhysicsMaterial2D s_physicsMaterial2D;
 
-    [Header("基本設定")] 
-    [SerializeField] int _maxHp; // 最大HP
-    [SerializeField] int _currentHp; // 現在のHP
-    [SerializeField] int _attack; // 攻撃力
-    [SerializeField] float _jumpPower; // ジャンプ力
+    [SerializeField, ReadOnly]
+    private Rigidbody2D _rigidbody2D;
 
-    [Header("移動スピード")] 
-    public float _speed; // 通常時の移動スピード
-    public float _chaseSpeed; // プレイヤーを発見したときの移動スピード
-    public float _currentSpeed; // 現在の移動スピード
+    [SerializeField, ReadOnly]
+    private BoxCollider2D _boxCollider2D;
 
-    [SerializeField] EnemyStateType _state; // 状態
+    [Header("関連コンポーネント・オブジェクト")]
+    [SerializeField, Required, FormerlySerializedAs("_anim")]
+    private Animator _animator;
+
+    [SerializeField]
+    private GameObject _stunAnimationObject;
+
+    [SerializeField]
+    private GameObject _meatIcon;
+
+    [Header("基本設定")]
+    [SerializeField, FormerlySerializedAs("_beast")]
+    private EnemyType _enemyType;
+
+    [SerializeField]
+    private int _maxHp;
+
+    [SerializeField, FormerlySerializedAs("_attack")]
+    private int _attackPoint;
+
+    [SerializeField]
+    private float _jumpPower;
+
+    [Header("移動スピード")]
+    [SerializeField, FormerlySerializedAs("_speed")]
+    private float _normalSpeed;
+
+    [SerializeField, FormerlySerializedAs("_chaseSpeed")]
+    private float _speedWhenChasingPlayer;
+
+    [Header("移動能力")]
+    [SerializeField, FormerlySerializedAs("_jumpOver")]
+    private bool _canJumpOver;
+
+    [SerializeField, FormerlySerializedAs("_goDown")]
+    private bool _canJumpDown;
+
+    [SerializeField, FormerlySerializedAs("_canChase")]
+    private bool _canChasePlayer;
+
+    [SerializeField, FormerlySerializedAs("_canDamage")]
+    private bool _canReceiveDamage;
+
+    [Header("Raycast 判定設定")]
+    [SerializeField, FormerlySerializedAs("_ground")]
+    private GroundedRay _raycastData;
+
+    [Header("現在の数値（インスペクタに編集しても効果なし）")]
+    [SerializeField]
+    private int _currentHp; // 現在のHP
+
+    [SerializeField]
+    private float _currentSpeed;
+
+    [SerializeField]
+    private DirectionType _currentDirection;
+
+    [SerializeField]
+    private EnemyStateType _currentState;
+
+    public float CurrentSpeed
+    {
+        get => _currentSpeed;
+    }
 
     public EnemyStateType State
     {
-        get => _state;
-        set
-        {
-            if (value == _state) return; // ステートが変わらなければ処理を行わない
-            _state = value;
-        }
+        get => _currentState;
     }
 
-    [SerializeField] bool _jumpOver; // 段差を乗り越えられるか
-    [SerializeField] bool _goDown;
-    [SerializeField] bool _canChase;
-    [SerializeField] bool _canDamage;
-    [SerializeField] GroundedRay _ground;
-    [SerializeField] DirectionType _dir; // どちらの方向に動くか
-    [SerializeField] bool _alwaysDebug;
-
-    Rigidbody2D _rb;
-    Transform _playerTra;
-    Transform _modelT;
-    Vector2 _modelScale;
-    SpriteRenderer[] _spriteRenderers;
-    BoxCollider2D _boxCollider;
-    PlayerController _player;
-    
     private EnemyDamageHandler _damageHandler;
     private EnemyAttackHandler _attackHandler;
-    
-    GameObject _stunAnimeObj; // スタンエフェクトのオブジェクト
-    Vector2 _bottlePosi;
-    
-    ContactPoint2D[] V;
 
-    // コルーチン
-    Coroutine _reactionCoro = null; // アイテム効果
-    Coroutine _coroutine = null;
+    private Coroutine _itemReactionCoroutine = null;
+    private Coroutine _slowDownCoroutine = null;
 
-    // 肉アイテム関連
-    GameObject _meatIcon;
-    Vector2 _meatPosi;
-    float _meatTimer;
-    float _meatTime;
-    bool _meatEat; // 肉アイテムの効果中
+    private SpriteRenderer[] _spriteRenderers;
+    private Transform _modelTransform;
 
-    bool _canMoveSE;
-    bool _canReset;
+    private Vector2 _modelScale;
+    private Vector2 _pointToEscapeFrom;
+    private Vector2 _meatPosition;
+    private float _meatEatingStartTime;
+    private float _meatEatingTargetDuration;
+    private bool _isEatingMeat;
+    private bool _canPlayMoveSE;
+    private float _lastAttackingTime;
 
-    float _attackedTimer; // 攻撃クールタイムを管理するための変数
-
-    #region 初期化処理
+    #region ライフサイクル関数
+    private void OnValidate()
+    {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+    }
 
     private void Awake()
     {
-        _canReset = true;
-        ResetStatus();
-        CacheComponents();
-        
-        _damageHandler = new EnemyDamageHandler(_currentHp, _canDamage, _spriteRenderers, this);
-        _attackHandler = new EnemyAttackHandler(_attack, ref _attackedTimer);
+        // コンポーネントと数値を初期化する
+        Initialize();
+
+        // 地面の高さに自身の位置を合わせる
+        MatchPositionToGround();
+
+        // 少し時間をずらして SE 再生を有効化する
+        StartCoroutine(DelayEnableSound(0.2f));
+
+        void Initialize()
+        {
+            if (s_playerController == null || s_playerTransform == null)
+            {
+                s_playerController = FindAnyObjectByType<PlayerController>();
+                s_playerTransform = s_playerController.transform;
+            }
+
+            if (s_physicsMaterial2D == null)
+            {
+                s_physicsMaterial2D = new PhysicsMaterial2D()
+                {
+                    friction = 0,
+                    bounciness = 0
+                };
+            }
+            _boxCollider2D.sharedMaterial = s_physicsMaterial2D;
+
+            _modelTransform = _animator.transform;
+            _modelScale = _modelTransform.localScale;
+            _modelScale.x = Mathf.Abs(_modelScale.x);
+
+            _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+
+            _currentHp = _maxHp;
+            _currentSpeed = _normalSpeed;
+            _currentState = EnemyStateType.Normal;
+
+            _damageHandler = new EnemyDamageHandler(_maxHp, _canReceiveDamage, _spriteRenderers, this);
+            _attackHandler = new EnemyAttackHandler(_attackPoint, ref _lastAttackingTime);
+        }
+
+        void MatchPositionToGround()
+        {
+            var hit = Physics2D.BoxCast(transform.position, _boxCollider2D.size, 0, Vector2.down, 1000, _raycastData.RaycastGroundMask);
+            if (hit && hit.collider)
+            {
+                Vector2 newPosition = transform.position;
+                newPosition.y = hit.point.y + _boxCollider2D.size.y / 2;
+                transform.position = newPosition;
+            }
+        }
+
+        IEnumerator DelayEnableSound(float delayDuration)
+        {
+            _canPlayMoveSE = false;
+            yield return new WaitForSeconds(delayDuration);
+            _canPlayMoveSE = true;
+        }
     }
 
     private void OnEnable()
     {
-        CacheComponents();
+        _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 
-        if (_canReset)
+        // SE を鳴らす
+        if (_canPlayMoveSE)
         {
-            ResetStatus();
-            MatchGround();
-            _canReset = false;
-        }
-
-        if (_canMoveSE)
-        {
-            AudioManager.Instance.PlaySE(_beast switch
+            AudioManager.Instance.PlaySE(_enemyType switch
             {
                 EnemyType.StrayDog => "strayDog",
                 EnemyType.Wolf_Normal or EnemyType.Wolf_Gray => "wolf",
                 EnemyType.Bear => "bare",
                 _ => "strayDog"
             });
-            _canMoveSE = false;
+            _canPlayMoveSE = false;
         }
     }
 
-    /// <summary>
-    /// ステータスの初期化
-    /// </summary>
-    private void ResetStatus()
+    private void OnDisable()
     {
-        PhysicsMaterial2D physicsMaterial2D = new()
+        _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+        _rigidbody2D.linearVelocity = Vector2.zero;
+    }
+
+    private void Update()
+    {
+        // 移動
+        var modelLocalScale = _modelScale;
+        modelLocalScale.x *= _currentDirection switch
         {
-            friction = 0,
-            bounciness = 0,
+            DirectionType.Right => -1,
+            DirectionType.Left => 1,
+            _ => Mathf.Sign(_modelTransform.localScale.x)
         };
-        GetComponent<Collider2D>().sharedMaterial = physicsMaterial2D;
+        _modelTransform.localScale = modelLocalScale;
 
-        _currentHp = _maxHp;
-        _currentSpeed = _speed;
-        _state = EnemyStateType.Normal;
-        _canDamage = true;
-
-        StartCoroutine(WaitAudio());
-
-        IEnumerator WaitAudio()
+        if (_stunAnimationObject)
         {
-            _canMoveSE = false;
-            yield return new WaitForSeconds(0.2f); // 開始後0.2秒は歩行時のSEを再生しない
-            _canMoveSE = true;
+            _stunAnimationObject.gameObject.SetActive(_currentState == EnemyStateType.Faint);
+        }
+
+        // 状態に応じた処理
+        switch (_currentState)
+        {
+            case EnemyStateType.Faint:
+                UpdateFaintState();
+                break;
+
+            case EnemyStateType.EatingMeat:
+                UpdateEatingMeatState();
+                break;
+
+            case EnemyStateType.Escape:
+                UpdateEscapeState();
+                break;
+
+            case EnemyStateType.ChasingPlayer:
+                UpdateChasingPlayerState();
+                break;
+
+            case EnemyStateType.Normal:
+            default:
+                TryChangeDirection();
+                UpdateHorizontalMovement();
+                SearchForPlayer();
+                _animator.SetBool(s_gallopParameter, false);
+                _animator.SetBool(s_dizzyParameter, false);
+                break;
+        }
+
+        // ゲームオーバー、もしくはゲームクリア時には敵を非表示にする
+        if (GameManager.Instance.CurrentState == GameStateType.GameOver
+            || GameManager.Instance.CurrentState == GameStateType.StageClear)
+        {
+            SetEnemyEnabledState(false);
+            gameObject.SetActive(false);
         }
     }
 
-    /// <summary>
-    /// コンポーネントの参照を取得する
-    /// </summary>
-    private void CacheComponents()
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        // _stunAnimeObj = GetComponentInChildren<StunAnime>().gameObject; // TODO
-        if (TryGetComponent(out _rb)) _rb.isKinematic = false;
-        if (_boxCollider == null) _boxCollider = GetComponent<BoxCollider2D>();
-        _meatIcon = transform.GetChild(1).gameObject;
-        
-        if (_modelT == null) _modelT = GetComponentInChildren<Animator>().transform;
-        _modelScale = _modelT.localScale;
-        _modelScale.x = MathF.Abs(_modelScale.x);
-
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-
-        if (_playerTra == null) _playerTra = FindAnyObjectByType<PlayerController>().transform;
-    }
-
-    /// <summary>
-    /// 地面の高さに自身の位置を合わせる
-    /// </summary>
-    private void MatchGround()
-    {
-        RaycastHit2D hit = Physics2D.BoxCast(transform.position, _boxCollider.size, 0, Vector2.down, 1000, _ground._mask);
-        if (hit)
+        switch (_currentState)
         {
-            Vector2 pos = transform.position;
-            pos.y = hit.point.y + _boxCollider.size.y / 2;
-            transform.position = pos;
+            case EnemyStateType.Faint:
+            case EnemyStateType.EatingMeat:
+            case EnemyStateType.Escape:
+            case EnemyStateType.ChasingPlayer:
+                return;
+        }
+
+        for (int i = 0; i < collision.contacts.Length; i++)
+        {
+            CollisionReturn(collision.GetContact(i).normal, collision.GetContact(i).point);
+        }
+
+        // TODO: What is this?
+        void CollisionReturn(Vector2 normal, Vector2 point)
+        {
+            float x = point.x - transform.position.x;
+            bool isLeft = x < 0;
+            bool isTrue = _currentDirection switch
+            {
+                DirectionType.Right => !isLeft,
+                DirectionType.Left => isLeft,
+                _ => false
+            };
+            if (Mathf.Abs(normal.y) <= 0.2f && isTrue)
+            {
+                _currentDirection = _currentDirection == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
+            }
         }
     }
 
     #endregion
 
-    private void Update()
+    /// <summary>
+    /// エネミーコンポネントを有効化・無効化する
+    /// </summary>
+    public void SetEnemyEnabledState(bool shouldBeEnabled)
     {
-        _rb.isKinematic = false;
+        this.enabled = shouldBeEnabled;
+    }
 
-        // 移動
-        var vec = _modelScale;
-        vec.x *= _dir switch { DirectionType.Right => -1, DirectionType.Left => 1, _ => Mathf.Sign(_modelT.localScale.x) };
-        _modelT.localScale = vec;
+    /// <summary>
+    /// スピードを上書きする
+    /// </summary>
+    public void SetCurrentSpeed(float newCurrentSpeed)
+    {
+        _currentSpeed = newCurrentSpeed;
+    }
 
-        // _stunAnimeObj.SetActive(State == EnemyStateType.Faint); // TODO: 素材を確認
+    /// <summary>
+    /// HPを減らすメソッド
+    /// </summary>
+    /// <param name="negativeValue">ダメージを受ける場合は負の数を渡す</param>
+    public void LifeFluctuation(int negativeValue)
+    {
+        _currentHp = _damageHandler.LifeFluctuation(negativeValue);
+    }
 
-        // 状態に応じた処理
-        switch (State)
+    /// <summary>
+    /// 死亡時自身を破棄する
+    /// </summary>
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    // TODO: Rename to "ApplyStoneItemEffect"?
+    /// <summary>
+    /// 石の効果を与える
+    /// </summary>
+    /// <param name="stunTime"></param>
+    public void ReactionStone(float stunTime)
+    {
+        SetStunStateForDuration(stunTime);
+    }
+
+    // TODO: Rename to "ApplyBottleItemEffect"?
+    /// <summary>
+    /// 空き缶の効果を与える
+    /// </summary>
+    public void ReactionBottle(Vector3 bottlePosition, float effectTime)
+    {
+        SetEscapeStateForDuration(bottlePosition, effectTime);
+    }
+
+    // TODO: Rename to "ApplyMeatItemEffect"?
+    /// <summary>
+    /// 肉の効果を与える
+    /// </summary>
+    public void ReactionMeat(Vector3 meatPosition, float effectTime)
+    {
+        if (_currentState == EnemyStateType.EatingMeat || _currentState == EnemyStateType.Faint)
         {
-            case EnemyStateType.Faint:
-                UpdateStone();
-                break;
-
-            case EnemyStateType.Bite:
-                UpdateMeat();
-                break;
-
-            case EnemyStateType.Escape:
-                UpdateBottle();
-                break;
-
-            case EnemyStateType.Chase:
-                UpdateChase();
-                break;
-
-            case EnemyStateType.Normal:
-            default:
-                ChangeDirection();
-                UpdateHorizontalMovement();
-                Search();
-                _anim.SetBool("Gallop", false);
-                _anim.SetBool("Dizzy", false);
-                break;
+            return;
         }
 
-        if (GameManager.Instance.CurrentState == GameStateType.GameOver || GameManager.Instance.CurrentState == GameStateType.StageClear)
+        _currentState = EnemyStateType.EatingMeat;
+        _isEatingMeat = false;
+        _meatPosition = meatPosition;
+        _meatEatingStartTime = Time.time;
+        _meatEatingTargetDuration = effectTime;
+    }
+
+    // TODO: Rename to "ApplySwampItemEffect"?
+    /// <summary>
+    /// 沼の効果を与える
+    /// </summary>
+    public void SlowDownScale(float speedSlowDownScale, float duration)
+    {
+        SetSlowDownStateForDuration(speedSlowDownScale, duration);
+    }
+
+    /// <summary>
+    /// ツタの効果を与える
+    /// </summary>
+    public void ApplyIvyItemEffect(float stunTime)
+    {
+        // SE を再生する
+        AudioManager.Instance.PlaySE("damage_enemy");
+
+        // エネミーをスタンする
+        SetStunStateForDuration(stunTime);
+    }
+
+    #region 効果処理
+
+    /// <summary>
+    /// 一定時間、スタン効果を与える
+    /// </summary>
+    private void SetStunStateForDuration(float stunTime)
+    {
+        if (_currentState == EnemyStateType.Escape || _currentState == EnemyStateType.Faint)
         {
-            // ゲームオーバー、もしくはゲームクリア時には敵を非表示にする
-            enabled = false;
-            gameObject.SetActive(false);
+            return;
+        }
+
+        if (_itemReactionCoroutine != null)
+        {
+            StopCoroutine(_itemReactionCoroutine);
+        }
+
+        _rigidbody2D.linearVelocity = Vector2.zero;
+        _itemReactionCoroutine = StartCoroutine(StunCoroutine(stunTime));
+
+        IEnumerator StunCoroutine(float stunTime)
+        {
+            _currentState = EnemyStateType.Faint;
+            yield return new WaitForSeconds(stunTime);
+            _currentState = EnemyStateType.Normal;
         }
     }
 
     /// <summary>
-    /// 方向転換のためのメソッド
+    /// ポイントを設定し、一定時間このポイントから逃げる状態に設定
     /// </summary>
-    private void ChangeDirection()
+    private void SetEscapeStateForDuration(Vector3 pointToEscapeFrom, float effectTime)
     {
-        if (IsFrontGrounded(out bool isRightDir))
+        if (_currentState == EnemyStateType.Faint)
         {
-            // もし目の前が崖なら移動方向を反転させる
-            _dir = isRightDir ? DirectionType.Right : DirectionType.Left;
+            return;
         }
 
-        if (IsSideTouch(out bool playerHit))
+        if (_itemReactionCoroutine != null)
         {
-            // もし壁などに触れたら移動方向を反転させる
-            _dir = _dir == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
-            if (playerHit)
-            {
-                AttackToPlayer(); // プレイヤーに当たっていたら攻撃を行う
-            }
+            StopCoroutine(_itemReactionCoroutine);
+        }
+
+        _itemReactionCoroutine = StartCoroutine(SetEscapeStateCoroutine(pointToEscapeFrom, effectTime));
+
+        IEnumerator SetEscapeStateCoroutine(Vector3 pointToEscapeFrom, float effectTime)
+        {
+            _currentState = EnemyStateType.Escape;
+            _pointToEscapeFrom = pointToEscapeFrom;
+            yield return new WaitForSeconds(effectTime);
+            _currentState = EnemyStateType.Normal;
         }
     }
-    
+
     /// <summary>
-    /// プレイヤー追跡状態の処理
+    /// 一定時間、スピードを遅くする状態に設定
     /// </summary>
-    private void UpdateChase()
+    private void SetSlowDownStateForDuration(float speedSlowDownScale, float duration)
     {
-        float x = _playerTra.position.x - transform.position.x;
-        float y = _playerTra.position.y - transform.position.y;
-        _dir = x <= 0 ? DirectionType.Left : DirectionType.Right;
-        if (Mathf.Abs(x) <= 0.1f)
+        if (_slowDownCoroutine != null)
         {
-            _dir = DirectionType.None;
+            StopCoroutine(_slowDownCoroutine);
         }
 
-        if (!_goDown)
+        _slowDownCoroutine = StartCoroutine(SlowDown(speedSlowDownScale, duration));
+
+        IEnumerator SlowDown(float speedSlowDownScale, float duration)
         {
-            if (IsFrontGrounded(out bool right))
+            float startTime = Time.time;
+
+            _currentSpeed = _normalSpeed * speedSlowDownScale;
+            while (Time.time <= startTime + duration)
             {
-                switch (_dir)
-                {
-                    case DirectionType.Left:
-                        if (right)
-                            _dir = DirectionType.None;
-                        break;
-                    case DirectionType.Right:
-                        if (!right)
-                            _dir = DirectionType.None;
-                        break;
-                }
+                yield return new WaitForSeconds(1);
+                LifeFluctuation(-1);
             }
-        }
 
-        if (IsJump() && IsGrounded() && _jumpOver)
-        {
-            Jump();
+            _currentSpeed = _normalSpeed;
         }
-
-        if (Time.time >= _attackedTimer + 0.1f)
-        {
-            if (IsSideTouch(out bool playerHit))
-            {
-                if (playerHit)
-                {
-                    AttackToPlayer();
-                }
-            }
-        }
-
-        UpdateHorizontalMovement();
-        Search();
     }
+
+    #endregion
+
+    #region 移動と攻撃処理
 
     /// <summary>
     /// 進行方向を更新する
     /// </summary>
     private void UpdateHorizontalMovement()
     {
-        Vector2 velo = _rb.linearVelocity;
-        velo.x = _currentSpeed * _dir switch { DirectionType.Right => 1, DirectionType.Left => -1, _ => 0 };
-        _rb.linearVelocity = velo;
+        Vector2 velocity = _rigidbody2D.linearVelocity;
+        velocity.x = _currentSpeed * _currentDirection switch
+        {
+            DirectionType.Right => 1,
+            DirectionType.Left => -1,
+            _ => 0
+        };
+        _rigidbody2D.linearVelocity = velocity;
+    }
+
+    /// <summary>
+    /// 距離を測って、方向転換の必要があれば転換する
+    /// </summary>
+    private void TryChangeDirection()
+    {
+        if (IsFrontGrounded(out bool isRightDirectionGrounded))
+        {
+            // もし目の前が崖なら移動方向を反転させる
+            _currentDirection = isRightDirectionGrounded ? DirectionType.Right : DirectionType.Left;
+        }
+
+        if (IsTouchedFromSide(out bool playerHit))
+        {
+            // もし壁などに触れたら移動方向を反転させる
+            _currentDirection = _currentDirection == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
+            if (playerHit)
+            {
+                // プレイヤーに当たっていたら攻撃を行う
+                AttackPlayer();
+            }
+        }
     }
 
     /// <summary>
@@ -308,332 +513,298 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        Vector2 velo = _rb.linearVelocity;
-        velo.y = _jumpPower;
-        _rb.linearVelocity = velo;
+        Vector2 velocity = _rigidbody2D.linearVelocity;
+        velocity.y = _jumpPower;
+        _rigidbody2D.linearVelocity = velocity;
     }
 
     /// <summary>
     /// プレイヤーを探す処理
     /// </summary>
-    private void Search()
+    private void SearchForPlayer()
     {
-        if (!_canChase) return;
+        if (!_canChasePlayer)
+        {
+            return;
+        }
 
-        RaycastHit2D hit = Physics2D.Linecast(transform.position, _playerTra.position, _ground._mask);
-        State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
+        var hit = Physics2D.Linecast(transform.position, s_playerTransform.position, _raycastData.RaycastGroundMask);
+        _currentState = hit ? EnemyStateType.Normal : EnemyStateType.ChasingPlayer;
     }
 
     /// <summary>
     /// プレイヤーへ攻撃する
     /// </summary>
-    private void AttackToPlayer() => _attackHandler.Attack();
-
-    private bool IsFrontGrounded(out bool isRightDir)
+    private void AttackPlayer()
     {
-        Vector2 rRayPos = transform.position + (Vector3)_ground._rightRayPos;
-        Vector2 lRayPos = transform.position + (Vector3)_ground._leftRayPos;
-        bool isHitR = Physics2D.Raycast(rRayPos, Vector2.down, _ground._rayLong, _ground._mask);
-        bool isHitL = Physics2D.Raycast(lRayPos, Vector2.down, _ground._rayLong, _ground._mask);
-        isRightDir = isHitR;
+        _attackHandler.Attack(s_playerController);
+    }
+
+    #endregion
+
+    #region 判定処理
+
+    /// <summary>
+    /// 前の方向が接地しているか？
+    /// </summary>
+    private bool IsFrontGrounded(out bool isRightDirectionGrounded)
+    {
+        Vector2 rRayPos = transform.position + (Vector3)_raycastData.RightRayOriginOffset;
+        Vector2 lRayPos = transform.position + (Vector3)_raycastData.LeftRayOriginOffset;
+        bool isHitR = Physics2D.Raycast(rRayPos, Vector2.down, _raycastData.GroundCheckRayDistance, _raycastData.RaycastGroundMask);
+        bool isHitL = Physics2D.Raycast(lRayPos, Vector2.down, _raycastData.GroundCheckRayDistance, _raycastData.RaycastGroundMask);
+        isRightDirectionGrounded = isHitR;
         return isHitR ^ isHitL;
     }
 
     /// <summary>
-    /// 接地判定
+    /// 接地しているか？
     /// </summary>
-    /// <returns></returns>
     private bool IsGrounded()
     {
-        return Physics2D.BoxCast(transform.position, _boxCollider.size - new Vector2(0.1f, 0.1f),
-            0, Vector2.down, 0.2f, _ground._mask);
+        return Physics2D.BoxCast(transform.position, _boxCollider2D.size - new Vector2(0.1f, 0.1f),
+            0, Vector2.down, 0.2f, _raycastData.RaycastGroundMask);
     }
 
     /// <summary>
-    /// 左右の判定
+    /// 左右いずれかの側面から他の物体に触れられているか？
     /// </summary>
-    private bool IsSideTouch(out bool playerHit)
+    private bool IsTouchedFromSide(out bool isPlayerHit)
     {
-        Vector2 dir = _dir switch
+        Vector2 rayDirection = _currentDirection switch
         {
-            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right => Vector2.right,
+            _ => Vector2.zero
         };
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, _ground._sideRayLong, _ground._sideMask);
-        playerHit = false;
-        if (hit)
-            playerHit = hit.transform.CompareTag("Player");
+        var hit = Physics2D.Raycast(transform.position, rayDirection, _raycastData.SideCheckRayDistance, _raycastData.RaycastSideMask);
+        isPlayerHit = false;
+        if (hit && hit.collider)
+        {
+            isPlayerHit = hit.collider.CompareTag(k_playerTag);
+        }
         return hit;
     }
 
-    private bool IsJump()
+    /// <summary>
+    /// 壁との水平距離が短くて乗り越えられるか？
+    /// </summary>
+    private bool IsCloseEnoughToJumpOnWall()
     {
-        Vector2 dir = _dir switch
+        Vector2 direction = _currentDirection switch
         {
-            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right => Vector2.right,
+            _ => Vector2.zero
         };
-        return Physics2D.Raycast(transform.position, dir, _ground._jumpRayLong, _ground._mask);
-    }
-
-    #region 石
-
-    private void UpdateStone()
-    {
-        Vector2 velo = _rb.linearVelocity;
-        velo.x = 0;
-        _rb.linearVelocity = velo;
-        _anim.SetBool("Dizzy", true);
-    }
-    
-    /// <summary>
-    /// 石の効果
-    /// </summary>
-    public void ReactionStone(float stunTime)
-    {
-        if (State == EnemyStateType.Escape || State == EnemyStateType.Faint)
-            return;
-
-        if (_reactionCoro != null)
-            StopCoroutine(_reactionCoro);
-        _rb.linearVelocity = Vector2.zero;
-        _reactionCoro = StartCoroutine(Stun(stunTime));
-    }
-  
-    /// <summary>
-    /// スタンの効果時間を管理するコルーチン
-    /// </summary>
-    private IEnumerator Stun(float stunTime)
-    {
-        State = EnemyStateType.Faint;
-        yield return new WaitForSeconds(stunTime);
-        State = EnemyStateType.Normal;
+        return Physics2D.Raycast(transform.position, direction, _raycastData.MaxJumpDistanceFromWall, _raycastData.RaycastGroundMask);
     }
 
     #endregion
 
-    #region 空き瓶
+    #region 状態更新
 
-    /// <summary>
-    /// 空き瓶の効果の処理
-    /// </summary>
-    private void UpdateBottle()
+    private void UpdateEscapeState()
     {
-        float x = _bottlePosi.x - transform.position.x;
-        _dir = x >= 0 ? DirectionType.Left : DirectionType.Right; // プレイヤーとは逆の方向に逃げ出す
-        _anim.SetBool("Gallop", true); // 逃げ出すアニメーションを再生する
+        float deltaPositionX = _pointToEscapeFrom.x - transform.position.x;
+
+        // プレイヤーとは逆の方向に逃げ出す
+        _currentDirection = deltaPositionX >= 0 ? DirectionType.Left : DirectionType.Right;
+
+        // 逃げ出すアニメーションを再生する
+        _animator.SetBool(s_gallopParameter, true);
 
         UpdateHorizontalMovement();
     }
-    
-    public void ReactionBottle(Vector3 bottlePosi, float effectTime)
-    {
-        if (State == EnemyStateType.Faint) return;
 
-        if (_reactionCoro != null)
+    private void UpdateEatingMeatState()
+    {
+        // 肉がある方へ方向をセットする
+        var deltaPositionX = _meatPosition.x - transform.position.x;
+        _currentDirection = deltaPositionX <= 0 ? DirectionType.Left : DirectionType.Right;
+
+        // もし肉に近づいたら...
+        if (Mathf.Abs(deltaPositionX) <= 0.2f)
         {
-            // 再生中のコルーチンがあれば止める
-            StopCoroutine(_reactionCoro);
-        }
-        
-        _reactionCoro = StartCoroutine(Bottle(bottlePosi, effectTime));
-    }
-    
-    /// <summary>
-    /// 空き瓶の効果持続時間を管理するコルーチン
-    /// </summary>
-    private IEnumerator Bottle(Vector3 bottlePosi, float effectTime)
-    {
-        State = EnemyStateType.Escape;
-        _bottlePosi = bottlePosi;
-        yield return new WaitForSeconds(effectTime);
-        State = EnemyStateType.Normal;
-    }
+            // ...エネミーを止めて
+            _currentDirection = DirectionType.None;
 
-    #endregion
-
-    #region 肉
-
-    /// <summary>
-    /// 肉の効果の処理
-    /// </summary>
-    private void UpdateMeat()
-    {
-        _meatIcon.SetActive(true);
-        float x = _meatPosi.x - transform.position.x;
-        _dir = x <= 0 ? DirectionType.Left : DirectionType.Right; // 肉がある方へ方向をセットする
-
-        if (Mathf.Abs(x) <= 0.2f)
-        {
-            _dir = DirectionType.None;
-            if (!_meatEat)
+            // ...肉アイコンをつけて
+            if (_meatIcon)
             {
-                _meatTimer = Time.time;
+                _meatIcon.SetActive(true);
             }
-            _meatEat = true;
+
+            // ...食う終了時間をセットして
+            if (!_isEatingMeat)
+            {
+                _meatEatingStartTime = Time.time;
+            }
+
+            // ...食い始める
+            _isEatingMeat = true;
         }
 
-        if (Time.time >= _meatTimer + _meatTime)
+        // もし食い終わったら、状態を戻す
+        if (Time.time >= _meatEatingStartTime + _meatEatingTargetDuration)
         {
-            State = EnemyStateType.Normal; // 状態を戻す
-            _meatIcon.SetActive(false);
-            _dir = Mathf.Sign(_modelT.localScale.x) switch
+            _currentState = EnemyStateType.Normal;
+            if (_meatIcon)
             {
-                1 => DirectionType.Left, -1 => DirectionType.Right, _ => DirectionType.None
+                _meatIcon.SetActive(false);
+            }
+            _currentDirection = Mathf.Sign(_modelTransform.localScale.x) switch
+            {
+                1 => DirectionType.Left,
+                -1 => DirectionType.Right,
+                _ => DirectionType.None
             };
         }
 
-        if (IsJump() && IsGrounded() && _jumpOver)
+        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOver)
         {
             Jump();
         }
 
         UpdateHorizontalMovement();
     }
-    
-    public void ReactionMeat(Vector3 meatPosi, float effectTime)
-    {
-        if (State == EnemyStateType.Bite || State == EnemyStateType.Faint)
-            return;
 
-        State = EnemyStateType.Bite;
-        _meatEat = false;
-        _meatPosi = meatPosi;
-        _meatTimer = Time.time;
-        _meatTime = effectTime;
+    private void UpdateChasingPlayerState()
+    {
+        float x = s_playerTransform.position.x - transform.position.x;
+        float y = s_playerTransform.position.y - transform.position.y;
+        _currentDirection = x <= 0 ? DirectionType.Left : DirectionType.Right;
+        if (Mathf.Abs(x) <= 0.1f)
+        {
+            _currentDirection = DirectionType.None;
+        }
+
+        if (!_canJumpDown)
+        {
+            if (IsFrontGrounded(out bool isRightDirectionGrounded))
+            {
+                switch (_currentDirection)
+                {
+                    case DirectionType.Left:
+                        if (isRightDirectionGrounded)
+                        {
+                            _currentDirection = DirectionType.None;
+                        }
+                        break;
+                    case DirectionType.Right:
+                        if (!isRightDirectionGrounded)
+                        {
+                            _currentDirection = DirectionType.None;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOver)
+        {
+            Jump();
+        }
+
+        if (Time.time >= _lastAttackingTime + 0.1f)
+        {
+            if (IsTouchedFromSide(out bool isPlayerHit))
+            {
+                if (isPlayerHit)
+                {
+                    AttackPlayer();
+                }
+            }
+        }
+
+        UpdateHorizontalMovement();
+        SearchForPlayer();
+    }
+
+    private void UpdateFaintState()
+    {
+        var velocity = _rigidbody2D.linearVelocity;
+        velocity.x = 0;
+        _rigidbody2D.linearVelocity = velocity;
+        _animator.SetBool(s_dizzyParameter, true);
     }
 
     #endregion
-    
-    #region 減速（沼）
 
-    public void SlowDownScale(float scale, float time)
-    {
-        if (_coroutine != null)
-        {
-            // 再生中のコルーチンがあったら止める
-            StopCoroutine(_coroutine);
-        }
-
-        _coroutine = StartCoroutine(SlowDown(scale, time));
-    }
-    
-    private IEnumerator SlowDown(float scale, float time)
-    {
-        float startTime = Time.time;
-
-        _currentSpeed = _speed * scale;
-        while (Time.time <= startTime + time)
-        {
-            yield return new WaitForSeconds(1);
-            LifeFluctuation(-1);
-        }
-
-        _currentSpeed = _speed;
-    }
-
-    #endregion
-    
-    /// <summary>
-    /// 何かに衝突しているときの処理
-    /// </summary>
-    private void OnCollisionStay2D(Collision2D col)
-    {
-        switch (State)
-        {
-            case EnemyStateType.Faint:
-            case EnemyStateType.Bite:
-            case EnemyStateType.Escape:
-            case EnemyStateType.Chase:
-                return;
-        }
-
-        for (int i = 0; i < col.contacts.Length; i++)
-        {
-            CollisionReturn(col.GetContact(i).normal, col.GetContact(i).point);
-        }
-        
-    }
-    
-    private void CollisionReturn(Vector2 normal, Vector2 point)
-    {
-        float x = point.x - transform.position.x;
-        bool isLeft = x < 0;
-        bool isTrue = _dir switch { DirectionType.Right => !isLeft, DirectionType.Left => isLeft, _ => false };
-        if (Mathf.Abs(normal.y) <= 0.2f && isTrue)
-        {
-            _dir = _dir == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
-        }
-    }
-    
-    /// <summary>
-    /// HPを減らすメソッド
-    /// </summary>
-    /// <param name="value">ダメージを受ける場合は負の数を渡す</param>
-    public void LifeFluctuation(int value) => _damageHandler.LifeFluctuation(value);
-
-    /// <summary>
-    /// 死亡時自身を破棄する
-    /// </summary>
-    public void Die() => Destroy(gameObject);
-    
-    private void OnDisable()
-    {
-        _rb.isKinematic = true;
-        _rb.linearVelocity = Vector2.zero;
-    }
-
+#if UNITY_EDITOR
     #region ギズモの描画処理
+
+    [Header("デバッグのギズモを描くか")]
+    [SerializeField]
+    private bool _alwaysDebug;
 
     private void OnDrawGizmos()
     {
-        if (_alwaysDebug) DebugRendering();
+        if (_alwaysDebug)
+        {
+            DebugRendering();
+        }
     }
 
     private void OnDrawGizmosSelected()
     {
-        if (!_alwaysDebug) DebugRendering();
+        if (!_alwaysDebug)
+        {
+            DebugRendering();
+        }
     }
 
     void DebugRendering()
     {
+        var cacheColor = Gizmos.color;
         Gizmos.color = Color.yellow;
         Vector3 dirPos = transform.position + Vector3.up;
-        Gizmos.DrawLine(dirPos, dirPos + (_dir == DirectionType.Right ? Vector3.right : Vector3.left));
-        Vector2 rRayPos = transform.position + (Vector3)_ground._rightRayPos;
-        Vector2 lRayPos = transform.position + (Vector3)_ground._leftRayPos;
+        Gizmos.DrawLine(dirPos, dirPos + (_currentDirection == DirectionType.Right ? Vector3.right : Vector3.left));
+        Vector2 rRayPos = transform.position + (Vector3)_raycastData.RightRayOriginOffset;
+        Vector2 lRayPos = transform.position + (Vector3)_raycastData.LeftRayOriginOffset;
 
-        RaycastHit2D hit = Physics2D.Raycast(rRayPos, Vector2.down, _ground._rayLong, _ground._mask);
+        var hit = Physics2D.Raycast(rRayPos, Vector2.down, _raycastData.GroundCheckRayDistance, _raycastData.RaycastGroundMask);
         if (hit)
+        {
             Gizmos.DrawLine(rRayPos, hit.point);
-        else
-            Gizmos.DrawLine(rRayPos, rRayPos + Vector2.down * _ground._rayLong);
-
-        hit = Physics2D.Raycast(lRayPos, Vector2.down, _ground._rayLong, _ground._mask);
-        if (hit)
-            Gizmos.DrawLine(lRayPos, hit.point);
-        else
-            Gizmos.DrawLine(lRayPos, lRayPos + Vector2.down * _ground._rayLong);
-
-        Vector2 dir = _dir switch
-        {
-            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
-        };
-        if (State == EnemyStateType.Chase)
-            Gizmos.color = Color.red;
-        else
-            Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(dir * _ground._jumpRayLong));
-        if (V == null)
-            return;
-        if (V.Length <= 0)
-            return;
-        Gizmos.color = Color.red;
-        foreach (ContactPoint2D v in V)
-        {
-            Gizmos.DrawSphere(v.point, 0.2f);
-            Gizmos.DrawLine(v.point, v.point + v.normal);
         }
+        else
+        {
+            Gizmos.DrawLine(rRayPos, rRayPos + Vector2.down * _raycastData.GroundCheckRayDistance);
+        }
+
+        hit = Physics2D.Raycast(lRayPos, Vector2.down, _raycastData.GroundCheckRayDistance, _raycastData.RaycastGroundMask);
+        if (hit)
+        {
+            Gizmos.DrawLine(lRayPos, hit.point);
+        }
+        else
+        {
+            Gizmos.DrawLine(lRayPos, lRayPos + Vector2.down * _raycastData.GroundCheckRayDistance);
+        }
+
+        Vector2 dir = _currentDirection switch
+        {
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right =>
+            Vector2.right, _ =>
+            Vector2.zero
+        };
+        if (_currentState == EnemyStateType.ChasingPlayer)
+        {
+            Gizmos.color = Color.red;
+        }
+        else
+        {
+            Gizmos.color = Color.blue;
+        }
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(dir * _raycastData.MaxJumpDistanceFromWall));
+        Gizmos.color = cacheColor;
     }
 
     #endregion
+#endif
 }

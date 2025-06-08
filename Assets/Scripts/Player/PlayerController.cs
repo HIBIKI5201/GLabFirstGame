@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
     float _acce = 1;
     IEnumerator _jumpEnumerator;
     
+
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -530,12 +532,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void UseItem()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            _pauseManager.RegisterAndStartCoroutine(ThrowItem());
-        }
-    }
-    
+
+        _pauseManager.RegisterAndStartCoroutine(ThrowItem());
+    }    
+
+
     IEnumerator ThrowItem()
     {
         IEnumerator enumerator = _pauseManager.GetLatestCoroutine();
