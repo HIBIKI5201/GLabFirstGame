@@ -2,67 +2,67 @@ using UnityEngine;
 
 public partial class tuta : MonoBehaviour
 {
-    private Collider2D col;       // ©•ª‚ÌCollider2DƒRƒ“ƒ|[ƒlƒ“ƒg
-    private Rigidbody2D rb;       // ©•ª‚ÌRigidbody2DƒRƒ“ƒ|[ƒlƒ“ƒg
+    private Collider2D col;       // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Collider2Dï¿½Rï¿½ï¿½ï¿½|ï¿½[ï¿½lï¿½ï¿½ï¿½g
+    private Rigidbody2D rb;       // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Rigidbody2Dï¿½Rï¿½ï¿½ï¿½|ï¿½[ï¿½lï¿½ï¿½ï¿½g
 
-    private bool isFalling = false;   // —‰º’†‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+    private bool isFalling = false;   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½O
 
     void Awake()
     {
-        // Awake‚ÅƒRƒ“ƒ|[ƒlƒ“ƒg‚ğæ“¾iƒLƒƒƒbƒVƒ…‚µ‚Ä‚¨‚­j
+        // Awakeï¿½ÅƒRï¿½ï¿½ï¿½|ï¿½[ï¿½lï¿½ï¿½ï¿½gï¿½ï¿½ï¿½æ“¾ï¿½iï¿½Lï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½j
         col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        // Rigidbody2D‚ÌY²‘¬“x‚ªƒ}ƒCƒiƒX‚È‚ç—‰º’†‚Æ”»’f
-        isFalling = rb.velocity.y < 0f;
+        // Rigidbody2Dï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½}ï¿½Cï¿½iï¿½Xï¿½È‚ç—ï¿½ï¿½ï¿½ï¿½ï¿½Æ”ï¿½ï¿½f
+        isFalling = rb.linearVelocity.y < 0f;
 
-        // ’n–Ê‚ÉÚG‚µ‚Ä‚¢‚é‚©ƒ`ƒFƒbƒN
+        // ï¿½nï¿½Ê‚ÉÚGï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½`ï¿½Fï¿½bï¿½N
         bool isGrounded = IsGrounded();
 
-        // —‰º’†‚¶‚á‚È‚­‚ÄA’n–Ê‚ÉÚG‚µ‚Ä‚¢‚é‚¾‚¯ÚG”»’è‚ğ—LŒø‚É‚·‚é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ÄAï¿½nï¿½Ê‚ÉÚGï¿½ï¿½ï¿½Ä‚ï¿½ï¿½éï¿½ï¿½ï¿½ï¿½ï¿½ÚGï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½
         if (!isFalling && isGrounded)
         {
-            col.enabled = true;   // ”»’èON
+            col.enabled = true;   // ï¿½ï¿½ï¿½ï¿½ON
         }
         else
         {
-            col.enabled = false;  // ”»’èOFFi—‰º’†‚â‹ó’†‚Í”»’è‚È‚µj
+            col.enabled = false;  // ï¿½ï¿½ï¿½ï¿½OFFï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó’†‚Í”ï¿½ï¿½ï¿½È‚ï¿½ï¿½j
         }
     }
 
-    // ’n–Ê‚ÉÚG‚µ‚Ä‚¢‚é‚©‚ğRaycast‚Å”»’è‚·‚éƒƒ\ƒbƒh
+    // ï¿½nï¿½Ê‚ÉÚGï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½ï¿½Raycastï¿½Å”ï¿½ï¿½è‚·ï¿½éƒï¿½\ï¿½bï¿½h
     private bool IsGrounded()
     {
-        // ©•ª‚ÌˆÊ’u‚©‚ç^‰º‚É0.1’PˆÊ‚¾‚¯Raycast‚ğ”ò‚Î‚·
-        // "Ground"ƒŒƒCƒ„[‚Ì‚à‚Ì‚¾‚¯‚É”½‰‚·‚éİ’è
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ÌˆÊ’uï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½0.1ï¿½Pï¿½Ê‚ï¿½ï¿½ï¿½Raycastï¿½ï¿½ï¿½Î‚ï¿½
+        // "Ground"ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‚ï¿½ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½É”ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, LayerMask.GetMask("Ground"));
 
-        // ’n–Ê‚É“–‚½‚Á‚½‚çtrueA‚»‚¤‚Å‚È‚¯‚ê‚Îfalse‚ğ•Ô‚·
+        // ï¿½nï¿½Ê‚É“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½trueï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ï¿½ï¿½falseï¿½ï¿½Ô‚ï¿½
         return hit.collider != null;
     }
 
-    // ‘¼‚ÌCollider‚ªÚG‚µ‚½‚ÉŒÄ‚Î‚ê‚éƒƒ\ƒbƒhiTriggerİ’è‚³‚ê‚Ä‚¢‚éê‡j
+    // ï¿½ï¿½ï¿½ï¿½Colliderï¿½ï¿½ï¿½ÚGï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉŒÄ‚Î‚ï¿½éƒï¿½\ï¿½bï¿½hï¿½iTriggerï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½j
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // —‰º’†‚Í”»’è‚µ‚È‚¢iˆ—‚µ‚È‚¢j
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í”ï¿½ï¿½è‚µï¿½È‚ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½j
         if (isFalling)
         {
             return;
         }
-        // “–‚½‚Á‚½‘Šè‚ªƒvƒŒƒCƒ„[‚¾‚Á‚½‚ç‰½‚à‚µ‚È‚¢iƒXƒ‹[j
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚ªï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç‰½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½iï¿½Xï¿½ï¿½ï¿½[ï¿½j
         if (other.CompareTag("Player"))
         {
             return;
         }
-        // “–‚½‚Á‚½‘Šè‚ªƒGƒlƒ~[‚È‚ç”»’èOKAˆ—‚ğs‚¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚ªï¿½Gï¿½lï¿½~ï¿½[ï¿½È‚ç”»ï¿½ï¿½OKï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("Enemy‚É“–‚½‚Á‚½I");
+            Debug.Log("Enemyï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½I");
 
-            // ‚±‚±‚ÉƒGƒlƒ~[‚É‘Î‚·‚éUŒ‚ˆ—‚âƒ_ƒ[ƒWˆ—‚ğ‘‚­
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ÉƒGï¿½lï¿½~ï¿½[ï¿½É‘Î‚ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
     }
 }

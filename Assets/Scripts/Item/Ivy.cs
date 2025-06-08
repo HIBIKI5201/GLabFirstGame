@@ -61,4 +61,9 @@ public class Ivy : ItemBase
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireSphere(transform.position, EffectRange);
     }
+
+    protected override void PlaySE()
+    {
+        throw new System.NotImplementedException();
+    }
 }
