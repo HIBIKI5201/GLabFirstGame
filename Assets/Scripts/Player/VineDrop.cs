@@ -1,13 +1,13 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class VineDrop : MonoBehaviour
 {
-    public GameObject vinePrefab;          // ƒcƒ^‚ÌƒvƒŒƒnƒu
-    public Transform vineSpawnPoint;       // main_2‚ÌTransform
+    public GameObject vinePrefab;          // ãƒ„ã‚¿ã®ãƒ—ãƒ¬ãƒãƒ–
+    public Transform vineSpawnPoint;       // main_2ã®Transform
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return)) // EnterƒL[
+        if (Input.GetKeyDown(KeyCode.Return)) // Enterã‚­ãƒ¼
         {
             DropVine();
         }
