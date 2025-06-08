@@ -1,13 +1,13 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// ƒAƒCƒeƒ€Fƒcƒ^
+/// ã‚¢ã‚¤ãƒ†ãƒ ï¼šãƒ„ã‚¿
 /// </summary>
 public class Ivy : ItemBase
 {
     [SerializeField] private float bottom = -10f;
-    [SerializeField] private float effectTime = 1f; // Œø‰ÊŠÔ
+    [SerializeField] private float effectTime = 1f; // åŠ¹æœæ™‚é–“
 
     private bool IsBottom()
     {
@@ -21,16 +21,16 @@ public class Ivy : ItemBase
 
     private IEnumerator BottomCheck()
     {
-        Debug.Log("“Ş—‚É‚Í‚Ü‚¾—‚¿‚Ä‚¢‚È‚¢");
-        yield return new WaitUntil(IsBottom); // ğŒ‚ªtrue‚É‚È‚é‚Ü‚Å‘Ò‚Â
-        Debug.Log("“Ş—‚É—‚¿‚½");
+        Debug.Log("å¥ˆè½ã«ã¯ã¾ã è½ã¡ã¦ã„ãªã„");
+        yield return new WaitUntil(IsBottom); // æ¡ä»¶ãŒtrueã«ãªã‚‹ã¾ã§å¾…ã¤
+        Debug.Log("å¥ˆè½ã«è½ã¡ãŸ");
         Destroy(gameObject);
     }
 
     protected override void Activate()
     {
 
-        // “Š‚°‚Ä‚¢‚È‚¢‚Å‚ ‚ê‚ÎAˆÈ~‚Ìˆ—‚Ís‚í‚È‚¢
+        // æŠ•ã’ã¦ã„ãªã„æ™‚ã§ã‚ã‚Œã°ã€ä»¥é™ã®å‡¦ç†ã¯è¡Œã‚ãªã„
         //if (!IsThrowing) return;
 
         var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
@@ -45,7 +45,7 @@ public class Ivy : ItemBase
 
                     if (enemy.State != EnemyStateType.Faint)
                     {
-                        // ‚Ü‚¾“G‚ª‹Câó‘Ô‚Å‚Í‚È‚¯‚ê‚ÎASE‚ğÄ¶‚·‚é
+                        // ã¾ã æ•µãŒæ°—çµ¶çŠ¶æ…‹ã§ã¯ãªã‘ã‚Œã°ã€SEã‚’å†ç”Ÿã™ã‚‹
                         AudioManager.Instance.PlaySE("damage_enemy");
                     }
                 }
