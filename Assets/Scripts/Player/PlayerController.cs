@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
     [HideInInspector] public PlayerStatusType _playerStatus = PlayerStatusType.Normal;
+    [SerializeField] private EnemyGetter _enemyGetter;
     Rigidbody2D _rb;
     SpriteRenderer _spriteRenderer;
     Scene m_simulationScene;
@@ -51,7 +52,10 @@ public class PlayerController : MonoBehaviour
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
-    
+    private Collider2D _playerCollider;
+
+    //bool isHitable = false; // ヒットする場合、true
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -75,7 +79,9 @@ public class PlayerController : MonoBehaviour
         CurrentHp = _maxHp;
         _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
+        _playerCollider = GetComponent<Collider2D>();
         
+
         GameObject platform;
         if (_throwsetting.Platform != null)
         {
@@ -106,9 +112,35 @@ public class PlayerController : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision.gameObject.name);
         if (collision.gameObject.name == "goal") _isInvincible = true; // ゴールした時
+
+        if (collision.gameObject.CompareTag("Grass"))
+        {
+            Debug.Log("草むらに入った");
+            // GameObject.FindGameObjectsWithTag()
+            // for文やforeace文で、エネミー全体に回す
+
+            foreach (Enemy enemy in _enemyGetter.Enemies)
+            {
+                enemy._stayGrass = true;
+            }
+        }
     }
-    
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Grass"))
+        {
+            Debug.Log("草むらから出た!");
+
+            foreach (Enemy enemy in _enemyGetter.Enemies)
+            {
+                enemy._stayGrass = false;
+            }
+        }
+    }
+
     private void Move()
     {
         _horiInput = Input.GetAxisRaw("Horizontal");
@@ -425,6 +457,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void FluctuationLife(int value)
     {
+        //今草むらにいたら　リターンする
+        //if (!isHitable) return;
+        
+        
         if (value < 0)
         {
             if (!_isInvincible)
@@ -619,6 +655,7 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireCube((Vector2)transform.position + _point, _size);
     }
 
+
     #region Unused
 
     void NewMove()//Made in Oikawa
@@ -656,6 +693,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+    }
+
+
+}
+
     #endregion
     
-}

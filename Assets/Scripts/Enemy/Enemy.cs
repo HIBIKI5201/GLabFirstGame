@@ -71,6 +71,7 @@ public class Enemy : MonoBehaviour
 
     bool _canMoveSE;
     bool _canReset;
+    public bool _stayGrass; //プレイヤーが草むらにいるかの判定
 
     float _attackedTimer; // 攻撃クールタイムを管理するための変数
 
@@ -235,7 +236,7 @@ public class Enemy : MonoBehaviour
         {
             // もし壁などに触れたら移動方向を反転させる
             _dir = _dir == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
-            if (playerHit)
+            if (!_stayGrass && playerHit)
             {
                 AttackToPlayer(); // プレイヤーに当たっていたら攻撃を行う
             }
@@ -319,6 +320,7 @@ public class Enemy : MonoBehaviour
     private void Search()
     {
         if (!_canChase) return;
+        if (_stayGrass) return;
 
         RaycastHit2D hit = Physics2D.Linecast(transform.position, _playerTra.position, _ground._mask);
         State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
@@ -327,7 +329,13 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// プレイヤーへ攻撃する
     /// </summary>
-    private void AttackToPlayer() => _attackHandler.Attack();
+    private void AttackToPlayer() 
+    { 
+      if(!_stayGrass)
+        {
+            _attackHandler.Attack();
+        }
+    }
 
     private bool IsFrontGrounded(out bool isRightDir)
     {
@@ -359,7 +367,16 @@ public class Enemy : MonoBehaviour
             DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
         };
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, _ground._sideRayLong, _ground._sideMask);
+        var mask = _ground._sideMask;
+
+        if (_stayGrass)
+        {
+            //プレイヤーを探索から除外
+            mask &= ~(1 << LayerMask.NameToLayer("Player"));
+        }
+
+        //Physics2D.Raycast(transform.position, dir, _ground.sideRayLong, _ground._sideMask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, _ground._sideRayLong, mask);
         playerHit = false;
         if (hit)
             playerHit = hit.transform.CompareTag("Player");
@@ -574,7 +591,12 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 死亡時自身を破棄する
     /// </summary>
-    public void Die() => Destroy(gameObject);
+    public void Die()
+    {
+        EnemyGetter enemyGetter = FindFirstObjectByType<EnemyGetter>();
+        enemyGetter.RemoveEnemy(this);
+        Destroy(gameObject);
+    }
     
     private void OnDisable()
     {
