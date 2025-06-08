@@ -48,11 +48,15 @@ public partial class tuta : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // 落下中は判定しない（処理しない）
-        if (isFalling) return;
-
+        if (isFalling)
+        {
+            return;
+        }
         // 当たった相手がプレイヤーだったら何もしない（スルー）
-        if (other.CompareTag("Player")) return;
-
+        if (other.CompareTag("Player"))
+        {
+            return;
+        }
         // 当たった相手がエネミーなら判定OK、処理を行う
         if (other.CompareTag("Enemy"))
         {
