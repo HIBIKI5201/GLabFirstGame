@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -11,13 +12,14 @@ public class Enemy : MonoBehaviour
     [SerializeField] EnemyType _beast; // 敵の種類
     [SerializeField] Animator _anim;
 
-    [Header("基本設定")] 
+    [Header("基本設定")]
     [SerializeField] int _maxHp; // 最大HP
     [SerializeField] int _currentHp; // 現在のHP
     [SerializeField] int _attack; // 攻撃力
     [SerializeField] float _jumpPower; // ジャンプ力
+    [SerializeField] float _missingTime = 2f; //プレイヤーを見失う時間
 
-    [Header("移動スピード")] 
+    [Header("移動スピード")]
     public float _speed; // 通常時の移動スピード
     public float _chaseSpeed; // プレイヤーを発見したときの移動スピード
     public float _currentSpeed; // 現在の移動スピード
@@ -49,18 +51,19 @@ public class Enemy : MonoBehaviour
     SpriteRenderer[] _spriteRenderers;
     BoxCollider2D _boxCollider;
     PlayerController _player;
-    
+
     private EnemyDamageHandler _damageHandler;
     private EnemyAttackHandler _attackHandler;
-    
+
     GameObject _stunAnimeObj; // スタンエフェクトのオブジェクト
     Vector2 _bottlePosi;
-    
+
     ContactPoint2D[] V;
 
     // コルーチン
     Coroutine _reactionCoro = null; // アイテム効果
     Coroutine _coroutine = null;
+    Coroutine _grassCoro = null;
 
     // 肉アイテム関連
     GameObject _meatIcon;
@@ -82,7 +85,7 @@ public class Enemy : MonoBehaviour
         _canReset = true;
         ResetStatus();
         CacheComponents();
-        
+
         _damageHandler = new EnemyDamageHandler(_currentHp, _canDamage, _spriteRenderers, this);
         _attackHandler = new EnemyAttackHandler(_attack, ref _attackedTimer);
     }
@@ -147,7 +150,7 @@ public class Enemy : MonoBehaviour
         if (TryGetComponent(out _rb)) _rb.isKinematic = false;
         if (_boxCollider == null) _boxCollider = GetComponent<BoxCollider2D>();
         _meatIcon = transform.GetChild(1).gameObject;
-        
+
         if (_modelT == null) _modelT = GetComponentInChildren<Animator>().transform;
         _modelScale = _modelT.localScale;
         _modelScale.x = MathF.Abs(_modelScale.x);
@@ -190,6 +193,10 @@ public class Enemy : MonoBehaviour
             case EnemyStateType.Faint:
                 UpdateStone();
                 break;
+
+            case EnemyStateType.MissingPlayerByGrass:
+                break;
+
 
             case EnemyStateType.Bite:
                 UpdateMeat();
@@ -242,7 +249,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    
+
     /// <summary>
     /// プレイヤー追跡状態の処理
     /// </summary>
@@ -274,6 +281,9 @@ public class Enemy : MonoBehaviour
             }
         }
 
+
+
+
         if (IsJump() && IsGrounded() && _jumpOver)
         {
             Jump();
@@ -288,6 +298,11 @@ public class Enemy : MonoBehaviour
                     AttackToPlayer();
                 }
             }
+        }
+
+        if(_stayGrass)
+        {
+            ReactionGrass(_missingTime);
         }
 
         UpdateHorizontalMovement();
@@ -320,7 +335,10 @@ public class Enemy : MonoBehaviour
     private void Search()
     {
         if (!_canChase) return;
-        if (_stayGrass) return;
+        if (_stayGrass)
+        {
+            return;
+        }
 
         RaycastHit2D hit = Physics2D.Linecast(transform.position, _playerTra.position, _ground._mask);
         State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
@@ -329,9 +347,9 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// プレイヤーへ攻撃する
     /// </summary>
-    private void AttackToPlayer() 
-    { 
-      if(!_stayGrass)
+    private void AttackToPlayer()
+    {
+        if (!_stayGrass)
         {
             _attackHandler.Attack();
         }
@@ -364,7 +382,9 @@ public class Enemy : MonoBehaviour
     {
         Vector2 dir = _dir switch
         {
-            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right => Vector2.right,
+            _ => Vector2.zero
         };
 
         var mask = _ground._sideMask;
@@ -387,7 +407,9 @@ public class Enemy : MonoBehaviour
     {
         Vector2 dir = _dir switch
         {
-            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right => Vector2.right,
+            _ => Vector2.zero
         };
         return Physics2D.Raycast(transform.position, dir, _ground._jumpRayLong, _ground._mask);
     }
@@ -396,12 +418,10 @@ public class Enemy : MonoBehaviour
 
     private void UpdateStone()
     {
-        Vector2 velo = _rb.linearVelocity;
-        velo.x = 0;
-        _rb.linearVelocity = velo;
+        _rb.linearVelocityX = 0;
         _anim.SetBool("Dizzy", true);
     }
-    
+
     /// <summary>
     /// 石の効果
     /// </summary>
@@ -415,7 +435,7 @@ public class Enemy : MonoBehaviour
         _rb.linearVelocity = Vector2.zero;
         _reactionCoro = StartCoroutine(Stun(stunTime));
     }
-  
+
     /// <summary>
     /// スタンの効果時間を管理するコルーチン
     /// </summary>
@@ -425,6 +445,40 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(stunTime);
         State = EnemyStateType.Normal;
     }
+
+    #endregion
+
+    #region 草むら
+
+    private void UpdateMissingPlayerByGrass()
+    {
+        _rb.linearVelocityX = 0;
+    }
+
+    private void ReactionGrass(float MissingTime)
+    {
+        if (State == EnemyStateType.MissingPlayerByGrass)
+            return;
+
+        Debug.Log("見失ったよ");
+        if (_grassCoro != null)
+            StopCoroutine(_grassCoro);
+        _rb.linearVelocity = Vector2.zero;
+        _grassCoro = StartCoroutine(Missing(MissingTime));
+
+
+    }
+
+    private IEnumerator Missing(float MissingTime)
+    {
+        State = EnemyStateType.MissingPlayerByGrass;
+        Debug.Log("aaaaaa");
+        yield return new WaitForSeconds(MissingTime);
+        State = EnemyStateType.Normal;
+
+    }
+
+
 
     #endregion
 
@@ -441,7 +495,7 @@ public class Enemy : MonoBehaviour
 
         UpdateHorizontalMovement();
     }
-    
+
     public void ReactionBottle(Vector3 bottlePosi, float effectTime)
     {
         if (State == EnemyStateType.Faint) return;
@@ -451,10 +505,10 @@ public class Enemy : MonoBehaviour
             // 再生中のコルーチンがあれば止める
             StopCoroutine(_reactionCoro);
         }
-        
+
         _reactionCoro = StartCoroutine(Bottle(bottlePosi, effectTime));
     }
-    
+
     /// <summary>
     /// 空き瓶の効果持続時間を管理するコルーチン
     /// </summary>
@@ -495,7 +549,9 @@ public class Enemy : MonoBehaviour
             _meatIcon.SetActive(false);
             _dir = Mathf.Sign(_modelT.localScale.x) switch
             {
-                1 => DirectionType.Left, -1 => DirectionType.Right, _ => DirectionType.None
+                1 => DirectionType.Left,
+                -1 => DirectionType.Right,
+                _ => DirectionType.None
             };
         }
 
@@ -506,7 +562,7 @@ public class Enemy : MonoBehaviour
 
         UpdateHorizontalMovement();
     }
-    
+
     public void ReactionMeat(Vector3 meatPosi, float effectTime)
     {
         if (State == EnemyStateType.Bite || State == EnemyStateType.Faint)
@@ -520,7 +576,7 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion
-    
+
     #region 減速（沼）
 
     public void SlowDownScale(float scale, float time)
@@ -533,7 +589,7 @@ public class Enemy : MonoBehaviour
 
         _coroutine = StartCoroutine(SlowDown(scale, time));
     }
-    
+
     private IEnumerator SlowDown(float scale, float time)
     {
         float startTime = Time.time;
@@ -549,7 +605,7 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion
-    
+
     /// <summary>
     /// 何かに衝突しているときの処理
     /// </summary>
@@ -568,9 +624,9 @@ public class Enemy : MonoBehaviour
         {
             CollisionReturn(col.GetContact(i).normal, col.GetContact(i).point);
         }
-        
+
     }
-    
+
     private void CollisionReturn(Vector2 normal, Vector2 point)
     {
         float x = point.x - transform.position.x;
@@ -581,7 +637,7 @@ public class Enemy : MonoBehaviour
             _dir = _dir == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
         }
     }
-    
+
     /// <summary>
     /// HPを減らすメソッド
     /// </summary>
@@ -597,7 +653,7 @@ public class Enemy : MonoBehaviour
         enemyGetter.RemoveEnemy(this);
         Destroy(gameObject);
     }
-    
+
     private void OnDisable()
     {
         _rb.isKinematic = true;
@@ -638,7 +694,9 @@ public class Enemy : MonoBehaviour
 
         Vector2 dir = _dir switch
         {
-            DirectionType.Left => Vector2.left, DirectionType.Right => Vector2.right, _ => Vector2.zero
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right => Vector2.right,
+            _ => Vector2.zero
         };
         if (State == EnemyStateType.Chase)
             Gizmos.color = Color.red;
