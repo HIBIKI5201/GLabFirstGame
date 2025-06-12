@@ -195,6 +195,8 @@ public class Enemy : MonoBehaviour
                 break;
 
             case EnemyStateType.MissingPlayerByGrass:
+                UpdateMissingPlayerByGrass();
+                Search(EnemyStateType.MissingPlayerByGrass);
                 break;
 
 
@@ -214,7 +216,7 @@ public class Enemy : MonoBehaviour
             default:
                 ChangeDirection();
                 UpdateHorizontalMovement();
-                Search();
+                Search(EnemyStateType.Normal);
                 _anim.SetBool("Gallop", false);
                 _anim.SetBool("Dizzy", false);
                 break;
@@ -306,7 +308,7 @@ public class Enemy : MonoBehaviour
         }
 
         UpdateHorizontalMovement();
-        Search();
+        Search(EnemyStateType.Chase);
     }
 
     /// <summary>
@@ -332,7 +334,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// プレイヤーを探す処理
     /// </summary>
-    private void Search()
+    private void Search(EnemyStateType enemyStateType)
     {
         if (!_canChase) return;
         if (_stayGrass)
@@ -341,7 +343,7 @@ public class Enemy : MonoBehaviour
         }
 
         RaycastHit2D hit = Physics2D.Linecast(transform.position, _playerTra.position, _ground._mask);
-        State = hit ? EnemyStateType.Normal : EnemyStateType.Chase;
+        State = hit ? enemyStateType : EnemyStateType.Chase;
     }
 
     /// <summary>
@@ -465,8 +467,6 @@ public class Enemy : MonoBehaviour
             StopCoroutine(_grassCoro);
         _rb.linearVelocity = Vector2.zero;
         _grassCoro = StartCoroutine(Missing(MissingTime));
-
-
     }
 
     private IEnumerator Missing(float MissingTime)
@@ -475,7 +475,6 @@ public class Enemy : MonoBehaviour
         Debug.Log("aaaaaa");
         yield return new WaitForSeconds(MissingTime);
         State = EnemyStateType.Normal;
-
     }
 
 
