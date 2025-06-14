@@ -44,6 +44,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] DirectionType _dir; // どちらの方向に動くか
     [SerializeField] bool _alwaysDebug;
 
+    [Header("演出系")]
+    [SerializeField] SpriteRenderer _stunSpriteRenderer;
+
     Rigidbody2D _rb;
     Transform _playerTra;
     Transform _modelT;
@@ -88,6 +91,10 @@ public class Enemy : MonoBehaviour
 
         _damageHandler = new EnemyDamageHandler(_currentHp, _canDamage, _spriteRenderers, this);
         _attackHandler = new EnemyAttackHandler(_attack, ref _attackedTimer);
+        if (_stunSpriteRenderer)
+        {
+            _stunSpriteRenderer.enabled = false;
+        }
     }
 
     private void OnEnable()
@@ -471,10 +478,21 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator Missing(float MissingTime)
     {
-        State = EnemyStateType.MissingPlayerByGrass;
-        Debug.Log("aaaaaa");
-        yield return new WaitForSeconds(MissingTime);
-        State = EnemyStateType.Normal;
+            Debug.Log("見つからない");
+        if (_stunSpriteRenderer)
+        {
+            _stunSpriteRenderer.enabled = true;
+        }
+            State = EnemyStateType.MissingPlayerByGrass;
+            Debug.Log("aaaaaa");
+            yield return new WaitForSeconds(MissingTime);
+        if (_stunSpriteRenderer)
+        {
+            _stunSpriteRenderer.enabled = false;
+        }
+            State = EnemyStateType.Normal;
+            Debug.Log("見つからない終了");
+        
     }
 
 
