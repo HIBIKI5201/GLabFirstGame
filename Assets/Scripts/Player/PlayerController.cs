@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -532,9 +532,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void UseItem()
     {
-
-        _pauseManager.RegisterAndStartCoroutine(ThrowItem());
-    }    
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            _pauseManager.RegisterAndStartCoroutine(ThrowItem());
+        }
+    }
 
 
     IEnumerator ThrowItem()
