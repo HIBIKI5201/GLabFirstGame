@@ -1,0 +1,14 @@
+# Enforce CRLF for all text files
+* text=auto eol=crlf
+
+# Unity-specific files (usually UTF-8 text)
+*.cs text eol=crlf
+*.shader text eol=crlf
+*.cginc text eol=crlf
+*.compute text eol=crlf
+*.json text eol=crlf
+*.txt text eol=crlf
+*.asmdef text eol=crlf
+*.unity text eol=crlf
+*.prefab text eol=crlf
+*.asset text eol=crlf
