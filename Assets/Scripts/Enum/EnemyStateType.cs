@@ -14,6 +14,11 @@ public enum EnemyStateType
     Faint,
 
     /// <summary>
+    /// Playerを見失っている（マップオブジェクト：草むらの効果）
+    /// </summary>
+    MissingPlayerByGrass,
+
+    /// <summary>
     /// 食いついている（アイテム：肉の効果）
     /// </summary>
     Bite,
