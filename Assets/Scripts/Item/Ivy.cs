@@ -6,8 +6,14 @@ using UnityEngine;
 /// </summary>
 public class Ivy : ItemBase
 {
-    [SerializeField] private float bottom = -10f;
-    [SerializeField] private float effectTime = 1f; // 効果時間
+    [SerializeField, Layer]
+    private int _onTouchGroundLayer;
+
+    [SerializeField]
+    private float bottom = -10f;
+
+    [SerializeField]
+    private float effectTime = 1f; // 効果時間
 
     private BoxCollider2D _boxCollider2D;
     private Rigidbody2D _rigidbody2D;
@@ -48,6 +54,7 @@ public class Ivy : ItemBase
         {
             if (obj.gameObject.CompareTag("Ground"))
             {
+                gameObject.layer = _onTouchGroundLayer;
                 Landing = true;
                 _boxCollider2D.enabled = true;
                 AudioManager.Instance.PlaySE("crack"); // 地面に衝突した時のSEを再生する

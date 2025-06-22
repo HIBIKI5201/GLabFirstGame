@@ -104,6 +104,7 @@ MonoBehaviour:
   _itemType: 3
   _throwType: 2
   _effectRange: 1
+  _onTouchGroundLayer: 11
   bottom: -10
   effectTime: 1
 --- !u!61 &3621439937217427006
