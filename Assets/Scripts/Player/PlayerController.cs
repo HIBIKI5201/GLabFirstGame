@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +14,6 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] int _maxHp;
-    public int CurrentPetal;
-    public int InitPetal = 0;
-    public int MaxPetal = 5;
     public int CurrentHp { get; private set; }
     [SerializeField] public List<GameObject> _rose = new List<GameObject>();
     [SerializeField] public float _maxSpeed;
@@ -55,8 +52,6 @@ public class PlayerController : MonoBehaviour
     float _acce = 1;
     IEnumerator _jumpEnumerator;
     
-
-
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -279,7 +274,7 @@ public class PlayerController : MonoBehaviour
         }
         _jumpEnumerator = null;
     }
-    
+
     /// <summary>
     /// アイテムを獲得した時の処理
     /// </summary>
@@ -324,31 +319,21 @@ public class PlayerController : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
-        else if (item as Petal)
+        else if (item as Tuta)
         {
-            PetalGetAction();
+            if (_itemList.Where(i => i as Tuta).ToList().Count < _itemSetting.MaxTutaCount)
+            {
+                _itemList.Add(item);
+                _itemSetting.TutaCountText.text = _itemList.Where(i => i as Tuta).Count().ToString();
+                _itemSetting.TutaUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+            }
+            else
+            {
+                Destroy(item.gameObject);
+            }
         }
     }
-    /// <summary>
-    /// 花びらを取得時の処理
-    /// </summary>
-    private void PetalGetAction()
-    {
-        CurrentPetal++;
-        if (CurrentPetal >= MaxPetal)
-        {
-            CurrentPetal = 0;
-            // TODO 花びらゲージを0にする
-            //InitPetalGauge();
-            // TODO 回復処理
-            //HealHp();
-        }
-        else
-        {
-            // TODO 花びらゲージを更新する
-            //UpdatePetalGauge();
-        }
-    }
+    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -361,6 +346,9 @@ public class PlayerController : MonoBehaviour
                 return true;
             case PlayerStatusType.Meat:
                 item = _itemList.Where(i => i as Meat).ToList().First();
+                return true;
+            case PlayerStatusType.Tuta:
+                item = _itemList.Where(i => i as Tuta).ToList().First();
                 return true;
             default:
                 item = null;
@@ -381,6 +369,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -391,6 +380,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -401,14 +391,27 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale *= _itemSetting.LeafSize;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (_itemList.Any(i => i as Tuta) && _playerStatus != PlayerStatusType.Tuta)
+            {
+                _playerStatus = PlayerStatusType.Tuta;
+                _itemSetting.LeafRock.transform.localScale = Vector3.one;
+                _itemSetting.LeafBottle.transform.localScale = Vector3.one;
+                _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafTuta.transform.localScale *= _itemSetting.LeafSize;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             _playerStatus = PlayerStatusType.Normal;
             _itemSetting.LeafRock.transform.localScale = Vector3.one;
             _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+            _itemSetting.LeafTuta.transform.localScale = Vector3.one;
         }
     }
     
@@ -537,8 +540,7 @@ public class PlayerController : MonoBehaviour
             _pauseManager.RegisterAndStartCoroutine(ThrowItem());
         }
     }
-
-
+    
     IEnumerator ThrowItem()
     {
         IEnumerator enumerator = _pauseManager.GetLatestCoroutine();
@@ -607,7 +609,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             }
         }
-        else
+        else if (item as Meat)
         {
             _itemList.Remove((Meat)item);
             _itemSetting.MeatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
@@ -616,6 +618,17 @@ public class PlayerController : MonoBehaviour
                 _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+            }
+        }
+        else if (item as Tuta)
+        {
+            _itemList.Remove((Tuta)item);
+            _itemSetting.TutaCountText.text = _itemList.Where(i => i as Tuta).Count().ToString();
+            if (_itemSetting.TutaCountText.text == "0")
+            {
+                _playerStatus = PlayerStatusType.Normal;
+                _itemSetting.TutaUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         AudioManager.Instance.PlaySE("throw");

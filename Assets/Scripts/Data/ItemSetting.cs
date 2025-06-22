@@ -22,4 +22,8 @@ public struct ItemSetting
     public GameObject LeafBottle;
     public GameObject LeafMeat;
     public float LeafSize;
+    public int MaxTutaCount;
+    public GameObject TutaUi;
+    public Text TutaCountText;
+    public GameObject LeafTuta;
 }

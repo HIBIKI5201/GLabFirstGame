@@ -8,5 +8,6 @@ public enum PlayerStatusType
     Meat,
     Normal,
     Damage,
-    Death
+    Death,
+    Tuta
 }
