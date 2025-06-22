@@ -6,32 +6,68 @@ using UnityEngine.UI;
 /// </summary>
 public class Flower_gauge : MonoBehaviour
 {
-    public Slider petalGauge;//花びらゲージ
-    public int petalsToHeal = 5;//５枚で回復
+    [SerializeField] private Image petal_1;
+    [SerializeField] private Image petal_2;
+    [SerializeField] private Image petal_3;
+    [SerializeField] private Image petal_4;
+        
+    [SerializeField, Range(0, 255)]
+    public float transparency;//最初の透明度
+
+    public int petalsToHeal = 4;//４枚で回復
     private int currentPetals = 0;//現在の花びら数
 
-    void start()
+    void Start()
     {
-        //スライダーの初期設定
-        petalGauge.maxValue = petalsToHeal;
-        petalGauge.value = currentPetals;
+        ColorReset();
     }
 
+    void ColorReset()//透明度の初期化
+    {
+        float alpha = transparency / 255f;
+        Color newColor = new (1f,1f,1f,alpha);
+        petal_1.color = newColor;
+        petal_2.color = newColor;
+        petal_3.color = newColor;
+        petal_4.color = newColor;
+    }
     void Update()
     {
-        if ()//花びらの取得
-        {
-            CollectPetal();
+        if (currentPetals == 0)
+        {   
+            ColorReset();
         }
     }
-    public void CollectPetal()
+   
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Petal"))//花びらの取得した時
+        {
+            CollectPetal();
+            Destroy(other.gameObject);
+        }
+    }
+    
+    private void CollectPetal()
     {
         currentPetals++;
-        if (currentPetals >= petalsToHeal)//花びらを５枚あつめる
+        Debug.Log("collect");
+        switch (currentPetals)//取得した枚数に応じて、透明度をかえる
+        {
+            case 1://動作確認用のコードでアニメーションの変化は未実装
+                Debug.Log("一枚目");
+                petal_1.color = new Color(1f, 1f, 1f, 1f);
+                break;
+            case 2:
+                petal_2.color = new Color(1f, 1f, 1f, 1f);
+                break;
+            case 3:
+                petal_3.color = new Color(1f, 1f, 1f, 1f);
+                break;
+        }
+        if (currentPetals >= petalsToHeal)//花びらを４枚あつめる
         {
             currentPetals = 0;//ゲージのリセット
         }
-
-        petalGauge.value = currentPetals;//ゲージUIの更新
     }
 }
