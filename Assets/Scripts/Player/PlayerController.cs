@@ -274,7 +274,7 @@ public class PlayerController : MonoBehaviour
         }
         _jumpEnumerator = null;
     }
-    
+
     /// <summary>
     /// アイテムを獲得した時の処理
     /// </summary>
@@ -319,6 +319,19 @@ public class PlayerController : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
+        else if (item as Tuta)
+        {
+            if (_itemList.Where(i => i as Tuta).ToList().Count < _itemSetting.MaxTutaCount)
+            {
+                _itemList.Add(item);
+                _itemSetting.TutaCountText.text = _itemList.Where(i => i as Tuta).Count().ToString();
+                _itemSetting.TutaUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+            }
+            else
+            {
+                Destroy(item.gameObject);
+            }
+        }
     }
     
     bool Item(out ItemBase item)
@@ -333,6 +346,9 @@ public class PlayerController : MonoBehaviour
                 return true;
             case PlayerStatusType.Meat:
                 item = _itemList.Where(i => i as Meat).ToList().First();
+                return true;
+            case PlayerStatusType.Tuta:
+                item = _itemList.Where(i => i as Tuta).ToList().First();
                 return true;
             default:
                 item = null;
@@ -353,6 +369,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -363,6 +380,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -373,14 +391,27 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale *= _itemSetting.LeafSize;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (_itemList.Any(i => i as Tuta) && _playerStatus != PlayerStatusType.Tuta)
+            {
+                _playerStatus = PlayerStatusType.Tuta;
+                _itemSetting.LeafRock.transform.localScale = Vector3.one;
+                _itemSetting.LeafBottle.transform.localScale = Vector3.one;
+                _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafTuta.transform.localScale *= _itemSetting.LeafSize;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             _playerStatus = PlayerStatusType.Normal;
             _itemSetting.LeafRock.transform.localScale = Vector3.one;
             _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+            _itemSetting.LeafTuta.transform.localScale = Vector3.one;
         }
     }
     
@@ -578,7 +609,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             }
         }
-        else
+        else if (item as Meat)
         {
             _itemList.Remove((Meat)item);
             _itemSetting.MeatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
@@ -587,6 +618,17 @@ public class PlayerController : MonoBehaviour
                 _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+            }
+        }
+        else if (item as Tuta)
+        {
+            _itemList.Remove((Tuta)item);
+            _itemSetting.TutaCountText.text = _itemList.Where(i => i as Tuta).Count().ToString();
+            if (_itemSetting.TutaCountText.text == "0")
+            {
+                _playerStatus = PlayerStatusType.Normal;
+                _itemSetting.TutaUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+                _itemSetting.LeafTuta.transform.localScale = Vector3.one;
             }
         }
         AudioManager.Instance.PlaySE("throw");
