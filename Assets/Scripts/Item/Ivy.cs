@@ -9,6 +9,15 @@ public class Ivy : ItemBase
     [SerializeField] private float bottom = -10f;
     [SerializeField] private float effectTime = 1f; // 効果時間
 
+    private BoxCollider2D _boxCollider2D;
+    private Rigidbody2D _rigidbody2D;
+    private float _releasedTime;
+
+    private void Awake()
+    {
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+    }
+
     private bool IsBottom()
     {
         return transform.position.y < bottom;
@@ -31,10 +40,30 @@ public class Ivy : ItemBase
     {
 
         // 投げていない時であれば、以降の処理は行わない
-        //if (!IsThrowing) return;
+        if (!IsThrowing) return;
+        _releasedTime += Time.deltaTime;
 
-        var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+        var hit = Physics2D.OverlapBoxAll(transform.position, _boxCollider2D.size, 0);
+        foreach (var obj in hit)
+        {
+            if (obj.gameObject.CompareTag("Ground"))
+            {
+                Landing = true;
+                _boxCollider2D.enabled = true;
+                AudioManager.Instance.PlaySE("crack"); // 地面に衝突した時のSEを再生する
+            }
+        }
 
+        if (_releasedTime > 0.5f && TryGetComponent(out _rigidbody2D) && _rigidbody2D.linearVelocity.y <= 0)
+        {
+            _rigidbody2D.linearVelocity = Vector2.zero;
+            _rigidbody2D.angularVelocity = 0;
+            _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+            _boxCollider2D.enabled = false;
+        }
+
+
+        hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
         foreach (var obj in hit)
         {
             if (obj.CompareTag("Enemy"))
@@ -64,6 +93,6 @@ public class Ivy : ItemBase
 
     protected override void PlaySE()
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"Play Ivy Pickup Sound.");
     }
 }

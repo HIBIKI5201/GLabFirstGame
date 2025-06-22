@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// アイテムのベースクラス
@@ -6,6 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public abstract class ItemBase : MonoBehaviour
 {
+    public ItemType ItemType => _itemType;
+    [SerializeField] private ItemType _itemType;
+
     /// <summary>投げた時の挙動</summary>
     public ThrowType Throw => _throwType;
     [SerializeField] ThrowType _throwType = ThrowType.Straight;

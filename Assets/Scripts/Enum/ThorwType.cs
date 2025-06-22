@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// アイテムを投げるときの挙動の列挙型
 /// </summary>
 public enum ThrowType
@@ -11,5 +11,10 @@ public enum ThrowType
     /// <summary>
     /// 放物線を描いて飛ぶ
     /// </summary>
-    Parabola
+    Parabola,
+
+    /// <summary>
+    /// 落下する
+    /// </summary>
+    Drop
 }

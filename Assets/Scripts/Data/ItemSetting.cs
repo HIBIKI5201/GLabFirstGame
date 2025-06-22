@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
@@ -22,8 +23,12 @@ public struct ItemSetting
     public GameObject LeafBottle;
     public GameObject LeafMeat;
     public float LeafSize;
-    public int MaxTutaCount;
-    public GameObject TutaUi;
-    public Text TutaCountText;
-    public GameObject LeafTuta;
+    [FormerlySerializedAs("MaxTutaCount")]
+    public int MaxIvyCount;
+    [FormerlySerializedAs("TutaUi")]
+    public GameObject IvyUi;
+    [FormerlySerializedAs("TutaCountText")]
+    public Text IvyCountText;
+    [FormerlySerializedAs("LeafTuta")]
+    public GameObject LeafIvy;
 }

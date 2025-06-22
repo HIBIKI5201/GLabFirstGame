@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// プレイヤーの状態の列挙型
 /// </summary>
 public enum PlayerStatusType
@@ -9,5 +9,5 @@ public enum PlayerStatusType
     Normal,
     Damage,
     Death,
-    Tuta
+    Ivy
 }
