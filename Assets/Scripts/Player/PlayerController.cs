@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
     [HideInInspector] public PlayerStatusType _playerStatus = PlayerStatusType.Normal;
+    [SerializeField] private EnemyGetter _enemyGetter;
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
     float _horiInput = 0;
@@ -52,6 +53,7 @@ public class PlayerController : MonoBehaviour
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
+    private Collider2D _playerCollider;
 
     private void OnValidate()
     {
@@ -61,6 +63,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        _playerCollider = GetComponent<Collider2D>();
         _damageEffect = GetComponent<DamageEffect>();
         
         // PauseManager
@@ -108,9 +111,34 @@ public class PlayerController : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision.gameObject.name);
         if (collision.gameObject.name == "goal") _isInvincible = true; // ゴールした時
+        if (collision.gameObject.CompareTag("Grass"))
+        {
+            Debug.Log("草むらに入った");
+            // GameObject.FindGameObjectsWithTag()
+            // for文やforeace文で、エネミー全体に回す
+
+            foreach (Enemy enemy in _enemyGetter.Enemies)
+            {
+                enemy.StayGrass = true;
+            }
+        }
     }
-    
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Grass"))
+        {
+            Debug.Log("草むらから出た!");
+
+            foreach (Enemy enemy in _enemyGetter.Enemies)
+            {
+                enemy.StayGrass = false;
+            }
+        }
+    }
+
     private void Move()
     {
         _horiInput = Input.GetAxisRaw("Horizontal");
