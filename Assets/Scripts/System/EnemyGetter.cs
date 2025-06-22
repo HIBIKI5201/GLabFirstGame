@@ -2,34 +2,34 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// ƒXƒe[ƒW“à‚·‚×‚Ä‚Ì“G‚ÌQÆ‚ğæ“¾‚·‚é
+/// ã‚¹ãƒ†ãƒ¼ã‚¸å†…ã™ã¹ã¦ã®æ•µã®å‚ç…§ã‚’å–å¾—ã™ã‚‹
 /// </summary>
 public class EnemyGetter : MonoBehaviour
 {
     /// <summary>
-    /// “G‚ÌQÆ
+    /// æ•µã®å‚ç…§
     /// </summary>
-    public List<Enemy> Enemies => _enemies; // ƒ‰ƒ€ƒ_® ƒvƒƒpƒeƒB
+    public List<Enemy> Enemies => _enemies; // ãƒ©ãƒ ãƒ€å¼ ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£
     private List<Enemy> _enemies = new List<Enemy>();
 
     private void Start()
     {
-        var enemies = GameObject.FindGameObjectsWithTag("Enemy"); // ƒV[ƒ““à‚ÌƒGƒlƒ~[‚ÌQÆ‚ğæ“¾
-        foreach(GameObject enemy in enemies)
+        var enemies = GameObject.FindGameObjectsWithTag("Enemy"); // ã‚·ãƒ¼ãƒ³å†…ã®ã‚¨ãƒãƒŸãƒ¼ã®å‚ç…§ã‚’å–å¾—
+        foreach (GameObject enemy in enemies)
         {
-            _enemies.Add(enemy.GetComponent<Enemy>());@// æ“¾‚µ‚½ƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚©‚çEnemyƒNƒ‰ƒX‚ğæ“¾‚µ‚ÄƒŠƒXƒg‚É’Ç‰Á‚·‚é
+            _enemies.Add(enemy.GetComponent<Enemy>()); // å–å¾—ã—ãŸã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰Enemyã‚¯ãƒ©ã‚¹ã‚’å–å¾—ã—ã¦ãƒªã‚¹ãƒˆã«è¿½åŠ ã™ã‚‹
         }
     }
 
     /// <summary>
-    /// ƒŠƒXƒg‚©‚çƒGƒlƒ~[‚ÌQÆ‚ğæ‚èœ‚­
-    /// “G‚ª€–S‚µ‚½ƒ^ƒCƒ~ƒ“ƒO‚ÅŒÄ‚Ño‚·
+    /// ãƒªã‚¹ãƒˆã‹ã‚‰ã‚¨ãƒãƒŸãƒ¼ã®å‚ç…§ã‚’å–ã‚Šé™¤ã
+    /// æ•µãŒæ­»äº¡ã—ãŸã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§å‘¼ã³å‡ºã™
     /// </summary>
     public void RemoveEnemy(Enemy enemy)
     {
         if (_enemies.Contains(enemy))
         {
-            _enemies.Remove(enemy); // ƒŠƒXƒg“à‚ÉQÆ‚ª‚ ‚ê‚ÎAƒŠƒXƒg‚©‚çÁ‹‚·‚é
+            _enemies.Remove(enemy); // ãƒªã‚¹ãƒˆå†…ã«å‚ç…§ãŒã‚ã‚Œã°ã€ãƒªã‚¹ãƒˆã‹ã‚‰æ¶ˆå»ã™ã‚‹
         }
     }
 }
