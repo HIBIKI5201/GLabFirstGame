@@ -45,8 +45,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _jumpPower;
 
+    [Header("プレイヤーが草むらにいる時、プレイヤーを無視する時間")]
     [SerializeField]
-    private float _missingTime = 2f;
+    private float _playerIgnoreTimeInGrass = 2f;
 
     [Header("移動スピード")]
     [SerializeField, FormerlySerializedAs("_speed")]
@@ -78,7 +79,7 @@ public class Enemy : MonoBehaviour
 
     [Header("現在の数値（インスペクタに編集しても効果なし）")]
     [SerializeField]
-    private int _currentHp; // 現在のHP
+    private int _currentHp;
 
     [SerializeField]
     private float _currentSpeed;
@@ -98,8 +99,6 @@ public class Enemy : MonoBehaviour
     {
         get => _currentState;
     }
-
-    public bool StayGrass { get; set; }
 
     private EnemyDamageHandler _damageHandler;
     private EnemyAttackHandler _attackHandler;
@@ -559,7 +558,7 @@ public class Enemy : MonoBehaviour
         {
             // もし壁などに触れたら移動方向を反転させる
             _currentDirection = _currentDirection == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
-            if (!StayGrass && playerHit)
+            if (!PlayerController.IsPlayerInGrass && playerHit)
             {
                 // プレイヤーに当たっていたら攻撃を行う
                 AttackPlayer();
@@ -586,7 +585,7 @@ public class Enemy : MonoBehaviour
         {
             return;
         }
-        if (StayGrass)
+        if (PlayerController.IsPlayerInGrass)
         {
             return;
         }
@@ -602,7 +601,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void AttackPlayer()
     {
-        if (!StayGrass)
+        if (!PlayerController.IsPlayerInGrass)
         {
             _attackHandler.Attack(s_playerController);
         }
@@ -648,7 +647,7 @@ public class Enemy : MonoBehaviour
 
         var mask = _raycastData.RaycastSideMask;
 
-        if (StayGrass)
+        if (PlayerController.IsPlayerInGrass)
         {
             mask &= ~(1 << LayerMask.NameToLayer(k_playerTag));
         }
@@ -795,9 +794,9 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (StayGrass)
+        if (PlayerController.IsPlayerInGrass)
         {
-            ReactionGrass(_missingTime);
+            ReactionGrass(_playerIgnoreTimeInGrass);
         }
 
         UpdateHorizontalMovement();

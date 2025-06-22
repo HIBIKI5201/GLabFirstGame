@@ -55,6 +55,12 @@ public class PlayerController : MonoBehaviour
     IEnumerator _jumpEnumerator;
     private Collider2D _playerCollider;
 
+    public static bool IsPlayerInGrass
+    {
+        get;
+        private set;
+    }
+
     private void OnValidate()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -118,11 +124,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("草むらに入った");
             // GameObject.FindGameObjectsWithTag()
             // for文やforeace文で、エネミー全体に回す
-
-            foreach (Enemy enemy in _enemyGetter.Enemies)
-            {
-                enemy.StayGrass = true;
-            }
+            IsPlayerInGrass = true;
         }
     }
 
@@ -132,10 +134,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("草むらから出た!");
 
-            foreach (Enemy enemy in _enemyGetter.Enemies)
-            {
-                enemy.StayGrass = false;
-            }
+            IsPlayerInGrass = false;
         }
     }
 
