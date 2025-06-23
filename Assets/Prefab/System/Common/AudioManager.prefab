@@ -195,7 +195,19 @@ MonoBehaviour:
     _volume: 1
     _pitch: 0
   - _name: getPetal
-    _clip: {fileID: 8300000, guid: e59af7b65911d6f47b58c720ed3faa5f, type: 3}
+    _clip: {fileID: 0}
+    _volume: 1
+    _pitch: 0
+  - _name: getIvy
+    _clip: {fileID: 8300000, guid: 955895c7b60f1f7459a9182d03249760, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: putIvy
+    _clip: {fileID: 8300000, guid: 89a3a1d7e78b531499c49a34152105c7, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: enterIvy
+    _clip: {fileID: 8300000, guid: 8d5c285499e6b204f92862d2b943d129, type: 3}
     _volume: 1
     _pitch: 0
   - _name: healing
