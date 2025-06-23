@@ -268,7 +268,8 @@ public class ReferenceFinderWindow : EditorWindow
         EditorUtility.ClearProgressBar();
         AssetDatabase.Refresh();
     }
-    public static void HorizontalLine(int height, Color color, float margin)
+
+    private static void HorizontalLine(int height, Color color, float margin)
     {
         Divider.fixedHeight = height;
         var cachedGUIColor = GUI.color;
