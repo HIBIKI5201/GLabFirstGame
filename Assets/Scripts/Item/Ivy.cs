@@ -99,19 +99,15 @@ public class Ivy : ItemBase
         hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
         foreach (var obj in hit)
         {
-            if (obj.CompareTag("Enemy"))
+            if (obj.TryGetComponent<Enemy>(out var enemy) && !enemy.CanAvoidIvy)
             {
-                if (obj.TryGetComponent<Enemy>(out var enemy))
+                enemy.ReactionStone(_enemyEffectTime);
+
+                if (enemy.State != EnemyStateType.Faint)
                 {
-                    enemy.ReactionStone(_enemyEffectTime);
-
-                    if (enemy.State != EnemyStateType.Faint)
-                    {
-                        // まだ敵が気絶状態ではなければ、SEを再生する
-                        AudioManager.Instance.PlaySE("damage_enemy");
-                    }
+                    // まだ敵が気絶状態ではなければ、SEを再生する
+                    AudioManager.Instance.PlaySE("damage_enemy");
                 }
-
                 Destroy(gameObject, 0f);
             }
         }

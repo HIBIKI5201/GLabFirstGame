@@ -57,8 +57,11 @@ public class Enemy : MonoBehaviour
     private float _speedWhenChasingPlayer;
 
     [Header("移動能力")]
-    [SerializeField, FormerlySerializedAs("_jumpOver")]
-    private bool _canJumpOver;
+    [SerializeField, FormerlySerializedAs("_jumpOver"), FormerlySerializedAs("_canJumpOver")]
+    private bool _canJumpOverWall;
+
+    [SerializeField]
+    private bool _canJumpOverIvy;
 
     [SerializeField, FormerlySerializedAs("_goDown")]
     private bool _canJumpDown;
@@ -98,6 +101,11 @@ public class Enemy : MonoBehaviour
     public EnemyStateType State
     {
         get => _currentState;
+    }
+
+    public bool CanAvoidIvy
+    {
+        get => _canJumpOverIvy;
     }
 
     private EnemyDamageHandler _damageHandler;
@@ -675,6 +683,26 @@ public class Enemy : MonoBehaviour
         return Physics2D.Raycast(transform.position, direction, _raycastData.MaxJumpDistanceFromWall, _raycastData.RaycastGroundMask);
     }
 
+    private bool IsCloseEnoughToJumpOverIvy()
+    {
+        Vector2 direction = _currentDirection switch
+        {
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right => Vector2.right,
+            _ => Vector2.zero
+        };
+        var hit = Physics2D.Raycast(transform.position, direction, _raycastData.MaxJumpDistanceFromWall, _raycastData.RaycastItemMask);
+
+        if (hit.transform)
+        {
+            if (hit.transform.GetComponent<Ivy>())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     #endregion
 
     #region 状態更新
@@ -736,7 +764,12 @@ public class Enemy : MonoBehaviour
             };
         }
 
-        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOver)
+        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOverWall)
+        {
+            Jump();
+        }
+
+        if (IsCloseEnoughToJumpOverIvy() && IsGrounded() && _canJumpOverIvy)
         {
             Jump();
         }
@@ -778,7 +811,12 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOver)
+        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOverWall)
+        {
+            Jump();
+        }
+
+        if (IsCloseEnoughToJumpOverIvy() && IsGrounded() && _canJumpOverIvy)
         {
             Jump();
         }

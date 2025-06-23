@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -11,6 +11,8 @@ public struct GroundedRay
 
     [FormerlySerializedAs("_sideMask")]
     public LayerMask RaycastSideMask;
+
+    public LayerMask RaycastItemMask;
 
     [Header("現在の位置から左と右の距離差")]
     [FormerlySerializedAs("_rightRayPos")]

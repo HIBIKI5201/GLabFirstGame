@@ -276,12 +276,15 @@ MonoBehaviour:
   _maxHp: 1
   _attackPoint: 1
   _jumpPower: 5
+  _playerIgnoreTimeInGrass: 2
   _normalSpeed: 4.2
   _speedWhenChasingPlayer: 4.2
-  _canJumpOver: 0
+  _canJumpOverWall: 0
+  _canJumpOverIvy: 0
   _canJumpDown: 0
   _canChasePlayer: 0
   _canReceiveDamage: 1
+  _stunSpriteRenderer: {fileID: 0}
   _raycastData:
     RaycastGroundMask:
       serializedVersion: 2
@@ -289,6 +292,9 @@ MonoBehaviour:
     RaycastSideMask:
       serializedVersion: 2
       m_Bits: 384
+    RaycastItemMask:
+      serializedVersion: 2
+      m_Bits: 2560
     RightRayOriginOffset: {x: 0.95, y: 0}
     LeftRayOriginOffset: {x: -0.95, y: 0}
     GroundCheckRayDistance: 0.88

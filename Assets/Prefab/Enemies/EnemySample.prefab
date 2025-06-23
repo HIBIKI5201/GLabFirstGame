@@ -184,12 +184,15 @@ MonoBehaviour:
   _maxHp: 0
   _attackPoint: 0
   _jumpPower: 0
+  _playerIgnoreTimeInGrass: 2
   _normalSpeed: 10
   _speedWhenChasingPlayer: 0
-  _canJumpOver: 0
+  _canJumpOverWall: 0
+  _canJumpOverIvy: 0
   _canJumpDown: 0
   _canChasePlayer: 0
   _canReceiveDamage: 0
+  _stunSpriteRenderer: {fileID: 0}
   _raycastData:
     RaycastGroundMask:
       serializedVersion: 2
