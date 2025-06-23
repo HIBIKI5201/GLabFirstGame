@@ -91,6 +91,7 @@ public class MissingReferenceFinderWindow : EditorWindow
         if (GUILayout.Button("結果をリフレッシュ", GUILayout.Height(30)))
         {
             RefreshResults();
+            SelectMissingObjectsInHierarchy();
         }
 
         GUILayout.EndScrollView();
@@ -120,8 +121,6 @@ public class MissingReferenceFinderWindow : EditorWindow
                 FindMissingReferencesInScene(SceneManager.GetSceneAt(i));
             }
         }
-
-        SelectMissingObjectsInHierarchy();
     }
 
     private void FindMissingReferencesInScene(Scene scene)
@@ -199,6 +198,7 @@ public class MissingReferenceFinderWindow : EditorWindow
         if (gameObjectsToSelect.Count > 0)
         {
             Selection.objects = gameObjectsToSelect.ToArray();
+            Debug.LogWarning($"参照が切れているオブジェクト ({gameObjectsToSelect.Count}) を選択しています:\n- {string.Join("\n- ", gameObjectsToSelect)}");
         }
     }
 
