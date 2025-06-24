@@ -214,3 +214,11 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: cffce7a2d2281174dafa271184f54633, type: 3}
     _volume: 1
     _pitch: 0
+  - _name: grassIn
+    _clip: {fileID: 8300000, guid: f7050fe82ad99d14485d54854bdfa88b, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: grassOut
+    _clip: {fileID: 8300000, guid: 9553667d34f266f459ad8e0d074e952c, type: 3}
+    _volume: 1
+    _pitch: 0

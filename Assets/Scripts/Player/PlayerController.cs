@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+        _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
     }
 
     private void Update()
@@ -117,13 +118,12 @@ public class PlayerController : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.name);
-        if (collision.gameObject.name == "goal") _isInvincible = true; // ゴールした時
+        if (collision.gameObject.name == "goal")
+        {
+            _isInvincible = true;
+        }
         if (collision.gameObject.CompareTag("Grass"))
         {
-            Debug.Log("草むらに入った");
-            // GameObject.FindGameObjectsWithTag()
-            // for文やforeace文で、エネミー全体に回す
             IsPlayerInGrass = true;
         }
     }
@@ -132,8 +132,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Grass"))
         {
-            Debug.Log("草むらから出た!");
-
             IsPlayerInGrass = false;
         }
     }
