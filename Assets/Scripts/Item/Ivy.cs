@@ -32,15 +32,6 @@ public class Ivy : ItemBase
     private Vector3 _cacheScale;
     private bool _putIvySoundPlayed;
 
-    private void Awake()
-    {
-        _cacheScale = transform.localScale;
-        _boxCollider2D = GetComponent<BoxCollider2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _expandCollider.enabled = false;
-        _expandSprite.enabled = false;
-    }
-
     private bool IsBottom()
     {
         return transform.position.y < _ivyDisappearHeight;
@@ -48,6 +39,11 @@ public class Ivy : ItemBase
 
     private void Start()
     {
+        _cacheScale = transform.localScale;
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _expandCollider.enabled = false;
+        _expandSprite.enabled = false;
         StartCoroutine(BottomCheck());
     }
 
