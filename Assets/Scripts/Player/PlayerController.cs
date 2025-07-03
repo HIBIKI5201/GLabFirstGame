@@ -14,11 +14,14 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] int _maxHp;
+    [SerializeField] int _initHp;
     public int CurrentPetal;
     public int InitPetal = 0;
-    public int MaxPetal = 5;
+    public int MaxPetal = 4;
     public int CurrentHp { get; private set; }
+    public int MaxHp { get { return _maxHp; } }
     [SerializeField] public List<GameObject> _rose = new List<GameObject>();
+    [SerializeField] public GameObject _petalGuage = default;
     [SerializeField] public float _maxSpeed;
     [SerializeField] public float _movePower;
     [SerializeField] public float _deceleration;
@@ -47,9 +50,11 @@ public class PlayerController : MonoBehaviour
     float _horiInput = 0;
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
+    HealingEffect _healingEffect;
     PauseManager _pauseManager;
     AudioSource _audioSource;
     Animator _animator;
+    Animator _petalGuageAnimator;
     Vector2 _pauseVelocity;
     float _veloX = 0;
     float _acce = 1;
@@ -59,7 +64,8 @@ public class PlayerController : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _damageEffect = GetComponent<DamageEffect>();
-        
+        _healingEffect = GetComponent<HealingEffect>();
+
         if (!TryGetComponent(out _audioSource)) Debug.LogError("AudioSourceが設定されていません");
         
         // PauseManager
@@ -75,7 +81,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        CurrentHp = _maxHp;
+        CurrentHp = _initHp;
         _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
         
@@ -94,6 +100,8 @@ public class PlayerController : MonoBehaviour
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
+
+        _petalGuageAnimator = _petalGuage.GetComponent<Animator>();
     }
 
     private void Update()
@@ -105,6 +113,7 @@ public class PlayerController : MonoBehaviour
             ChangeItem();
             UseItem();
         }
+        _petalGuageAnimator.SetInteger("P_PetalCount", CurrentPetal);
     }
     
     private void OnTriggerEnter2D(Collider2D collision)
@@ -332,19 +341,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PetalGetAction()
     {
-        CurrentPetal++;
-        if (CurrentPetal >= MaxPetal)
+        if (CurrentPetal < MaxPetal)
         {
-            CurrentPetal = 0;
-            // TODO 花びらゲージを0にする
-            //InitPetalGauge();
-            // TODO 回復処理
-            //HealHp();
-        }
-        else
-        {
-            // TODO 花びらゲージを更新する
-            //UpdatePetalGauge();
+            CurrentPetal++;
+            if (CurrentPetal == MaxPetal)
+            {
+                CurrentPetal = MaxPetal;
+                FluctuationLife(1);
+            }
         }
     }
     bool Item(out ItemBase item)
@@ -459,7 +463,8 @@ public class PlayerController : MonoBehaviour
                 for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
                     _damageEffect.PlayDamageEffect();
-                    _rose.RemoveAt(0);
+                    //_rose.RemoveAt(0);
+
                 }
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
@@ -476,15 +481,17 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (CurrentHp >= _maxHp) return;
             CurrentHp += value;
+            _healingEffect.PlayHealingEffect();
         }
         
-        if (CurrentHp > _maxHp)
-        {
-            CurrentHp = _maxHp;
-        }
+        //if (CurrentHp > _maxHp)
+        //{
+        //    CurrentHp = _maxHp;
+        //}
     }
-    
+
     IEnumerator Invincible()
     {
         _isInvincible = true;

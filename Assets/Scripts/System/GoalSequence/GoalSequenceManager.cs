@@ -93,8 +93,9 @@ public class GoalSequenceManager : MonoBehaviour
         int min = Mathf.FloorToInt(_timer.CurrentTime / 60); // 小数点以下切り捨て
         int sec = Mathf.FloorToInt(_timer.CurrentTime % 60);
         _clearTime.text = $"クリアタイム {min:00}:{sec:00}";
-        
-        _gameProgressManager.StageClear(_nowStage);
+
+        // クリアしたステージのindex、および花びら所持数を渡す
+        _gameProgressManager.StageClear(_nowStage, _playerController.CurrentPetal);
     }
 
     /// <summary>

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2876446638051849357}
   - component: {fileID: 5215226295752310641}
   - component: {fileID: 68313780225532984}
+  - component: {fileID: 4507324999788391195}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -57,6 +58,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -94,7 +98,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!50 &4471043681205350746
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -105,8 +109,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.1
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0.1
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -131,8 +135,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80e6e48d36e84b24e85c9c18d3a0f50c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHp: 4
-  _rose: []
+  _maxHp: 5
+  _initHp: 4
+  CurrentPetal: 0
+  InitPetal: 0
+  MaxPetal: 4
+  _rose:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _petalGuage: {fileID: 0}
   _maxSpeed: 6
   _movePower: 40
   _deceleration: 8
@@ -181,6 +195,7 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989625297304483414}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 43c94a06f0bdd2d4eaf4524ac6cedc24, type: 2}
   m_IncludeLayers:
@@ -204,7 +219,8 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.09}
   m_Size: {x: 1, y: 2.17}
   m_Direction: 0
@@ -221,8 +237,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameManager: {fileID: 0}
-  _fadeImage: {fileID: 0}
   _sceneLoader: {fileID: 0}
+  goalSequence: {fileID: 0}
+  goal3Sequence: {fileID: 0}
+  _animator: {fileID: 0}
+  _fadeImage: {fileID: 0}
   _clearText: {fileID: 0}
   _timerTxt: {fileID: 0}
   _clearTime: {fileID: 0}
@@ -240,6 +259,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -337,6 +357,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e12736113cd86643b0111fb57dc74e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _stageText: {fileID: 0}
+  _nowStage: 0
 --- !u!114 &68313780225532984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,6 +371,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b89a417d7e607845b81e56c973fe794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _redImage: {fileID: 0}
+  _vignette: {fileID: 0}
+  _damageEffectDuration: 0.3
+--- !u!114 &4507324999788391195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989625297304483414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42504cb27d258514ab5dcc619a020710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vignette: {fileID: 0}
+  _healingEffectDuration: 0.3
 --- !u!1001 &636050959518985300
 PrefabInstance:
   m_ObjectHideFlags: 0
