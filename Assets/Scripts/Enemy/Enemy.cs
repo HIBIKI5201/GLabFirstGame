@@ -309,7 +309,7 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if(_stayGrass)
+        if (_stayGrass)
         {
             ReactionGrass(_missingTime);
         }
@@ -478,21 +478,26 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator Missing(float MissingTime)
     {
-            Debug.Log("見つからない");
+        Debug.Log("見つからない");
         if (_stunSpriteRenderer)
         {
             _stunSpriteRenderer.enabled = true;
         }
-            State = EnemyStateType.MissingPlayerByGrass;
-            Debug.Log("aaaaaa");
-            yield return new WaitForSeconds(MissingTime);
+        State = EnemyStateType.MissingPlayerByGrass;
+        Debug.Log("aaaaaa");
+        yield return new WaitForSeconds(MissingTime);
         if (_stunSpriteRenderer)
         {
             _stunSpriteRenderer.enabled = false;
         }
+
+        if (State != EnemyStateType.Faint)
+        {
             State = EnemyStateType.Normal;
-            Debug.Log("見つからない終了");
-        
+        }
+
+        Debug.Log("見つからない終了");
+
     }
 
 
