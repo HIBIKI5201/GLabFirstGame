@@ -33,6 +33,10 @@ public abstract class ItemBase : MonoBehaviour
     /// アイテムを使用した時の処理
     /// </summary>
     protected abstract void Activate();
+    /// <summary>
+    /// アイテム取得時のSE再生処理
+    /// </summary>
+    protected abstract void PlaySE();
     
     private void Awake()
     {
@@ -60,7 +64,7 @@ public abstract class ItemBase : MonoBehaviour
             if (collision.CompareTag("Player"))
             {
                 Player = collision.gameObject;
-                AudioManager.Instance.PlaySE("itemGet");
+                PlaySE();
                 transform.position = Camera.main.transform.position;
                 GetComponent<Collider2D>().enabled = false;
                 collision.gameObject.GetComponent<PlayerController>().GetItem(this);

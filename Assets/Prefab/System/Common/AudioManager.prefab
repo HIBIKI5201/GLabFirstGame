@@ -182,4 +182,23 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: 5b7e1af3753028542884d94b92fc3578, type: 3}
     _volume: 1
     _pitch: 0
-  _bgmSource: {fileID: 0}
+  - _name: getRock
+    _clip: {fileID: 8300000, guid: eec8e3c479928e14eb0ed42c1bc6b522, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: getBottle
+    _clip: {fileID: 8300000, guid: 26fb766530c41fd4ea04db14116129e2, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: getMeat
+    _clip: {fileID: 8300000, guid: 6ce1bed4f6187314b87098c46015db8a, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: getPetal
+    _clip: {fileID: 8300000, guid: e59af7b65911d6f47b58c720ed3faa5f, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: healing
+    _clip: {fileID: 8300000, guid: cffce7a2d2281174dafa271184f54633, type: 3}
+    _volume: 1
+    _pitch: 0

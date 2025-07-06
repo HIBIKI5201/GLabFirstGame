@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 public class Rock : ItemBase
 {
+    private string _seNameGet = "getRock"; // アイテム取得時に再生するSEの名称
     protected override void Activate()
     {
         // 投げていない時であれば、以降の処理は行わない
@@ -29,7 +30,10 @@ public class Rock : ItemBase
             }
         }
     }
-    
+    protected override void PlaySE()
+    {
+        AudioManager.Instance.PlaySE(_seNameGet);
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
