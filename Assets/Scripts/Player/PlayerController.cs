@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +51,8 @@ public class PlayerController : MonoBehaviour
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
-    
+    [SerializeField] public float stompPowerMultiplier = 3f;
+
 
 
     private void Awake()
@@ -219,7 +220,30 @@ public class PlayerController : MonoBehaviour
         else if (_isStompEnemy)
         {
             _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
-            _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
+
+            // 入力取得：A = -1、D = 1、無入力 = 0
+            float input = Input.GetAxisRaw("Horizontal");
+
+            Vector2 bounceDir;
+
+            if (input > 0f)
+            {
+                // Dキー押下 → 右上へ
+                bounceDir = new Vector2(5f, 0.2f).normalized;
+            }
+            else if (input < 0f)
+            {
+                // Aキー押下 → 左上へ
+                bounceDir = new Vector2(-5f, 0.2f).normalized;
+            }
+            else
+            {
+                // 入力なし → 真上
+                bounceDir = Vector2.up;
+            }
+
+            _rb.AddForce(bounceDir * (_jumpPower * stompPowerMultiplier), ForceMode2D.Impulse);
+
             _isStompEnemy = false;
         }
         else if (_rb.linearVelocity.y > 0)
