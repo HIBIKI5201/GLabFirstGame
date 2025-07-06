@@ -1,64 +1,131 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// ƒAƒCƒeƒ€Fƒcƒ^
+/// ã‚¢ã‚¤ãƒ†ãƒ ï¼šãƒ„ã‚¿
 /// </summary>
 public class Ivy : ItemBase
 {
-    [SerializeField] private float bottom = -10f;
-    [SerializeField] private float effectTime = 1f; // Œø‰ÊŠÔ
+    [Header("åœ°é¢ã«æ¥è§¦ã—ãŸã‚‰ã€ã“ã®ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ãªã‚‹")]
+    [SerializeField, Layer]
+    private int _onTouchGroundLayer;
+
+    [Header("å¥ˆè½ã® Y ãƒã‚¸ã‚·ãƒ§ãƒ³")]
+    [SerializeField]
+    private float _ivyDisappearHeight = -10f;
+
+    [Header("æ•µã«åŠ¹æœæ™‚é–“")]
+    [SerializeField]
+    private float _enemyEffectTime = 1f;
+
+    [Header("å’²ã„ãŸçŠ¶æ…‹")]
+    [SerializeField, Required]
+    private BoxCollider2D _expandCollider;
+
+    [SerializeField, Required]
+    private SpriteRenderer _expandSprite;
+
+    private BoxCollider2D _boxCollider2D;
+    private SpriteRenderer _spriteRenderer;
+    private Rigidbody2D _rigidbody2D;
+    private float _releasedTime;
+    private Vector3 _cacheScale;
+    private bool _putIvySoundPlayed;
 
     private bool IsBottom()
     {
-        return transform.position.y < bottom;
+        return transform.position.y < _ivyDisappearHeight;
     }
 
     private void Start()
     {
+        _cacheScale = transform.localScale;
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _expandCollider.enabled = false;
+        _expandSprite.enabled = false;
         StartCoroutine(BottomCheck());
     }
 
     private IEnumerator BottomCheck()
     {
-        Debug.Log("“Ş—‚É‚Í‚Ü‚¾—‚¿‚Ä‚¢‚È‚¢");
-        yield return new WaitUntil(IsBottom); // ğŒ‚ªtrue‚É‚È‚é‚Ü‚Å‘Ò‚Â
-        Debug.Log("“Ş—‚É—‚¿‚½");
+        yield return new WaitUntil(IsBottom); // æ¡ä»¶ãŒtrueã«ãªã‚‹ã¾ã§å¾…ã¤
+        Debug.Log("å¥ˆè½ã«è½ã¡ãŸ");
         Destroy(gameObject);
     }
 
     protected override void Activate()
     {
+        if (!IsThrowing)
+        {
+            return;
+        }
 
-        // “Š‚°‚Ä‚¢‚È‚¢‚Å‚ ‚ê‚ÎAˆÈ~‚Ìˆ—‚Ís‚í‚È‚¢
-        //if (!IsThrowing) return;
+        _releasedTime += Time.deltaTime;
 
-        var hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
-
+        var hit = Physics2D.OverlapBoxAll(transform.position, _boxCollider2D.size, 0);
         foreach (var obj in hit)
         {
-            if (obj.CompareTag("Enemy"))
+            if (obj.gameObject.CompareTag("Ground"))
             {
-                if (obj.TryGetComponent<Enemy>(out var enemy))
+                gameObject.layer = _onTouchGroundLayer;
+                Landing = true;
+                _boxCollider2D.enabled = true;
+                if (!_putIvySoundPlayed)
                 {
-                    enemy.ReactionStone(effectTime);
-
-                    if (enemy.State != EnemyStateType.Faint)
-                    {
-                        // ‚Ü‚¾“G‚ª‹Câó‘Ô‚Å‚Í‚È‚¯‚ê‚ÎASE‚ğÄ¶‚·‚é
-                        AudioManager.Instance.PlaySE("damage_enemy");
-                    }
+                    AudioManager.Instance.PlaySE("putIvy");
+                    _putIvySoundPlayed = true;
                 }
 
+                _boxCollider2D.offset = _expandCollider.offset;
+                _boxCollider2D.size = _expandCollider.size;
+                _spriteRenderer.sprite = _expandSprite.sprite;
+                transform.localScale = _expandSprite.transform.localScale.x * _cacheScale;
+            }
+        }
+
+        if (_releasedTime > 0.5f && TryGetComponent(out _rigidbody2D) && Mathf.Abs(_rigidbody2D.linearVelocity.y) <= 0)
+        {
+            _rigidbody2D.linearVelocity = Vector2.zero;
+            _rigidbody2D.angularVelocity = 0;
+            _rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+            _boxCollider2D.isTrigger = true;
+        }
+
+        hit = Physics2D.OverlapCircleAll(transform.position, EffectRange);
+        foreach (var obj in hit)
+        {
+            if (obj.TryGetComponent<Enemy>(out var enemy) && !enemy.CanAvoidIvy)
+            {
+                enemy.ReactionStone(_enemyEffectTime);
+
+                if (enemy.State != EnemyStateType.Faint)
+                {
+                    // ã¾ã æ•µãŒæ°—çµ¶çŠ¶æ…‹ã§ã¯ãªã‘ã‚Œã°ã€SEã‚’å†ç”Ÿã™ã‚‹
+                    AudioManager.Instance.PlaySE("damage_enemy");
+                }
                 Destroy(gameObject, 0f);
             }
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        // FIXME: This is not invoked since the Trigger is deactivated from PlayerController.cs
+        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        {
+            AudioManager.Instance.PlaySE("enterIvy");
+        }
+    }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireSphere(transform.position, EffectRange);
+    }
+
+    protected override void PlaySE()
+    {
+        AudioManager.Instance.PlaySE("getIvy");
     }
 }

@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// 敵の状態の列挙型
 /// </summary>
 public enum EnemyStateType
@@ -27,4 +27,9 @@ public enum EnemyStateType
     /// 追跡中
     /// </summary>
     ChasingPlayer,
+
+    /// <summary>
+    /// Playerを見失っている（マップオブジェクト：草むらの効果）
+    /// </summary>
+    MissingPlayerByGrass,
 }

@@ -45,6 +45,10 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _jumpPower;
 
+    [Header("プレイヤーが草むらにいる時、プレイヤーを無視する時間")]
+    [SerializeField]
+    private float _playerIgnoreTimeInGrass = 2f;
+
     [Header("移動スピード")]
     [SerializeField, FormerlySerializedAs("_speed")]
     private float _normalSpeed;
@@ -53,8 +57,11 @@ public class Enemy : MonoBehaviour
     private float _speedWhenChasingPlayer;
 
     [Header("移動能力")]
-    [SerializeField, FormerlySerializedAs("_jumpOver")]
-    private bool _canJumpOver;
+    [SerializeField, FormerlySerializedAs("_jumpOver"), FormerlySerializedAs("_canJumpOver")]
+    private bool _canJumpOverWall;
+
+    [SerializeField]
+    private bool _canJumpOverIvy;
 
     [SerializeField, FormerlySerializedAs("_goDown")]
     private bool _canJumpDown;
@@ -65,13 +72,17 @@ public class Enemy : MonoBehaviour
     [SerializeField, FormerlySerializedAs("_canDamage")]
     private bool _canReceiveDamage;
 
+    [Header("演出")]
+    [SerializeField]
+    private SpriteRenderer _stunSpriteRenderer;
+
     [Header("Raycast 判定設定")]
     [SerializeField, FormerlySerializedAs("_ground")]
     private GroundedRay _raycastData;
 
     [Header("現在の数値（インスペクタに編集しても効果なし）")]
     [SerializeField]
-    private int _currentHp; // 現在のHP
+    private int _currentHp;
 
     [SerializeField]
     private float _currentSpeed;
@@ -92,11 +103,17 @@ public class Enemy : MonoBehaviour
         get => _currentState;
     }
 
+    public bool CanAvoidIvy
+    {
+        get => _canJumpOverIvy;
+    }
+
     private EnemyDamageHandler _damageHandler;
     private EnemyAttackHandler _attackHandler;
 
     private Coroutine _itemReactionCoroutine = null;
     private Coroutine _slowDownCoroutine = null;
+    private Coroutine _grassCoroutine = null;
 
     private SpriteRenderer[] _spriteRenderers;
     private Transform _modelTransform;
@@ -130,6 +147,11 @@ public class Enemy : MonoBehaviour
 
         void Initialize()
         {
+            if (_stunSpriteRenderer)
+            {
+                _stunSpriteRenderer.enabled = false;
+            }
+
             if (s_playerController == null || s_playerTransform == null)
             {
                 s_playerController = FindAnyObjectByType<PlayerController>();
@@ -239,11 +261,16 @@ public class Enemy : MonoBehaviour
                 UpdateChasingPlayerState();
                 break;
 
+            case EnemyStateType.MissingPlayerByGrass:
+                UpdateMissingPlayerByGrassState();
+                SearchForPlayer(EnemyStateType.MissingPlayerByGrass);
+                break;
+
             case EnemyStateType.Normal:
             default:
                 TryChangeDirection();
                 UpdateHorizontalMovement();
-                SearchForPlayer();
+                SearchForPlayer(EnemyStateType.Normal);
                 _animator.SetBool(s_gallopParameter, false);
                 _animator.SetBool(s_dizzyParameter, false);
                 break;
@@ -324,6 +351,11 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void Die()
     {
+        EnemyGetter enemyGetter = FindFirstObjectByType<EnemyGetter>();
+        if (enemyGetter)
+        {
+            enemyGetter.RemoveEnemy(this);
+        }
         Destroy(gameObject);
     }
 
@@ -362,6 +394,40 @@ public class Enemy : MonoBehaviour
         _meatPosition = meatPosition;
         _meatEatingStartTime = Time.time;
         _meatEatingTargetDuration = effectTime;
+    }
+
+    public void ReactionGrass(float missingTime)
+    {
+        if (_currentState == EnemyStateType.MissingPlayerByGrass)
+        {
+            return;
+        }
+
+        Debug.Log("見失ったよ");
+        if (_grassCoroutine != null)
+        {
+            StopCoroutine(_grassCoroutine);
+        }
+        _rigidbody2D.linearVelocity = Vector2.zero;
+        _grassCoroutine = StartCoroutine(Missing(missingTime));
+
+        IEnumerator Missing(float missingTime)
+        {
+            Debug.Log("見つからない");
+            if (_stunSpriteRenderer)
+            {
+                _stunSpriteRenderer.enabled = true;
+            }
+            _currentState = EnemyStateType.MissingPlayerByGrass;
+            Debug.Log("aaaaaa");
+            yield return new WaitForSeconds(missingTime);
+            if (_stunSpriteRenderer)
+            {
+                _stunSpriteRenderer.enabled = false;
+            }
+            _currentState = EnemyStateType.Normal;
+            Debug.Log("見つからない終了");
+        }
     }
 
     // TODO: Rename to "ApplySwampItemEffect"?
@@ -500,7 +566,7 @@ public class Enemy : MonoBehaviour
         {
             // もし壁などに触れたら移動方向を反転させる
             _currentDirection = _currentDirection == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
-            if (playerHit)
+            if (!PlayerController.IsPlayerInGrass && playerHit)
             {
                 // プレイヤーに当たっていたら攻撃を行う
                 AttackPlayer();
@@ -521,15 +587,21 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// プレイヤーを探す処理
     /// </summary>
-    private void SearchForPlayer()
+    private void SearchForPlayer(EnemyStateType enemyStateType)
     {
         if (!_canChasePlayer)
         {
             return;
         }
+        if (PlayerController.IsPlayerInGrass)
+        {
+            return;
+        }
 
         var hit = Physics2D.Linecast(transform.position, s_playerTransform.position, _raycastData.RaycastGroundMask);
-        _currentState = hit ? EnemyStateType.Normal : EnemyStateType.ChasingPlayer;
+
+        // TODO: What does it mean? Shouldn't it be opposite? (Or maybe it is indeed correct.)
+        _currentState = hit ? enemyStateType : EnemyStateType.ChasingPlayer;
     }
 
     /// <summary>
@@ -537,7 +609,10 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void AttackPlayer()
     {
-        _attackHandler.Attack(s_playerController);
+        if (!PlayerController.IsPlayerInGrass)
+        {
+            _attackHandler.Attack(s_playerController);
+        }
     }
 
     #endregion
@@ -578,7 +653,14 @@ public class Enemy : MonoBehaviour
             _ => Vector2.zero
         };
 
-        var hit = Physics2D.Raycast(transform.position, rayDirection, _raycastData.SideCheckRayDistance, _raycastData.RaycastSideMask);
+        var mask = _raycastData.RaycastSideMask;
+
+        if (PlayerController.IsPlayerInGrass)
+        {
+            mask &= ~(1 << LayerMask.NameToLayer(k_playerTag));
+        }
+
+        var hit = Physics2D.Raycast(transform.position, rayDirection, _raycastData.SideCheckRayDistance, mask);
         isPlayerHit = false;
         if (hit && hit.collider)
         {
@@ -599,6 +681,26 @@ public class Enemy : MonoBehaviour
             _ => Vector2.zero
         };
         return Physics2D.Raycast(transform.position, direction, _raycastData.MaxJumpDistanceFromWall, _raycastData.RaycastGroundMask);
+    }
+
+    private bool IsCloseEnoughToJumpOverIvy()
+    {
+        Vector2 direction = _currentDirection switch
+        {
+            DirectionType.Left => Vector2.left,
+            DirectionType.Right => Vector2.right,
+            _ => Vector2.zero
+        };
+        var hit = Physics2D.Raycast(transform.position, direction, _raycastData.MaxJumpDistanceFromWall, _raycastData.RaycastItemMask);
+
+        if (hit.transform)
+        {
+            if (hit.transform.GetComponent<Ivy>())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     #endregion
@@ -662,7 +764,12 @@ public class Enemy : MonoBehaviour
             };
         }
 
-        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOver)
+        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOverWall)
+        {
+            Jump();
+        }
+
+        if (IsCloseEnoughToJumpOverIvy() && IsGrounded() && _canJumpOverIvy)
         {
             Jump();
         }
@@ -704,7 +811,12 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOver)
+        if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOverWall)
+        {
+            Jump();
+        }
+
+        if (IsCloseEnoughToJumpOverIvy() && IsGrounded() && _canJumpOverIvy)
         {
             Jump();
         }
@@ -720,15 +832,23 @@ public class Enemy : MonoBehaviour
             }
         }
 
+        if (PlayerController.IsPlayerInGrass)
+        {
+            ReactionGrass(_playerIgnoreTimeInGrass);
+        }
+
         UpdateHorizontalMovement();
-        SearchForPlayer();
+        SearchForPlayer(EnemyStateType.ChasingPlayer);
+    }
+
+    private void UpdateMissingPlayerByGrassState()
+    {
+        _rigidbody2D.linearVelocityX = 0;
     }
 
     private void UpdateFaintState()
     {
-        var velocity = _rigidbody2D.linearVelocity;
-        velocity.x = 0;
-        _rigidbody2D.linearVelocity = velocity;
+        _rigidbody2D.linearVelocityX = 0;
         _animator.SetBool(s_dizzyParameter, true);
     }
 

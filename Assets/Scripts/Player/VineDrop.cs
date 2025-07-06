@@ -7,7 +7,7 @@ public class VineDrop : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return)) // Enterキー
+        if (Input.GetKeyDown(KeyCode.Return))// Enterキー
         {
             DropVine();
         }
