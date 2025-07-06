@@ -36,6 +36,7 @@ public class Checkpoint : MonoBehaviour
         {
             AudioManager.Instance.PlaySE("checkpoint");
             CheckPointManager._checkPoint[nowStage - 1] = transform.position; // リスポーン地点を変更する
+            CheckPointManager._petalCount[nowStage - 1] = _player.GetComponent<PlayerController>().CurrentPetal; // 現在花びら所持数を記憶する
             _capsuleCollider.enabled = false; // コライダーを無効化
             if (_changeSprite) _spriteRenderer.sprite = _changeSprite; // 画像を変更
             _isFirstCheck = true; // 通過済みとする

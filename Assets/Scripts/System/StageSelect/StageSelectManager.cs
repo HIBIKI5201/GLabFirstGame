@@ -9,6 +9,10 @@ public class StageSelectManager : MonoBehaviour
 {
     [SerializeField] private Button[] _stage = { };
     [SerializeField] private GameObject[] _clearObj = new GameObject[3];
+    [SerializeField] private Text[] _textPetalCount = new Text[3];
+
+    private const int MAX_PETAL_COUNT = 4; // 花びら取得数の最大値
+
 
     private void Start()
     {
@@ -41,10 +45,11 @@ public class StageSelectManager : MonoBehaviour
             _stage[i].image.color = Color.white;
         }
 
-        // クリア済みのステージに達成マークを表示する
+        // クリア済みのステージに達成マークを表示、および花びら取得数の更新
         for (var i = 1; i <= GameProgressManager.HighestClearedStage; i++)
         {
             _clearObj[i - 1].SetActive(true);
+            _textPetalCount[i - 1].text = GameProgressManager.PetalCount[i - 1] + "/" + MAX_PETAL_COUNT;
         }
     }
 
@@ -57,6 +62,11 @@ public class StageSelectManager : MonoBehaviour
         GameProgressManager.IsSecretModeUnlocked = false;
         GameProgressManager.HighestClearedStage = 0;
         PlayerPrefs.SetInt("nowStage", GameProgressManager.HighestClearedStage);
+        for (int i = 0; i < _stage.Length; i++)
+        {
+            GameProgressManager.PetalCount[i] = 0;
+            PlayerPrefs.SetInt("petalCount-" + (i + 1), 0); // 花びら取得数をリセット
+        }
         
         // UI表示を変更する
         UpdateStageSelectionUI();

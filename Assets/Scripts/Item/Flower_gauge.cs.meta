@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d3f7da1d87429e24e8523057896dfe8d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - petal_1: {instanceID: 0}
+  - petal_2: {instanceID: 0}
+  - petal_3: {instanceID: 0}
+  - petal_4: {instanceID: 0}
+  - petal_5: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

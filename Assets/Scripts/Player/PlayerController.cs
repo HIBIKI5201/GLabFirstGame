@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +10,18 @@ using UnityEngine.UI;
 /// <summary>
 /// Playerの動きを管理するクラス
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D), typeof(AudioSource))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, ReadOnly]
-    private Rigidbody2D _rigidbody2D;
-
-    [SerializeField, ReadOnly]
-    private AudioSource _audioSource;
-
     [SerializeField] int _maxHp;
+    [SerializeField] int _initHp;
+    public int CurrentPetal;
+    public int InitPetal = 0;
+    public int MaxPetal = 4;
     public int CurrentHp { get; private set; }
+    public int MaxHp { get { return _maxHp; } }
     [SerializeField] public List<GameObject> _rose = new List<GameObject>();
+    [SerializeField] public GameObject _petalGuage = default;
     [SerializeField] public float _maxSpeed;
     [SerializeField] public float _movePower;
     [SerializeField] public float _deceleration;
@@ -42,35 +42,31 @@ public class PlayerController : MonoBehaviour
     bool _isInvincible;
     [SerializeField] bool _canAction = true;
     [HideInInspector] public PlayerStatusType _playerStatus = PlayerStatusType.Normal;
-    [SerializeField] private EnemyGetter _enemyGetter;
+    Rigidbody2D _rb;
+    SpriteRenderer _spriteRenderer;
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
+    GameObject[] _itemPos = new GameObject[3];
     float _horiInput = 0;
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
+    HealingEffect _healingEffect;
     PauseManager _pauseManager;
+    AudioSource _audioSource;
     Animator _animator;
+    Animator _petalGuageAnimator;
+    Vector2 _pauseVelocity;
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
-    private Collider2D _playerCollider;
-
-    public static bool IsPlayerInGrass
-    {
-        get;
-        private set;
-    }
-
-    private void OnValidate()
-    {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-        _audioSource = GetComponent<AudioSource>();
-    }
-
+    
     private void Awake()
     {
-        _playerCollider = GetComponent<Collider2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _damageEffect = GetComponent<DamageEffect>();
+        _healingEffect = GetComponent<HealingEffect>();
+
+        if (!TryGetComponent(out _audioSource)) Debug.LogError("AudioSourceが設定されていません");
         
         // PauseManager
         _pauseManager = FindAnyObjectByType<PauseManager>();
@@ -85,7 +81,8 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        CurrentHp = _maxHp;
+        CurrentHp = _initHp;
+        _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
         
         GameObject platform;
@@ -102,7 +99,9 @@ public class PlayerController : MonoBehaviour
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
-        _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+        _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
+
+        _petalGuageAnimator = _petalGuage.GetComponent<Animator>();
     }
 
     private void Update()
@@ -114,28 +113,14 @@ public class PlayerController : MonoBehaviour
             ChangeItem();
             UseItem();
         }
+        _petalGuageAnimator.SetInteger("P_PetalCount", CurrentPetal);
     }
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "goal")
-        {
-            _isInvincible = true;
-        }
-        if (collision.gameObject.CompareTag("Grass"))
-        {
-            IsPlayerInGrass = true;
-        }
+        if (collision.gameObject.name == "goal") _isInvincible = true; // ゴールした時
     }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Grass"))
-        {
-            IsPlayerInGrass = false;
-        }
-    }
-
+    
     private void Move()
     {
         _horiInput = Input.GetAxisRaw("Horizontal");
@@ -144,9 +129,9 @@ public class PlayerController : MonoBehaviour
             if (!_isJump)
             {
                 float x = 0;
-                if (_rigidbody2D.linearVelocity.x != 0)
+                if (_rb.linearVelocity.x != 0)
                 {
-                    x = _rigidbody2D.linearVelocity.x - (_deceleration + Mathf.Abs(_rigidbody2D.linearVelocity.x)) * Mathf.Sign(_rigidbody2D.linearVelocity.x) * Time.deltaTime;
+                    x = _rb.linearVelocity.x - (_deceleration + Mathf.Abs(_rb.linearVelocity.x)) * Mathf.Sign(_rb.linearVelocity.x) * Time.deltaTime;
                 }
                 if (Mathf.Abs(x) < 0.2)
                 {
@@ -158,13 +143,13 @@ public class PlayerController : MonoBehaviour
                     _audioSource.clip = _walk;
                     _audioSource.Play();
                 }
-                _rigidbody2D.linearVelocity = new Vector2(x, _rigidbody2D.linearVelocity.y);
+                _rb.linearVelocity = new Vector2(x, _rb.linearVelocity.y);
                 _animator.SetFloat("isWalk", Mathf.Abs(x));
             }
         }
         else
         {
-            float x = _rigidbody2D.linearVelocity.x + _movePower * _horiInput * Time.deltaTime;
+            float x = _rb.linearVelocity.x + _movePower * _horiInput * Time.deltaTime;
             if (Mathf.Abs(x) > _maxSpeed)
             {
                 x = _maxSpeed * Mathf.Sign(x);
@@ -189,7 +174,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            _rigidbody2D.linearVelocity = new Vector2(x, _rigidbody2D.linearVelocity.y);
+            _rb.linearVelocity = new Vector2(x, _rb.linearVelocity.y);
         }
         if (_isJump)
         {
@@ -210,7 +195,7 @@ public class PlayerController : MonoBehaviour
     
     private void Jump()
     {
-        if (_rigidbody2D.linearVelocity.y < -1f)
+        if (_rb.linearVelocity.y < -1f)
         {
             if (_jumpEnumerator == null)
             {
@@ -225,7 +210,7 @@ public class PlayerController : MonoBehaviour
             if (!_isJump)
             {
                 AudioManager.Instance.PlaySE("jump");
-                _rigidbody2D.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+                _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
                 _jumpEnumerator = GroundingJudge(_jumpEnumerator);
                 //Debug.Log("StartCoroutine");
@@ -237,36 +222,36 @@ public class PlayerController : MonoBehaviour
             if (_isStompEnemy)
             {
                 _isStompEnemy = false;
-                _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, 0);
-                _rigidbody2D.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
+                _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
             }
         }
         else if (_isStompEnemy)
         {
-            _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, 0);
-            _rigidbody2D.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
+            _rb.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
         }
-        else if (_rigidbody2D.linearVelocity.y > 0)
+        else if (_rb.linearVelocity.y > 0)
         {
-            _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, _rigidbody2D.linearVelocity.y * 0.99f);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _rb.linearVelocity.y * 0.99f);
         }
         //Debug.Log(_isJump);
     }
     
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
-        if (_rigidbody2D.linearVelocity.y > 0)
+        if (_rb.linearVelocity.y > 0)
         {
             _animator.SetBool("isJump", true);
         }
         _audioSource.Stop();
-        while (_rigidbody2D.linearVelocity.y > 0)
+        while (_rb.linearVelocity.y > 0)
         {
             yield return new WaitForEndOfFrame();
         }
         _animator.SetBool("isFall", true);
-        _rigidbody2D.gravityScale = _fallSpeed;
+        _rb.gravityScale = _fallSpeed;
         while (_isJump)
         {
             yield return new WaitForEndOfFrame();
@@ -276,13 +261,13 @@ public class PlayerController : MonoBehaviour
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;
-                    _rigidbody2D.gravityScale = 1;
+                    _rb.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
                     _animator.SetBool("isJump", false);
                     _animator.SetBool("isFall", false);
                     if (_landingInertia && _horiInput == 0)
                     {
-                        _rigidbody2D.linearVelocity = new Vector2(0, _rigidbody2D.linearVelocity.y);
+                        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
                     }
                     yield return new WaitForSeconds(0.5f);
                     _jumpEnumerator = null;
@@ -295,13 +280,13 @@ public class PlayerController : MonoBehaviour
                         FluctuationLife(-1);
                     }
                     _isStompEnemy = true;
-                    _rigidbody2D.gravityScale = 1;
+                    _rb.gravityScale = 1;
                 }
             }
         }
         _jumpEnumerator = null;
     }
-
+    
     /// <summary>
     /// アイテムを獲得した時の処理
     /// </summary>
@@ -346,21 +331,26 @@ public class PlayerController : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
-        else if (item as Ivy)
+        else if (item as Petal)
         {
-            if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
+            PetalGetAction();
+        }
+    }
+    /// <summary>
+    /// 花びらを取得時の処理
+    /// </summary>
+    private void PetalGetAction()
+    {
+        if (CurrentPetal < MaxPetal)
+        {
+            CurrentPetal++;
+            if (CurrentPetal == MaxPetal)
             {
-                _itemList.Add(item);
-                _itemSetting.IvyCountText.text = _itemList.Where(i => i as Ivy).Count().ToString();
-                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
-            }
-            else
-            {
-                Destroy(item.gameObject);
+                CurrentPetal = MaxPetal;
+                FluctuationLife(1);
             }
         }
     }
-    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -373,9 +363,6 @@ public class PlayerController : MonoBehaviour
                 return true;
             case PlayerStatusType.Meat:
                 item = _itemList.Where(i => i as Meat).ToList().First();
-                return true;
-            case PlayerStatusType.Ivy:
-                item = _itemList.Where(i => i as Ivy).ToList().First();
                 return true;
             default:
                 item = null;
@@ -396,7 +383,6 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -407,7 +393,6 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -418,27 +403,14 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale *= _itemSetting.LeafSize;
-                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            if (_itemList.Any(i => i as Ivy) && _playerStatus != PlayerStatusType.Ivy)
-            {
-                _playerStatus = PlayerStatusType.Ivy;
-                _itemSetting.LeafRock.transform.localScale = Vector3.one;
-                _itemSetting.LeafBottle.transform.localScale = Vector3.one;
-                _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-                _itemSetting.LeafIvy.transform.localScale *= _itemSetting.LeafSize;
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             _playerStatus = PlayerStatusType.Normal;
             _itemSetting.LeafRock.transform.localScale = Vector3.one;
             _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-            _itemSetting.LeafIvy.transform.localScale = Vector3.one;
         }
     }
     
@@ -491,7 +463,8 @@ public class PlayerController : MonoBehaviour
                 for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
                     _damageEffect.PlayDamageEffect();
-                    _rose.RemoveAt(0);
+                    //_rose.RemoveAt(0);
+
                 }
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
@@ -508,15 +481,17 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (CurrentHp >= _maxHp) return;
             CurrentHp += value;
+            _healingEffect.PlayHealingEffect();
         }
         
-        if (CurrentHp > _maxHp)
-        {
-            CurrentHp = _maxHp;
-        }
+        //if (CurrentHp > _maxHp)
+        //{
+        //    CurrentHp = _maxHp;
+        //}
     }
-    
+
     IEnumerator Invincible()
     {
         _isInvincible = true;
@@ -586,11 +561,6 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = 0;
             rb.AddForce(new Vector2(_throwsetting.ThrowStraightPower * transform.localScale.x, 0), ForceMode2D.Impulse);
         }
-        else if (item.Throw == ThrowType.Drop)
-        {
-            item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
-            rb.gravityScale = 1;
-        }
         else
         {
             if (_throwsetting.BulletSimulationLine == null)
@@ -641,7 +611,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             }
         }
-        else if (item as Meat)
+        else
         {
             _itemList.Remove((Meat)item);
             _itemSetting.MeatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
@@ -650,17 +620,6 @@ public class PlayerController : MonoBehaviour
                 _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
-            }
-        }
-        else if (item as Ivy)
-        {
-            _itemList.Remove((Ivy)item);
-            _itemSetting.IvyCountText.text = _itemList.Where(i => i as Ivy).Count().ToString();
-            if (_itemSetting.IvyCountText.text == "0")
-            {
-                _playerStatus = PlayerStatusType.Normal;
-                _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
-                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         AudioManager.Instance.PlaySE("throw");
@@ -713,9 +672,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        Vector2 vector2 = _rigidbody2D.linearVelocity;
+        Vector2 vector2 = _rb.linearVelocity;
         vector2.x = _veloX;
-        _rigidbody2D.linearVelocity = vector2;
+        _rb.linearVelocity = vector2;
 
         if (!_isJump)
         {
