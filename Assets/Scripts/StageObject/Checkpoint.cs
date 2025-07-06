@@ -26,9 +26,13 @@ public class Checkpoint : MonoBehaviour
     
     /// <summary>
     /// 現在のステージのリスポーン地点をVector2.zeroの位置にセットしなおす
+    /// 花びらの所持数を0に戻す
     /// </summary>
-    public void ResetPoint() => CheckPointManager._checkPoint[nowStage - 1] = Vector2.zero;
-
+    public void ResetPoint()
+    {
+        CheckPointManager._checkPoint[nowStage - 1] = Vector2.zero;
+        CheckPointManager._petalCount[nowStage - 1] = 0;
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Colliderにプレイヤーが入って、かつまだチェックポイント通過前だった場合
