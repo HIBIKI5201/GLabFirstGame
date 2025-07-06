@@ -5097,8 +5097,72 @@ Transform:
   - {fileID: 1206203717}
   - {fileID: 268505650}
   - {fileID: 1950487841}
+  - {fileID: 908133229}
+  - {fileID: 48300676}
   m_Father: {fileID: 1856425853}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &48300675
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 43171014}
+    m_Modifications:
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 296.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997617603144794670, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_Name
+      value: Torabasami (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+--- !u!4 &48300676 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+  m_PrefabInstance: {fileID: 48300675}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &55928245
 GameObject:
   m_ObjectHideFlags: 0
@@ -20428,6 +20492,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7042332450947224398, guid: ab736c05c4c7a6341884d877cfd897f4, type: 3}
   m_PrefabInstance: {fileID: 900536589}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &908133228
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 43171014}
+    m_Modifications:
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 291.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997617603144794670, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+      propertyPath: m_Name
+      value: Torabasami
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+--- !u!4 &908133229 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2910147404510581666, guid: 0ac23c89bfce77a43a43905bb0671395, type: 3}
+  m_PrefabInstance: {fileID: 908133228}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &918412127
 GameObject:
