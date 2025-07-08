@@ -101,6 +101,11 @@ public class Enemy : MonoBehaviour
     public EnemyStateType State
     {
         get => _currentState;
+        set
+        {
+            if (value == _currentState) return; // ステートが変わらなければ処理を行わない
+            _currentState = value;
+        }
     }
 
     public bool CanAvoidIvy
@@ -428,11 +433,6 @@ public class Enemy : MonoBehaviour
             _currentState = EnemyStateType.Normal;
             Debug.Log("見つからない終了");
         }
-
-        if (_stayGrass)
-        {
-            ReactionGrass(_missingTime);
-        }
     }
 
     // TODO: Rename to "ApplySwampItemEffect"?
@@ -661,17 +661,9 @@ public class Enemy : MonoBehaviour
         var mask = _raycastData.RaycastSideMask;
 
         if (PlayerController.IsPlayerInGrass)
-    private IEnumerator Missing(float MissingTime)
-    {
-        Debug.Log("見つからない");
-        if (_stunSpriteRenderer)
         {
             mask &= ~(1 << LayerMask.NameToLayer(k_playerTag));
         }
-        State = EnemyStateType.MissingPlayerByGrass;
-        Debug.Log("aaaaaa");
-        yield return new WaitForSeconds(MissingTime);
-        if (_stunSpriteRenderer)
 
         var hit = Physics2D.Raycast(transform.position, rayDirection, _raycastData.SideCheckRayDistance, mask);
         isPlayerHit = false;
@@ -679,15 +671,27 @@ public class Enemy : MonoBehaviour
         {
             isPlayerHit = hit.collider.CompareTag(k_playerTag);
         }
-
-        if (State != EnemyStateType.Faint)
+        return hit;
+    }
+    private IEnumerator Missing(float MissingTime)
+    {
+        Debug.Log("見つからない");
+        if (_stunSpriteRenderer)
         {
-            State = EnemyStateType.Normal;
+            _stunSpriteRenderer.enabled = true;
         }
+        State = EnemyStateType.MissingPlayerByGrass;
+
+        Debug.Log("aaaaaa");
+        yield return new WaitForSeconds(MissingTime);
+        if (_stunSpriteRenderer)
+            if (State != EnemyStateType.Faint)
+            {
+                State = EnemyStateType.Normal;
+            }
 
         Debug.Log("見つからない終了");
 
-        return hit;
     }
 
     /// <summary>
@@ -931,7 +935,8 @@ public class Enemy : MonoBehaviour
         {
             DirectionType.Left => Vector2.left,
             DirectionType.Right =>
-            Vector2.right, _ =>
+            Vector2.right,
+            _ =>
             Vector2.zero
         };
         if (_currentState == EnemyStateType.ChasingPlayer)

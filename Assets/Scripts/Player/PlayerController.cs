@@ -13,10 +13,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D), typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, ReadOnly]
+    [SerializeField]
     private Rigidbody2D _rigidbody2D;
 
-    [SerializeField, ReadOnly]
+    [SerializeField]
     private AudioSource _audioSource;
 
     [SerializeField] int _maxHp;
@@ -55,10 +55,14 @@ public class PlayerController : MonoBehaviour
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
     HealingEffect _healingEffect;
+    Rigidbody2D _rb;
     PauseManager _pauseManager;
     Animator _animator;
     Animator _petalGuageAnimator;
     Vector2 _pauseVelocity;
+
+    GameObject[] _itemPos;
+
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
@@ -83,12 +87,12 @@ public class PlayerController : MonoBehaviour
         _healingEffect = GetComponent<HealingEffect>();
 
         if (!TryGetComponent(out _audioSource)) Debug.LogError("AudioSourceが設定されていません");
-        
+
         // PauseManager
         _pauseManager = FindAnyObjectByType<PauseManager>();
         if (_pauseManager != null) _pauseManager.OnPauseResume += PauseAction; // ポーズイベントを購読
         else Debug.LogError("PauseManagerが取得できませんでした");
-           
+
         if (!TryGetComponent(out _animator))
         {
             _animator = GetComponentInChildren<Animator>();
@@ -100,7 +104,7 @@ public class PlayerController : MonoBehaviour
         CurrentHp = _initHp;
         _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
-        
+
         GameObject platform;
         if (_throwsetting.Platform != null)
         {
@@ -108,10 +112,10 @@ public class PlayerController : MonoBehaviour
             Array.ForEach(platform.GetComponentsInChildren<Renderer>(), x => x.enabled = false);
             SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         }
-        
+
         _cameraShakeController = FindAnyObjectByType<CameraShakeController>();
         if (_cameraShakeController == null) Debug.LogError("CameraShakeControllerが設定されていません");
-        
+
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
@@ -132,7 +136,7 @@ public class PlayerController : MonoBehaviour
         }
         _petalGuageAnimator.SetInteger("P_PetalCount", CurrentPetal);
     }
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.name == "goal")
@@ -224,7 +228,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     private void Jump()
     {
         if (_rigidbody2D.linearVelocity.y < -1f)
@@ -270,7 +274,7 @@ public class PlayerController : MonoBehaviour
         }
         //Debug.Log(_isJump);
     }
-    
+
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
         if (_rigidbody2D.linearVelocity.y > 0)
@@ -381,21 +385,9 @@ public class PlayerController : MonoBehaviour
                 CurrentPetal = MaxPetal;
                 FluctuationLife(1);
             }
-        else if (item as Ivy)
-        {
-            if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
-            {
-                _itemList.Add(item);
-                _itemSetting.IvyCountText.text = _itemList.Where(i => i as Ivy).Count().ToString();
-                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
-            }
-            else
-            {
-                Destroy(item.gameObject);
-            }
         }
+
     }
-    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -417,7 +409,7 @@ public class PlayerController : MonoBehaviour
                 return false;
         }
     }
-    
+
     /// <summary>
     /// アイテムを切り替える処理
     /// </summary>
@@ -476,13 +468,13 @@ public class PlayerController : MonoBehaviour
             _itemSetting.LeafIvy.transform.localScale = Vector3.one;
         }
     }
-    
+
     void CreatePhysicsScene()
     {
         m_simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         m_physicsScene = m_simulationScene.GetPhysicsScene2D();
     }
-    
+
     /// <summary>
     /// アイテムを投げるときの予測線のシミュレーション
     /// </summary>
@@ -548,7 +540,7 @@ public class PlayerController : MonoBehaviour
             CurrentHp += value;
             _healingEffect.PlayHealingEffect();
         }
-        
+
         //if (CurrentHp > _maxHp)
         //{
         //    CurrentHp = _maxHp;
@@ -605,7 +597,7 @@ public class PlayerController : MonoBehaviour
             _pauseManager.RegisterAndStartCoroutine(ThrowItem());
         }
     }
-    
+
     IEnumerator ThrowItem()
     {
         IEnumerator enumerator = _pauseManager.GetLatestCoroutine();
@@ -708,7 +700,7 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
-    
+
     #region ポーズ関連の処理
 
     private void PauseAction(bool isPause)
@@ -722,9 +714,9 @@ public class PlayerController : MonoBehaviour
             _canAction = true;
         }
     }
-    
+
     #endregion
-    
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
@@ -769,5 +761,5 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
-    
+
 }
