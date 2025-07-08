@@ -20,8 +20,14 @@ public class PlayerController : MonoBehaviour
     private AudioSource _audioSource;
 
     [SerializeField] int _maxHp;
+    [SerializeField] int _initHp;
+    public int CurrentPetal;
+    public int InitPetal = 0;
+    public int MaxPetal = 4;
     public int CurrentHp { get; private set; }
+    public int MaxHp { get { return _maxHp; } }
     [SerializeField] public List<GameObject> _rose = new List<GameObject>();
+    [SerializeField] public GameObject _petalGuage = default;
     [SerializeField] public float _maxSpeed;
     [SerializeField] public float _movePower;
     [SerializeField] public float _deceleration;
@@ -48,8 +54,11 @@ public class PlayerController : MonoBehaviour
     float _horiInput = 0;
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
+    HealingEffect _healingEffect;
     PauseManager _pauseManager;
     Animator _animator;
+    Animator _petalGuageAnimator;
+    Vector2 _pauseVelocity;
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
@@ -71,6 +80,9 @@ public class PlayerController : MonoBehaviour
     {
         _playerCollider = GetComponent<Collider2D>();
         _damageEffect = GetComponent<DamageEffect>();
+        _healingEffect = GetComponent<HealingEffect>();
+
+        if (!TryGetComponent(out _audioSource)) Debug.LogError("AudioSourceが設定されていません");
         
         // PauseManager
         _pauseManager = FindAnyObjectByType<PauseManager>();
@@ -85,7 +97,8 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        CurrentHp = _maxHp;
+        CurrentHp = _initHp;
+        _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
         
         GameObject platform;
@@ -102,6 +115,9 @@ public class PlayerController : MonoBehaviour
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+        _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
+
+        _petalGuageAnimator = _petalGuage.GetComponent<Animator>();
         _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
     }
 
@@ -114,6 +130,7 @@ public class PlayerController : MonoBehaviour
             ChangeItem();
             UseItem();
         }
+        _petalGuageAnimator.SetInteger("P_PetalCount", CurrentPetal);
     }
     
     private void OnTriggerEnter2D(Collider2D collision)
@@ -346,6 +363,24 @@ public class PlayerController : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
+        else if (item as Petal)
+        {
+            PetalGetAction();
+        }
+    }
+    /// <summary>
+    /// 花びらを取得時の処理
+    /// </summary>
+    private void PetalGetAction()
+    {
+        if (CurrentPetal < MaxPetal)
+        {
+            CurrentPetal++;
+            if (CurrentPetal == MaxPetal)
+            {
+                CurrentPetal = MaxPetal;
+                FluctuationLife(1);
+            }
         else if (item as Ivy)
         {
             if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
@@ -491,7 +526,8 @@ public class PlayerController : MonoBehaviour
                 for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
                     _damageEffect.PlayDamageEffect();
-                    _rose.RemoveAt(0);
+                    //_rose.RemoveAt(0);
+
                 }
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
@@ -508,15 +544,17 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (CurrentHp >= _maxHp) return;
             CurrentHp += value;
+            _healingEffect.PlayHealingEffect();
         }
         
-        if (CurrentHp > _maxHp)
-        {
-            CurrentHp = _maxHp;
-        }
+        //if (CurrentHp > _maxHp)
+        //{
+        //    CurrentHp = _maxHp;
+        //}
     }
-    
+
     IEnumerator Invincible()
     {
         _isInvincible = true;

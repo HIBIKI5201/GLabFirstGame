@@ -10,7 +10,8 @@ public class GameProgressManager : MonoBehaviour
     public static int HighestClearedStage = 0; // クリアした最高ステージ
     public static bool IsSecretModeUnlocked = false; // 隠しクリアフラグ
     public static bool IsGameCompleted = false; // ステージ全てをクリアしたか
-    
+    public static int[] PetalCount = {0, 0, 0 }; // 各ステージの花びら所持数
+
     // 定数
     private const int FINAL_STAGE_INDEX = 3; // 最後のステージ数
 
@@ -28,7 +29,7 @@ public class GameProgressManager : MonoBehaviour
     /// <summary>
     /// クリアしたステージを記録する
     /// </summary>
-    public void StageClear(int stageIndex)
+    public void StageClear(int stageIndex, int petalCount)
     {
         // より高いステージをクリアした場合のみ記録を更新
         if (HighestClearedStage < stageIndex)
@@ -40,9 +41,11 @@ public class GameProgressManager : MonoBehaviour
             }
             
             HighestClearedStage = stageIndex; // 最高ステージクリア情報を書き換える
+            PetalCount[stageIndex - 1] = petalCount; // クリア時の花びら所持数を書き換える
             PlayerPrefs.SetInt("nowStage", HighestClearedStage); // PlayerPrefsに保存する
+            PlayerPrefs.SetInt("petalCount-" + stageIndex, petalCount); 
         }
-        
+
         Debug.Log($"ステージ全てをクリアしたか: {IsGameCompleted}, 隠しクリアフラグ: {IsSecretModeUnlocked}");
     }
 }

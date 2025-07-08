@@ -428,6 +428,11 @@ public class Enemy : MonoBehaviour
             _currentState = EnemyStateType.Normal;
             Debug.Log("見つからない終了");
         }
+
+        if (_stayGrass)
+        {
+            ReactionGrass(_missingTime);
+        }
     }
 
     // TODO: Rename to "ApplySwampItemEffect"?
@@ -656,9 +661,17 @@ public class Enemy : MonoBehaviour
         var mask = _raycastData.RaycastSideMask;
 
         if (PlayerController.IsPlayerInGrass)
+    private IEnumerator Missing(float MissingTime)
+    {
+        Debug.Log("見つからない");
+        if (_stunSpriteRenderer)
         {
             mask &= ~(1 << LayerMask.NameToLayer(k_playerTag));
         }
+        State = EnemyStateType.MissingPlayerByGrass;
+        Debug.Log("aaaaaa");
+        yield return new WaitForSeconds(MissingTime);
+        if (_stunSpriteRenderer)
 
         var hit = Physics2D.Raycast(transform.position, rayDirection, _raycastData.SideCheckRayDistance, mask);
         isPlayerHit = false;
@@ -666,6 +679,14 @@ public class Enemy : MonoBehaviour
         {
             isPlayerHit = hit.collider.CompareTag(k_playerTag);
         }
+
+        if (State != EnemyStateType.Faint)
+        {
+            State = EnemyStateType.Normal;
+        }
+
+        Debug.Log("見つからない終了");
+
         return hit;
     }
 
