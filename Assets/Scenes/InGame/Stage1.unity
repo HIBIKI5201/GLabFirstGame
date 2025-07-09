@@ -228,6 +228,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _initHp
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: _petalGuage
+      value: 
+      objectReference: {fileID: 1874863570}
+    - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _throwsetting.Platform
       value: 
       objectReference: {fileID: 1805939698}
@@ -405,6 +413,11 @@ MonoBehaviour:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4819325981027729080, guid: 9d4eb256d8f572b43bf9a278b6f40e94, type: 3}
   m_PrefabInstance: {fileID: 1509392966}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1874863570 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1182954574480478629, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+  m_PrefabInstance: {fileID: 34037733}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1876642818 stripped
 MonoBehaviour:

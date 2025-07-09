@@ -55,14 +55,10 @@ public class PlayerController : MonoBehaviour
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
     HealingEffect _healingEffect;
-    Rigidbody2D _rb;
     PauseManager _pauseManager;
     Animator _animator;
     Animator _petalGuageAnimator;
     Vector2 _pauseVelocity;
-
-    GameObject[] _itemPos;
-
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
@@ -385,9 +381,21 @@ public class PlayerController : MonoBehaviour
                 CurrentPetal = MaxPetal;
                 FluctuationLife(1);
             }
+        else if (item as Ivy)
+        {
+            if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
+            {
+                _itemList.Add(item);
+                _itemSetting.IvyCountText.text = _itemList.Where(i => i as Ivy).Count().ToString();
+                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+            }
+            else
+            {
+                Destroy(item.gameObject);
+            }
         }
-
     }
+    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
