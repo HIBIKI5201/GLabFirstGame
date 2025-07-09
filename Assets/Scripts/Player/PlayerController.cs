@@ -55,10 +55,14 @@ public class PlayerController : MonoBehaviour
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
     HealingEffect _healingEffect;
+    Rigidbody2D _rb;
     PauseManager _pauseManager;
     Animator _animator;
     Animator _petalGuageAnimator;
     Vector2 _pauseVelocity;
+
+    GameObject[] _itemPos;
+
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
@@ -367,20 +371,6 @@ public class PlayerController : MonoBehaviour
         {
             PetalGetAction();
         }
-    }
-    /// <summary>
-    /// 花びらを取得時の処理
-    /// </summary>
-    private void PetalGetAction()
-    {
-        if (CurrentPetal < MaxPetal)
-        {
-            CurrentPetal++;
-            if (CurrentPetal == MaxPetal)
-            {
-                CurrentPetal = MaxPetal;
-                FluctuationLife(1);
-            }
         else if (item as Ivy)
         {
             if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
@@ -395,7 +385,22 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+    /// <summary>
+    /// 花びらを取得時の処理
+    /// </summary>
+    private void PetalGetAction()
+    {
+        if (CurrentPetal < MaxPetal)
+        {
+            CurrentPetal++;
+            if (CurrentPetal == MaxPetal)
+            {
+                CurrentPetal = MaxPetal;
+                FluctuationLife(1);
+            }
+        }
+
+    }
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
