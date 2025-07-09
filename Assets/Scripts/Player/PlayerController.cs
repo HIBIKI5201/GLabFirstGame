@@ -397,6 +397,7 @@ public class PlayerController : MonoBehaviour
             {
                 CurrentPetal = MaxPetal;
                 FluctuationLife(1);
+                Debug.Log("回復");
             }
         }
 
@@ -551,7 +552,10 @@ public class PlayerController : MonoBehaviour
         {
             if (CurrentHp >= _maxHp) return;
             CurrentHp += value;
-            _healingEffect.PlayHealingEffect();
+            if (_healingEffect)
+            {
+                _healingEffect.PlayHealingEffect();
+            }
         }
 
         //if (CurrentHp > _maxHp)
