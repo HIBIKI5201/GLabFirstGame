@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2876446638051849357}
   - component: {fileID: 5215226295752310641}
   - component: {fileID: 68313780225532984}
+  - component: {fileID: 4507324999788391195}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -134,11 +135,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80e6e48d36e84b24e85c9c18d3a0f50c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHp: 4
+  _maxHp: 5
+  _initHp: 4
   CurrentPetal: 0
   InitPetal: 0
-  MaxPetal: 5
-  _rose: []
+  MaxPetal: 4
+  _rose:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _petalGuage: {fileID: 0}
   _maxSpeed: 6
   _movePower: 40
   _deceleration: 8
@@ -366,6 +374,20 @@ MonoBehaviour:
   _redImage: {fileID: 0}
   _vignette: {fileID: 0}
   _damageEffectDuration: 0.3
+--- !u!114 &4507324999788391195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989625297304483414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42504cb27d258514ab5dcc619a020710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vignette: {fileID: 0}
+  _healingEffectDuration: 0.3
 --- !u!1001 &636050959518985300
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -437,38 +459,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: b3dcc3bccc8cb5147aa8a45595855d74, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5286089352480202619}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 4843985084834002234, guid: b3dcc3bccc8cb5147aa8a45595855d74, type: 3}
---- !u!1 &1095636010478489065 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: b3dcc3bccc8cb5147aa8a45595855d74, type: 3}
-  m_PrefabInstance: {fileID: 636050959518985300}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &5286089352480202619
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1095636010478489065}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cd02064da4379864584b615a95f94e28, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &2304825897929741706 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7552582706839291426, guid: b3dcc3bccc8cb5147aa8a45595855d74, type: 3}
