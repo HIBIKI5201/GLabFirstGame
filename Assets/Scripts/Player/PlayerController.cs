@@ -406,15 +406,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
-            }
-            else
-            {
-                Destroy(item.gameObject);
->>>>>>>>> Temporary merge branch 2
-            }
-        }
-    }
+//                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+//            }
+//            else
+//            {
+//                Destroy(item.gameObject);
+//>>>>>>>>> Temporary merge branch 2
+//            }
+//        }
+//    }
     
     bool Item(out ItemBase item)
     {
@@ -555,8 +555,6 @@ public class PlayerController : MonoBehaviour
                 {
                     _cameraShakeController.TriggerShake();
                 }
-            _healingEffect.PlayHealingEffect();
-        }
 
                 _playerStatus = PlayerStatusType.Death;
             }
