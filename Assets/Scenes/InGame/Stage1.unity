@@ -136,6 +136,10 @@ PrefabInstance:
       value: TogglePauseByUIButton
       objectReference: {fileID: 0}
     - target: {fileID: 270906391555921784, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 270906391555921784, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -162,6 +166,14 @@ PrefabInstance:
     - target: {fileID: 1515367687876581440, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981255608010970057, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.416
       objectReference: {fileID: 0}
     - target: {fileID: 2713661338995360478, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: m_Name
@@ -238,23 +250,23 @@ PrefabInstance:
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _petalGuage
       value: 
-      objectReference: {fileID: 1874863570}
+      objectReference: {fileID: 0}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: '_rose.Array.data[0]'
       value: 
-      objectReference: {fileID: 1368634970}
+      objectReference: {fileID: 203755388}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: '_rose.Array.data[1]'
       value: 
-      objectReference: {fileID: 703880304}
+      objectReference: {fileID: 1320530210}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: '_rose.Array.data[2]'
       value: 
-      objectReference: {fileID: 1688954867}
+      objectReference: {fileID: 2019071128}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: '_rose.Array.data[3]'
       value: 
-      objectReference: {fileID: 370092438}
+      objectReference: {fileID: 890267037}
     - target: {fileID: 6231606412595326649, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
       propertyPath: _throwsetting.Platform
       value: 
@@ -306,9 +318,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7a8d8894e64a747896edd994cce1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &203755388 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4287341906330735382, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+  m_PrefabInstance: {fileID: 34037733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &432514925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4953143955142307075, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+  m_PrefabInstance: {fileID: 34037733}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &890267037 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8043072675211128661, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
   m_PrefabInstance: {fileID: 34037733}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1034674985 stripped
@@ -353,6 +375,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1320530210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5413418643261398608, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+  m_PrefabInstance: {fileID: 34037733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1509392966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -468,6 +495,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c027cbc03a56f84bb5d3170dd3070eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2019071128 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 417786548011778884, guid: 7ebedab795fcdeb4eac9f8eef763fed3, type: 3}
+  m_PrefabInstance: {fileID: 34037733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
