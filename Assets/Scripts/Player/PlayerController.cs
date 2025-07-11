@@ -13,10 +13,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D), typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, ReadOnly]
     private Rigidbody2D _rigidbody2D;
 
-    [SerializeField]
+    [SerializeField, ReadOnly]
     private AudioSource _audioSource;
 
     [SerializeField] int _maxHp;
@@ -55,14 +55,9 @@ public class PlayerController : MonoBehaviour
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
     HealingEffect _healingEffect;
-    Rigidbody2D _rb;
     PauseManager _pauseManager;
     Animator _animator;
     Animator _petalGuageAnimator;
-    Vector2 _pauseVelocity;
-
-    GameObject[] _itemPos;
-
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
@@ -86,8 +81,6 @@ public class PlayerController : MonoBehaviour
         _damageEffect = GetComponent<DamageEffect>();
         _healingEffect = GetComponent<HealingEffect>();
 
-        if (!TryGetComponent(out _audioSource)) Debug.LogError("AudioSourceが設定されていません");
-
         // PauseManager
         _pauseManager = FindAnyObjectByType<PauseManager>();
         if (_pauseManager != null) _pauseManager.OnPauseResume += PauseAction; // ポーズイベントを購読
@@ -102,7 +95,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         CurrentHp = _initHp;
-        _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
 
         GameObject platform;
@@ -120,10 +112,7 @@ public class PlayerController : MonoBehaviour
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
-        _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
-
         _petalGuageAnimator = _petalGuage.GetComponent<Animator>();
-        _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
     }
 
     private void Update()
@@ -368,10 +357,6 @@ public class PlayerController : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
-        else if (item as Petal)
-        {
-            PetalGetAction();
-        }
         else if (item as Ivy)
         {
             if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
@@ -406,16 +391,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-//                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
-//            }
-//            else
-//            {
-//                Destroy(item.gameObject);
-//>>>>>>>>> Temporary merge branch 2
-//            }
-//        }
-//    }
-    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -555,7 +530,9 @@ public class PlayerController : MonoBehaviour
                 {
                     _cameraShakeController.TriggerShake();
                 }
-
+            }
+            if (CurrentHp <= 0)
+            {
                 _playerStatus = PlayerStatusType.Death;
             }
         }
@@ -565,7 +542,7 @@ public class PlayerController : MonoBehaviour
             CurrentHp += value;
             _healingEffect.PlayHealingEffect();
         }
-        
+
         //if (CurrentHp > _maxHp)
         //{
         //    CurrentHp = _maxHp;

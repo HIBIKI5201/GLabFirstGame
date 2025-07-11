@@ -814,6 +814,12 @@ public class Enemy : MonoBehaviour
 
 
 
+
+
+
+
+
+
     /// <summary>
     /// 壁との水平距離が短くて乗り越えられるか？
     /// </summary>
