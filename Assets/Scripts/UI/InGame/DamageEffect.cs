@@ -93,10 +93,11 @@ public class DamageEffect : MonoBehaviour
     public void StopDyingEffect()
     {
         _isDying = false;
-        if(_dyingVignette != null)
+        if (_dyingVignette != null)
         {
             _dyingVignette.Kill();
             _dyingVignette = null;
+            _vignette.gameObject.SetActive(false);
         }
     }
 

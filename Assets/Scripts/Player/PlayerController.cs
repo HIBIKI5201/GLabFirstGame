@@ -119,6 +119,7 @@ public class PlayerController : MonoBehaviour
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+        _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
 
         _petalGuageAnimator = _petalGuage.GetComponent<Animator>();
@@ -371,6 +372,23 @@ public class PlayerController : MonoBehaviour
         {
             PetalGetAction();
         }
+        else if (item as Ivy)
+        {
+            if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
+            {
+                _itemList.Add(item);
+                _itemSetting.IvyCountText.text = _itemList.Where(i => i as Ivy).Count().ToString();
+                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+            }
+            else
+            {
+                Destroy(item.gameObject);
+            }
+        }
+        else if (item as Petal)
+        {
+            PetalGetAction();
+        }
     }
     /// <summary>
     /// 花びらを取得時の処理
@@ -386,8 +404,18 @@ public class PlayerController : MonoBehaviour
                 FluctuationLife(1);
             }
         }
-
     }
+
+//                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+//            }
+//            else
+//            {
+//                Destroy(item.gameObject);
+//>>>>>>>>> Temporary merge branch 2
+//            }
+//        }
+//    }
+    
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -519,7 +547,6 @@ public class PlayerController : MonoBehaviour
                 {
                     _damageEffect.PlayDamageEffect();
                     //_rose.RemoveAt(0);
-
                 }
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
@@ -528,9 +555,7 @@ public class PlayerController : MonoBehaviour
                 {
                     _cameraShakeController.TriggerShake();
                 }
-            }
-            if (CurrentHp <= 0)
-            {
+
                 _playerStatus = PlayerStatusType.Death;
             }
         }
@@ -540,7 +565,7 @@ public class PlayerController : MonoBehaviour
             CurrentHp += value;
             _healingEffect.PlayHealingEffect();
         }
-
+        
         //if (CurrentHp > _maxHp)
         //{
         //    CurrentHp = _maxHp;
@@ -690,7 +715,7 @@ public class PlayerController : MonoBehaviour
             {
                 _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
-                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
+                //_itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         AudioManager.Instance.PlaySE("throw");

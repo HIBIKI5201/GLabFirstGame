@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+
+
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -63,14 +65,31 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private bool _canJumpOverIvy;
 
+
+
+
+
+
+
+
     [SerializeField, FormerlySerializedAs("_goDown")]
     private bool _canJumpDown;
+
+
+
+
+
 
     [SerializeField, FormerlySerializedAs("_canChase")]
     private bool _canChasePlayer;
 
     [SerializeField, FormerlySerializedAs("_canDamage")]
     private bool _canReceiveDamage;
+
+
+
+
+
 
     [Header("演出")]
     [SerializeField]
@@ -87,11 +106,18 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _currentSpeed;
 
+
+
     [SerializeField]
     private DirectionType _currentDirection;
 
+
+
+
+
     [SerializeField]
     private EnemyStateType _currentState;
+
 
     public float CurrentSpeed
     {
@@ -112,6 +138,7 @@ public class Enemy : MonoBehaviour
     {
         get => _canJumpOverIvy;
     }
+
 
     private EnemyDamageHandler _damageHandler;
     private EnemyAttackHandler _attackHandler;
@@ -150,6 +177,10 @@ public class Enemy : MonoBehaviour
         // 少し時間をずらして SE 再生を有効化する
         StartCoroutine(DelayEnableSound(0.2f));
 
+
+
+
+
         void Initialize()
         {
             if (_stunSpriteRenderer)
@@ -157,11 +188,23 @@ public class Enemy : MonoBehaviour
                 _stunSpriteRenderer.enabled = false;
             }
 
+
+
+
+
+
+
             if (s_playerController == null || s_playerTransform == null)
             {
                 s_playerController = FindAnyObjectByType<PlayerController>();
                 s_playerTransform = s_playerController.transform;
             }
+
+
+
+
+
+
 
             if (s_physicsMaterial2D == null)
             {
@@ -179,9 +222,21 @@ public class Enemy : MonoBehaviour
 
             _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
+
+
+
+
+
+
             _currentHp = _maxHp;
             _currentSpeed = _normalSpeed;
             _currentState = EnemyStateType.Normal;
+
+
+
+
+
+
 
             _damageHandler = new EnemyDamageHandler(_maxHp, _canReceiveDamage, _spriteRenderers, this);
             _attackHandler = new EnemyAttackHandler(_attackPoint, ref _lastAttackingTime);
@@ -207,6 +262,9 @@ public class Enemy : MonoBehaviour
     }
 
     private void OnEnable()
+
+
+
     {
         _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
 
@@ -232,6 +290,8 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+
+
         // 移動
         var modelLocalScale = _modelScale;
         modelLocalScale.x *= _currentDirection switch
@@ -256,10 +316,12 @@ public class Enemy : MonoBehaviour
 
             case EnemyStateType.EatingMeat:
                 UpdateEatingMeatState();
+
                 break;
 
             case EnemyStateType.Escape:
                 UpdateEscapeState();
+
                 break;
 
             case EnemyStateType.ChasingPlayer:
@@ -286,11 +348,15 @@ public class Enemy : MonoBehaviour
             || GameManager.Instance.CurrentState == GameStateType.StageClear)
         {
             SetEnemyEnabledState(false);
+
             gameObject.SetActive(false);
         }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
+
+
+
     {
         switch (_currentState)
         {
@@ -392,6 +458,19 @@ public class Enemy : MonoBehaviour
         if (_currentState == EnemyStateType.EatingMeat || _currentState == EnemyStateType.Faint)
         {
             return;
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
         _currentState = EnemyStateType.EatingMeat;
@@ -429,10 +508,21 @@ public class Enemy : MonoBehaviour
             if (_stunSpriteRenderer)
             {
                 _stunSpriteRenderer.enabled = false;
+
+
+
             }
             _currentState = EnemyStateType.Normal;
             Debug.Log("見つからない終了");
         }
+
+
+
+
+
+
+
+
     }
 
     // TODO: Rename to "ApplySwampItemEffect"?
@@ -442,6 +532,8 @@ public class Enemy : MonoBehaviour
     public void SlowDownScale(float speedSlowDownScale, float duration)
     {
         SetSlowDownStateForDuration(speedSlowDownScale, duration);
+
+
     }
 
     /// <summary>
@@ -464,6 +556,7 @@ public class Enemy : MonoBehaviour
     private void SetStunStateForDuration(float stunTime)
     {
         if (_currentState == EnemyStateType.Escape || _currentState == EnemyStateType.Faint)
+
         {
             return;
         }
@@ -499,6 +592,7 @@ public class Enemy : MonoBehaviour
             StopCoroutine(_itemReactionCoroutine);
         }
 
+
         _itemReactionCoroutine = StartCoroutine(SetEscapeStateCoroutine(pointToEscapeFrom, effectTime));
 
         IEnumerator SetEscapeStateCoroutine(Vector3 pointToEscapeFrom, float effectTime)
@@ -514,6 +608,7 @@ public class Enemy : MonoBehaviour
     /// 一定時間、スピードを遅くする状態に設定
     /// </summary>
     private void SetSlowDownStateForDuration(float speedSlowDownScale, float duration)
+
     {
         if (_slowDownCoroutine != null)
         {
@@ -568,6 +663,16 @@ public class Enemy : MonoBehaviour
         }
 
         if (IsTouchedFromSide(out bool playerHit))
+
+
+
+
+
+
+
+
+
+
         {
             // もし壁などに触れたら移動方向を反転させる
             _currentDirection = _currentDirection == DirectionType.Right ? DirectionType.Left : DirectionType.Right;
@@ -644,6 +749,12 @@ public class Enemy : MonoBehaviour
     {
         return Physics2D.BoxCast(transform.position, _boxCollider2D.size - new Vector2(0.1f, 0.1f),
             0, Vector2.down, 0.2f, _raycastData.RaycastGroundMask);
+
+
+
+
+
+
     }
 
     /// <summary>
@@ -652,6 +763,7 @@ public class Enemy : MonoBehaviour
     private bool IsTouchedFromSide(out bool isPlayerHit)
     {
         Vector2 rayDirection = _currentDirection switch
+
         {
             DirectionType.Left => Vector2.left,
             DirectionType.Right => Vector2.right,
@@ -672,6 +784,8 @@ public class Enemy : MonoBehaviour
             isPlayerHit = hit.collider.CompareTag(k_playerTag);
         }
         return hit;
+
+
     }
     private IEnumerator Missing(float MissingTime)
     {
@@ -693,6 +807,12 @@ public class Enemy : MonoBehaviour
         Debug.Log("見つからない終了");
 
     }
+
+
+
+
+
+
 
     /// <summary>
     /// 壁との水平距離が短くて乗り越えられるか？
@@ -732,9 +852,17 @@ public class Enemy : MonoBehaviour
 
     #region 状態更新
 
+
     private void UpdateEscapeState()
+
+
+
     {
         float deltaPositionX = _pointToEscapeFrom.x - transform.position.x;
+
+
+
+
 
         // プレイヤーとは逆の方向に逃げ出す
         _currentDirection = deltaPositionX >= 0 ? DirectionType.Left : DirectionType.Right;
@@ -837,16 +965,40 @@ public class Enemy : MonoBehaviour
         }
 
         if (IsCloseEnoughToJumpOnWall() && IsGrounded() && _canJumpOverWall)
+
+
+
+
         {
             Jump();
+
         }
 
         if (IsCloseEnoughToJumpOverIvy() && IsGrounded() && _canJumpOverIvy)
+
+
+
+
+
+
+
+
         {
             Jump();
+
         }
 
         if (Time.time >= _lastAttackingTime + 0.1f)
+
+
+
+
+
+
+
+
+
+
         {
             if (IsTouchedFromSide(out bool isPlayerHit))
             {
@@ -869,15 +1021,35 @@ public class Enemy : MonoBehaviour
     private void UpdateMissingPlayerByGrassState()
     {
         _rigidbody2D.linearVelocityX = 0;
+
+
+
+
+
+
     }
 
     private void UpdateFaintState()
+
+
+
+
+
+
+
+
+
     {
         _rigidbody2D.linearVelocityX = 0;
         _animator.SetBool(s_dizzyParameter, true);
+
     }
 
     #endregion
+
+
+
+
 
 #if UNITY_EDITOR
     #region ギズモの描画処理
@@ -946,6 +1118,16 @@ public class Enemy : MonoBehaviour
         else
         {
             Gizmos.color = Color.blue;
+
+
+
+
+
+
+
+
+
+
         }
         Gizmos.DrawLine(transform.position, transform.position + (Vector3)(dir * _raycastData.MaxJumpDistanceFromWall));
         Gizmos.color = cacheColor;
