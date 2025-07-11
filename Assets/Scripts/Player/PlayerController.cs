@@ -715,7 +715,7 @@ public class PlayerController : MonoBehaviour
             {
                 _playerStatus = PlayerStatusType.Normal;
                 _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
-                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
+                //_itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         AudioManager.Instance.PlaySE("throw");
