@@ -406,16 +406,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-//                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
-//            }
-//            else
-//            {
-//                Destroy(item.gameObject);
-//>>>>>>>>> Temporary merge branch 2
-//            }
-//        }
-//    }
-    
+    //                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+    //            }
+    //            else
+    //            {
+    //                Destroy(item.gameObject);
+    //>>>>>>>>> Temporary merge branch 2
+    //            }
+    //        }
+    //    }
+
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -555,8 +555,10 @@ public class PlayerController : MonoBehaviour
                 {
                     _cameraShakeController.TriggerShake();
                 }
-
-                _playerStatus = PlayerStatusType.Death;
+                if (CurrentHp <= 0)
+                {
+                    _playerStatus = PlayerStatusType.Death;
+                }
             }
         }
         else
@@ -565,7 +567,7 @@ public class PlayerController : MonoBehaviour
             CurrentHp += value;
             _healingEffect.PlayHealingEffect();
         }
-        
+
         //if (CurrentHp > _maxHp)
         //{
         //    CurrentHp = _maxHp;
