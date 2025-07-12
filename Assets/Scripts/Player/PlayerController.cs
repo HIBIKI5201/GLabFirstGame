@@ -63,6 +63,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator _jumpEnumerator;
     private Collider2D _playerCollider;
 
+    [SerializeField] private float _stompPower = 10f;
+
     public static bool IsPlayerInGrass
     {
         get;
@@ -254,9 +256,25 @@ public class PlayerController : MonoBehaviour
         }
         else if (_isStompEnemy)
         {
-            _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, 0);
-            _rigidbody2D.AddForce(new Vector2(0, _jumpPower / 1.5f), ForceMode2D.Impulse);
             _isStompEnemy = false;
+            float input = Input.GetAxisRaw("Horizontal");
+            Vector2 bounceDir;
+
+            if (input > 0f)
+            {
+                bounceDir = new Vector2(5f, 0.2f).normalized;
+            }
+            else if (input < 0f)
+            {
+                bounceDir = new Vector2(-5f, 0.2f).normalized;
+            }
+            else
+            {
+                bounceDir = Vector2.up;
+            }
+
+            _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, 0);
+            _rigidbody2D.AddForce(bounceDir * _stompPower, ForceMode2D.Impulse);
         }
         else if (_rigidbody2D.linearVelocity.y > 0)
         {
