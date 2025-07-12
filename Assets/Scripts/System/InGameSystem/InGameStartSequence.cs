@@ -62,7 +62,10 @@ public class InGameStartSequence : MonoBehaviour
     /// </summary>
     private void SetPetalCount()
     {
-        _player.GetComponent<PlayerController>().CurrentPetal = CheckPointManager._petalCount[_nowStage - 1];
+        if (CheckPointManager._checkPoint[_nowStage - 1] != Vector2.zero)
+        {
+            _player.GetComponent<PlayerController>().CurrentPetal = CheckPointManager._petalCount[_nowStage - 1];
+        }
     }
 
     /// <summary>

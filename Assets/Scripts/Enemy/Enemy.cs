@@ -127,6 +127,11 @@ public class Enemy : MonoBehaviour
     public EnemyStateType State
     {
         get => _currentState;
+        set
+        {
+            if (value == _currentState) return; // ステートが変わらなければ処理を行わない
+            _currentState = value;
+        }
     }
 
     public bool CanAvoidIvy
@@ -782,6 +787,32 @@ public class Enemy : MonoBehaviour
 
 
     }
+    private IEnumerator Missing(float MissingTime)
+    {
+        Debug.Log("見つからない");
+        if (_stunSpriteRenderer)
+        {
+            _stunSpriteRenderer.enabled = true;
+        }
+        State = EnemyStateType.MissingPlayerByGrass;
+
+        Debug.Log("aaaaaa");
+        yield return new WaitForSeconds(MissingTime);
+        if (_stunSpriteRenderer)
+            if (State != EnemyStateType.Faint)
+            {
+                State = EnemyStateType.Normal;
+            }
+
+        Debug.Log("見つからない終了");
+
+    }
+
+
+
+
+
+
 
 
 
