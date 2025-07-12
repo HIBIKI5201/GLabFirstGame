@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -58,7 +58,7 @@ public class GoalSequenceManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "goal" && GameManager.Instance.CurrentState  == GameStateType.StageClear)
+        if (collision.gameObject.name == "goal")
         {
             _rb.Sleep(); // 物理演算を止める
             
