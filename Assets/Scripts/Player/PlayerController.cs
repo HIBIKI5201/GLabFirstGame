@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +10,24 @@ using UnityEngine.UI;
 /// <summary>
 /// Playerの動きを管理するクラス
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private Rigidbody2D _rigidbody2D;
+
+    [SerializeField]
+    private AudioSource _audioSource;
+
     [SerializeField] int _maxHp;
+    [SerializeField] int _initHp;
+    public int CurrentPetal;
+    public int InitPetal = 0;
+    public int MaxPetal = 4;
     public int CurrentHp { get; private set; }
+    public int MaxHp { get { return _maxHp; } }
     [SerializeField] public List<GameObject> _rose = new List<GameObject>();
+    [SerializeField] public GameObject _petalGuage = default;
     [SerializeField] public float _maxSpeed;
     [SerializeField] public float _movePower;
     [SerializeField] public float _deceleration;
@@ -37,38 +49,52 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _canAction = true;
     [HideInInspector] public PlayerStatusType _playerStatus = PlayerStatusType.Normal;
     [SerializeField] private EnemyGetter _enemyGetter;
-    Rigidbody2D _rb;
-    SpriteRenderer _spriteRenderer;
     Scene m_simulationScene;
     PhysicsScene2D m_physicsScene;
-    GameObject[] _itemPos = new GameObject[3];
     float _horiInput = 0;
     CameraShakeController _cameraShakeController;
     DamageEffect _damageEffect;
+    HealingEffect _healingEffect;
+    Rigidbody2D _rb;
     PauseManager _pauseManager;
-    AudioSource _audioSource;
     Animator _animator;
+    Animator _petalGuageAnimator;
     Vector2 _pauseVelocity;
+
+    GameObject[] _itemPos;
+
     float _veloX = 0;
     float _acce = 1;
     IEnumerator _jumpEnumerator;
     private Collider2D _playerCollider;
-    [SerializeField] public float stompPowerMultiplier = 1;
 
-    //bool isHitable = false; // ヒットする場合、true
+    [SerializeField] private float _stompPower = 10f;
+
+    public static bool IsPlayerInGrass
+    {
+        get;
+        private set;
+    }
+
+    private void OnValidate()
+    {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _playerCollider = GetComponent<Collider2D>();
         _damageEffect = GetComponent<DamageEffect>();
-        
+        _healingEffect = GetComponent<HealingEffect>();
+
         if (!TryGetComponent(out _audioSource)) Debug.LogError("AudioSourceが設定されていません");
-        
+
         // PauseManager
         _pauseManager = FindAnyObjectByType<PauseManager>();
         if (_pauseManager != null) _pauseManager.OnPauseResume += PauseAction; // ポーズイベントを購読
         else Debug.LogError("PauseManagerが取得できませんでした");
-           
+
         if (!TryGetComponent(out _animator))
         {
             _animator = GetComponentInChildren<Animator>();
@@ -77,11 +103,9 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        CurrentHp = _maxHp;
+        CurrentHp = _initHp;
         _rb = GetComponent<Rigidbody2D>();
         CreatePhysicsScene();
-        _playerCollider = GetComponent<Collider2D>();
-        
 
         GameObject platform;
         if (_throwsetting.Platform != null)
@@ -90,14 +114,18 @@ public class PlayerController : MonoBehaviour
             Array.ForEach(platform.GetComponentsInChildren<Renderer>(), x => x.enabled = false);
             SceneManager.MoveGameObjectToScene(platform, m_simulationScene);
         }
-        
+
         _cameraShakeController = FindAnyObjectByType<CameraShakeController>();
         if (_cameraShakeController == null) Debug.LogError("CameraShakeControllerが設定されていません");
-        
+
         _itemSetting.RockUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.BottleUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemSetting.MeatUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+        _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
         _itemPos = new GameObject[] { _itemSetting.RockUi, _itemSetting.BottleUi, _itemSetting.MeatUi };
+
+        _petalGuageAnimator = _petalGuage.GetComponent<Animator>();
+        _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
     }
 
     private void Update()
@@ -109,23 +137,18 @@ public class PlayerController : MonoBehaviour
             ChangeItem();
             UseItem();
         }
+        _petalGuageAnimator.SetInteger("P_PetalCount", CurrentPetal);
     }
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.name);
-        if (collision.gameObject.name == "goal") _isInvincible = true; // ゴールした時
-
+        if (collision.gameObject.name == "goal")
+        {
+            _isInvincible = true;
+        }
         if (collision.gameObject.CompareTag("Grass"))
         {
-            Debug.Log("草むらに入った");
-            // GameObject.FindGameObjectsWithTag()
-            // for文やforeace文で、エネミー全体に回す
-
-            foreach (Enemy enemy in _enemyGetter.Enemies)
-            {
-                enemy._stayGrass = true;
-            }
+            IsPlayerInGrass = true;
         }
     }
 
@@ -133,12 +156,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Grass"))
         {
-            Debug.Log("草むらから出た!");
-
-            foreach (Enemy enemy in _enemyGetter.Enemies)
-            {
-                enemy._stayGrass = false;
-            }
+            IsPlayerInGrass = false;
         }
     }
 
@@ -150,9 +168,9 @@ public class PlayerController : MonoBehaviour
             if (!_isJump)
             {
                 float x = 0;
-                if (_rb.linearVelocity.x != 0)
+                if (_rigidbody2D.linearVelocity.x != 0)
                 {
-                    x = _rb.linearVelocity.x - (_deceleration + Mathf.Abs(_rb.linearVelocity.x)) * Mathf.Sign(_rb.linearVelocity.x) * Time.deltaTime;
+                    x = _rigidbody2D.linearVelocity.x - (_deceleration + Mathf.Abs(_rigidbody2D.linearVelocity.x)) * Mathf.Sign(_rigidbody2D.linearVelocity.x) * Time.deltaTime;
                 }
                 if (Mathf.Abs(x) < 0.2)
                 {
@@ -164,13 +182,13 @@ public class PlayerController : MonoBehaviour
                     _audioSource.clip = _walk;
                     _audioSource.Play();
                 }
-                _rb.linearVelocity = new Vector2(x, _rb.linearVelocity.y);
+                _rigidbody2D.linearVelocity = new Vector2(x, _rigidbody2D.linearVelocity.y);
                 _animator.SetFloat("isWalk", Mathf.Abs(x));
             }
         }
         else
         {
-            float x = _rb.linearVelocity.x + _movePower * _horiInput * Time.deltaTime;
+            float x = _rigidbody2D.linearVelocity.x + _movePower * _horiInput * Time.deltaTime;
             if (Mathf.Abs(x) > _maxSpeed)
             {
                 x = _maxSpeed * Mathf.Sign(x);
@@ -195,7 +213,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            _rb.linearVelocity = new Vector2(x, _rb.linearVelocity.y);
+            _rigidbody2D.linearVelocity = new Vector2(x, _rigidbody2D.linearVelocity.y);
         }
         if (_isJump)
         {
@@ -213,10 +231,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     private void Jump()
     {
-        if (_rb.linearVelocity.y < -1f)
+        if (_rigidbody2D.linearVelocity.y < -1f)
         {
             if (_jumpEnumerator == null)
             {
@@ -231,7 +249,7 @@ public class PlayerController : MonoBehaviour
             if (!_isJump)
             {
                 AudioManager.Instance.PlaySE("jump");
-                _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+                _rigidbody2D.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
                 _isJump = true;
                 _jumpEnumerator = GroundingJudge(_jumpEnumerator);
                 //Debug.Log("StartCoroutine");
@@ -243,62 +261,52 @@ public class PlayerController : MonoBehaviour
             if (_isStompEnemy)
             {
                 _isStompEnemy = false;
-                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
-                _rb.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
+                _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, 0);
+                _rigidbody2D.AddForce(new Vector2(0, _jumpPower), ForceMode2D.Impulse);
             }
         }
         else if (_isStompEnemy)
         {
-            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
-
-            // 入力取得：A = -1、D = 1、無入力 = 0
+            _isStompEnemy = false;
             float input = Input.GetAxisRaw("Horizontal");
-
             Vector2 bounceDir;
 
             if (input > 0f)
             {
-                // Dキー押下 → 右上へ
                 bounceDir = new Vector2(5f, 0.2f).normalized;
             }
             else if (input < 0f)
             {
-                // Aキー押下 → 左上へ
                 bounceDir = new Vector2(-5f, 0.2f).normalized;
             }
             else
             {
-                // 入力なし → 真上
                 bounceDir = Vector2.up;
             }
 
-            _rb.AddForce(bounceDir * (_jumpPower * stompPowerMultiplier), ForceMode2D.Impulse);
-            _isStompEnemy = false;
-
-
-
-
+            _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, 0);
+            _rigidbody2D.AddForce(bounceDir * _stompPower, ForceMode2D.Impulse);
         }
-        else if (_rb.linearVelocity.y > 0)
+        else if (_rigidbody2D.linearVelocity.y > 0)
         {
-            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _rb.linearVelocity.y * 0.99f);
+            _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, _rigidbody2D.linearVelocity.y * 0.99f);
         }
         //Debug.Log(_isJump);
     }
-    
+
     IEnumerator GroundingJudge(IEnumerator enumerator)
     {
-        if (_rb.linearVelocity.y > 0)
+        if (_rigidbody2D.linearVelocity.y > 0)
         {
             _animator.SetBool("isJump", true);
         }
         _audioSource.Stop();
-        while (_rb.linearVelocity.y > 0)
+        while (_rigidbody2D.linearVelocity.y > 0)
         {
             yield return new WaitForEndOfFrame();
         }
         _animator.SetBool("isFall", true);
-        _rb.gravityScale = _fallSpeed;
+        _rigidbody2D.gravityScale = _fallSpeed;
         while (_isJump)
         {
             yield return new WaitForEndOfFrame();
@@ -308,13 +316,13 @@ public class PlayerController : MonoBehaviour
                 if (obj.gameObject.CompareTag("Ground"))
                 {
                     _isJump = false;
-                    _rb.gravityScale = 1;
+                    _rigidbody2D.gravityScale = 1;
                     AudioManager.Instance.PlaySE("jump_landing");
                     _animator.SetBool("isJump", false);
                     _animator.SetBool("isFall", false);
                     if (_landingInertia && _horiInput == 0)
                     {
-                        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+                        _rigidbody2D.linearVelocity = new Vector2(0, _rigidbody2D.linearVelocity.y);
                     }
                     yield return new WaitForSeconds(0.5f);
                     _jumpEnumerator = null;
@@ -327,13 +335,13 @@ public class PlayerController : MonoBehaviour
                         FluctuationLife(-1);
                     }
                     _isStompEnemy = true;
-                    _rb.gravityScale = 1;
+                    _rigidbody2D.gravityScale = 1;
                 }
             }
         }
         _jumpEnumerator = null;
     }
-    
+
     /// <summary>
     /// アイテムを獲得した時の処理
     /// </summary>
@@ -378,8 +386,54 @@ public class PlayerController : MonoBehaviour
                 Destroy(item.gameObject);
             }
         }
+        else if (item as Petal)
+        {
+            PetalGetAction();
+        }
+        else if (item as Ivy)
+        {
+            if (_itemList.Where(i => i as Ivy).ToList().Count < _itemSetting.MaxIvyCount)
+            {
+                _itemList.Add(item);
+                _itemSetting.IvyCountText.text = _itemList.Where(i => i as Ivy).Count().ToString();
+                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+            }
+            else
+            {
+                Destroy(item.gameObject);
+            }
+        }
+        else if (item as Petal)
+        {
+            PetalGetAction();
+        }
     }
-    
+    /// <summary>
+    /// 花びらを取得時の処理
+    /// </summary>
+    private void PetalGetAction()
+    {
+        if (CurrentPetal < MaxPetal)
+        {
+            CurrentPetal++;
+            if (CurrentPetal == MaxPetal)
+            {
+                CurrentPetal = MaxPetal;
+                FluctuationLife(1);
+            }
+        }
+    }
+
+    //                _itemSetting.IvyUi.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+    //            }
+    //            else
+    //            {
+    //                Destroy(item.gameObject);
+    //>>>>>>>>> Temporary merge branch 2
+    //            }
+    //        }
+    //    }
+
     bool Item(out ItemBase item)
     {
         switch (_playerStatus)
@@ -393,12 +447,15 @@ public class PlayerController : MonoBehaviour
             case PlayerStatusType.Meat:
                 item = _itemList.Where(i => i as Meat).ToList().First();
                 return true;
+            case PlayerStatusType.Ivy:
+                item = _itemList.Where(i => i as Ivy).ToList().First();
+                return true;
             default:
                 item = null;
                 return false;
         }
     }
-    
+
     /// <summary>
     /// アイテムを切り替える処理
     /// </summary>
@@ -412,6 +469,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -422,6 +480,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale *= _itemSetting.LeafSize;
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -432,23 +491,36 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafRock.transform.localScale = Vector3.one;
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
                 _itemSetting.LeafMeat.transform.localScale *= _itemSetting.LeafSize;
+                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (_itemList.Any(i => i as Ivy) && _playerStatus != PlayerStatusType.Ivy)
+            {
+                _playerStatus = PlayerStatusType.Ivy;
+                _itemSetting.LeafRock.transform.localScale = Vector3.one;
+                _itemSetting.LeafBottle.transform.localScale = Vector3.one;
+                _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+                _itemSetting.LeafIvy.transform.localScale *= _itemSetting.LeafSize;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             _playerStatus = PlayerStatusType.Normal;
             _itemSetting.LeafRock.transform.localScale = Vector3.one;
             _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             _itemSetting.LeafMeat.transform.localScale = Vector3.one;
+            _itemSetting.LeafIvy.transform.localScale = Vector3.one;
         }
     }
-    
+
     void CreatePhysicsScene()
     {
         m_simulationScene = SceneManager.CreateScene("Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         m_physicsScene = m_simulationScene.GetPhysicsScene2D();
     }
-    
+
     /// <summary>
     /// アイテムを投げるときの予測線のシミュレーション
     /// </summary>
@@ -484,10 +556,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void FluctuationLife(int value)
     {
-        //今草むらにいたら　リターンする
-        //if (!isHitable) return;
-        
-        
         if (value < 0)
         {
             if (!_isInvincible)
@@ -496,7 +564,7 @@ public class PlayerController : MonoBehaviour
                 for (int i = 0; i < Mathf.Abs(value) && _rose.Count > 0; i++)
                 {
                     _damageEffect.PlayDamageEffect();
-                    _rose.RemoveAt(0);
+                    //_rose.RemoveAt(0);
                 }
                 StartCoroutine(Invincible());
                 AudioManager.Instance.PlaySE("damaged");
@@ -505,23 +573,25 @@ public class PlayerController : MonoBehaviour
                 {
                     _cameraShakeController.TriggerShake();
                 }
-            }
-            if (CurrentHp <= 0)
-            {
-                _playerStatus = PlayerStatusType.Death;
+                if (CurrentHp <= 0)
+                {
+                    _playerStatus = PlayerStatusType.Death;
+                }
             }
         }
         else
         {
+            if (CurrentHp >= _maxHp) return;
             CurrentHp += value;
+            _healingEffect.PlayHealingEffect();
         }
-        
-        if (CurrentHp > _maxHp)
-        {
-            CurrentHp = _maxHp;
-        }
+
+        //if (CurrentHp > _maxHp)
+        //{
+        //    CurrentHp = _maxHp;
+        //}
     }
-    
+
     IEnumerator Invincible()
     {
         _isInvincible = true;
@@ -572,7 +642,7 @@ public class PlayerController : MonoBehaviour
             _pauseManager.RegisterAndStartCoroutine(ThrowItem());
         }
     }
-    
+
     IEnumerator ThrowItem()
     {
         IEnumerator enumerator = _pauseManager.GetLatestCoroutine();
@@ -590,6 +660,11 @@ public class PlayerController : MonoBehaviour
             item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
             rb.gravityScale = 0;
             rb.AddForce(new Vector2(_throwsetting.ThrowStraightPower * transform.localScale.x, 0), ForceMode2D.Impulse);
+        }
+        else if (item.Throw == ThrowType.Drop)
+        {
+            item.transform.position = transform.position + (Vector3)_throwsetting.ThrowPos;
+            rb.gravityScale = 1;
         }
         else
         {
@@ -641,7 +716,7 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafBottle.transform.localScale = Vector3.one;
             }
         }
-        else
+        else if (item as Meat)
         {
             _itemList.Remove((Meat)item);
             _itemSetting.MeatCountText.text = _itemList.Where(i => i as Meat).Count().ToString();
@@ -652,6 +727,17 @@ public class PlayerController : MonoBehaviour
                 _itemSetting.LeafMeat.transform.localScale = Vector3.one;
             }
         }
+        else if (item as Ivy)
+        {
+            _itemList.Remove((Ivy)item);
+            _itemSetting.IvyCountText.text = _itemList.Where(i => i as Ivy).Count().ToString();
+            if (_itemSetting.IvyCountText.text == "0")
+            {
+                _playerStatus = PlayerStatusType.Normal;
+                _itemSetting.IvyUi.GetComponent<Image>().color = _itemSetting.ZeroItemColor;
+                _itemSetting.LeafIvy.transform.localScale = Vector3.one;
+            }
+        }
         AudioManager.Instance.PlaySE("throw");
     EndCoroutine:
         yield return new WaitForEndOfFrame();
@@ -659,7 +745,7 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
-    
+
     #region ポーズ関連の処理
 
     private void PauseAction(bool isPause)
@@ -673,15 +759,14 @@ public class PlayerController : MonoBehaviour
             _canAction = true;
         }
     }
-    
+
     #endregion
-    
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 1, 1, 0.5f);
         Gizmos.DrawWireCube((Vector2)transform.position + _point, _size);
     }
-
 
     #region Unused
 
@@ -703,9 +788,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        Vector2 vector2 = _rb.linearVelocity;
+        Vector2 vector2 = _rigidbody2D.linearVelocity;
         vector2.x = _veloX;
-        _rb.linearVelocity = vector2;
+        _rigidbody2D.linearVelocity = vector2;
 
         if (!_isJump)
         {
@@ -720,14 +805,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        
-    }
-
+    #endregion
 
 }
-
-    #endregion
-    

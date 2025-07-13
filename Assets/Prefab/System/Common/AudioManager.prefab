@@ -182,4 +182,43 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: 5b7e1af3753028542884d94b92fc3578, type: 3}
     _volume: 1
     _pitch: 0
-  _bgmSource: {fileID: 0}
+  - _name: getRock
+    _clip: {fileID: 8300000, guid: eec8e3c479928e14eb0ed42c1bc6b522, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: getBottle
+    _clip: {fileID: 8300000, guid: 26fb766530c41fd4ea04db14116129e2, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: getMeat
+    _clip: {fileID: 8300000, guid: 6ce1bed4f6187314b87098c46015db8a, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: getPetal
+    _clip: {fileID: 0}
+    _volume: 1
+    _pitch: 0
+  - _name: getIvy
+    _clip: {fileID: 8300000, guid: 955895c7b60f1f7459a9182d03249760, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: putIvy
+    _clip: {fileID: 8300000, guid: 89a3a1d7e78b531499c49a34152105c7, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: enterIvy
+    _clip: {fileID: 8300000, guid: 8d5c285499e6b204f92862d2b943d129, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: healing
+    _clip: {fileID: 8300000, guid: cffce7a2d2281174dafa271184f54633, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: grassIn
+    _clip: {fileID: 8300000, guid: 713d6add631ef2a48b007e176dd8aedd, type: 3}
+    _volume: 1
+    _pitch: 0
+  - _name: grassOut
+    _clip: {fileID: 8300000, guid: e18c26c1ba8da7a41ad4f6884fbadcb7, type: 3}
+    _volume: 1
+    _pitch: 0

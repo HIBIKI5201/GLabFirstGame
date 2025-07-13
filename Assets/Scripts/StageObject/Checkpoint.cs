@@ -26,9 +26,13 @@ public class Checkpoint : MonoBehaviour
     
     /// <summary>
     /// 現在のステージのリスポーン地点をVector2.zeroの位置にセットしなおす
+    /// 花びらの所持数を0に戻す
     /// </summary>
-    public void ResetPoint() => CheckPointManager._checkPoint[nowStage - 1] = Vector2.zero;
-
+    public void ResetPoint()
+    {
+        CheckPointManager._checkPoint[nowStage - 1] = Vector2.zero;
+        CheckPointManager._petalCount[nowStage - 1] = 0;
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Colliderにプレイヤーが入って、かつまだチェックポイント通過前だった場合
@@ -36,6 +40,7 @@ public class Checkpoint : MonoBehaviour
         {
             AudioManager.Instance.PlaySE("checkpoint");
             CheckPointManager._checkPoint[nowStage - 1] = transform.position; // リスポーン地点を変更する
+            CheckPointManager._petalCount[nowStage - 1] = _player.GetComponent<PlayerController>().CurrentPetal; // 現在花びら所持数を記憶する
             _capsuleCollider.enabled = false; // コライダーを無効化
             if (_changeSprite) _spriteRenderer.sprite = _changeSprite; // 画像を変更
             _isFirstCheck = true; // 通過済みとする

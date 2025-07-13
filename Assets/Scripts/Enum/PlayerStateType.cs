@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// プレイヤーの状態の列挙型
 /// </summary>
 public enum PlayerStatusType
@@ -8,5 +8,6 @@ public enum PlayerStatusType
     Meat,
     Normal,
     Damage,
-    Death
+    Death,
+    Ivy
 }

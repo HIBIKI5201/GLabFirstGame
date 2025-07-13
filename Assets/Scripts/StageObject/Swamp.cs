@@ -53,8 +53,8 @@ public class Swamp : MonoBehaviour
             AudioManager.Instance.PlaySE("damage_enemy");
             _enemy = collision.gameObject.GetComponent<Enemy>();
 
-            _defaultEnemySpeed = _enemy._currentSpeed;
-            _enemy._currentSpeed *= _speedDown;
+            _defaultEnemySpeed = _enemy.CurrentSpeed;
+            _enemy.SetCurrentSpeed(_defaultEnemySpeed * _speedDown);
         }
     }
 
@@ -85,7 +85,7 @@ public class Swamp : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            _enemy._currentSpeed = _defaultEnemySpeed;
+            _enemy.SetCurrentSpeed(_defaultEnemySpeed);
             _enemy.SlowDownScale(_speedDown, 2);
         }
     }

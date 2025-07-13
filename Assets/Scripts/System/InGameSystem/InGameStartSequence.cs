@@ -21,6 +21,7 @@ public class InGameStartSequence : MonoBehaviour
         InitializeReferences();
         SetupStageEntry();
         PositionPlayerAtCheckpoint();
+        SetPetalCount();
     }
 
     /// <summary>
@@ -53,6 +54,17 @@ public class InGameStartSequence : MonoBehaviour
         {
             // リスポーン地点が原点以外になっている場合は、その場所にプレイヤーの位置を移動させる
             transform.position = CheckPointManager._checkPoint[_nowStage - 1];
+        }
+    }
+
+    /// <summary>
+    /// チェックポイント情報に基づいて花びらの所持数を設定
+    /// </summary>
+    private void SetPetalCount()
+    {
+        if (CheckPointManager._checkPoint[_nowStage - 1] != Vector2.zero)
+        {
+            _player.GetComponent<PlayerController>().CurrentPetal = CheckPointManager._petalCount[_nowStage - 1];
         }
     }
 

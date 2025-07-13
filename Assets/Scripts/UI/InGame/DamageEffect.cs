@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using DG.Tweening.Core;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class DamageEffect : MonoBehaviour
     private bool _isDying; // プレイヤーが現在瀕死状態かどうかのフラグ
     private PlayerController _playerController;
     private CompositeDisposable _stateDisposable = new CompositeDisposable();
+    public TweenerCore<Color, Color, DG.Tweening.Plugins.Options.ColorOptions> _dyingVignette = null; // 瀕死ビネットのTweenerオブジェクト
 
     private void Start()
     {
@@ -51,12 +53,18 @@ public class DamageEffect : MonoBehaviour
     /// </summary>
     private void HpIconAnimation()
     {
-        Image hpIcon = _playerController._rose[0].GetComponent<Image>(); // 参照を取得する
-        
-        // 黒色に変化させつつフェードアウトし、破棄
-        hpIcon.DOColor(new Color(0, 0, 0), _damageEffectDuration);
-        hpIcon.DOFade(0, _damageEffectDuration).SetEase(Ease.InQuart);
-        Destroy(_playerController._rose[0], _damageEffectDuration);
+        for(int i = 0; i < _playerController.MaxHp; i++)
+        {
+            Image rose = _playerController._rose[i].GetComponent<Image>();
+            if (i >= _playerController.CurrentHp)
+            {
+                if (rose.gameObject.activeInHierarchy)
+                {
+                    rose.DOColor(new Color(0f, 0f, 0f), _damageEffectDuration);
+                    rose.DOFade(1, _damageEffectDuration).SetEase(Ease.InQuart).OnComplete(() => { rose.gameObject.SetActive(false); });
+                }
+            }
+        }
     }
     
     /// <summary>
@@ -76,7 +84,21 @@ public class DamageEffect : MonoBehaviour
     {
         _isDying = true;
         _vignette.gameObject.SetActive(true); // ビネットを表示
-        _vignette.DOFade(0, 1f).SetEase(Ease.OutQuart).SetLoops(-1, LoopType.Yoyo); // 明滅するアニメーション
+        _dyingVignette = _vignette.DOFade(0, 1f).SetEase(Ease.OutQuart).SetLoops(-1, LoopType.Yoyo); // 明滅するアニメーション
+    }
+
+    /// <summary>
+    /// 瀕死状態ビネットの点滅を停止
+    /// </summary>
+    public void StopDyingEffect()
+    {
+        _isDying = false;
+        if (_dyingVignette != null)
+        {
+            _dyingVignette.Kill();
+            _dyingVignette = null;
+            _vignette.gameObject.SetActive(false);
+        }
     }
 
     private void OnDestroy()

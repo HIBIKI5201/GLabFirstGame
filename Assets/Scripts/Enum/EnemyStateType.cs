@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// 敵の状態の列挙型
 /// </summary>
 public enum EnemyStateType
@@ -14,14 +14,9 @@ public enum EnemyStateType
     Faint,
 
     /// <summary>
-    /// Playerを見失っている（マップオブジェクト：草むらの効果）
-    /// </summary>
-    MissingPlayerByGrass,
-
-    /// <summary>
     /// 食いついている（アイテム：肉の効果）
     /// </summary>
-    Bite,
+    EatingMeat,
 
     /// <summary>
     /// 逃げている（アイテム：空き瓶の効果）
@@ -31,5 +26,10 @@ public enum EnemyStateType
     /// <summary>
     /// 追跡中
     /// </summary>
-    Chase,
+    ChasingPlayer,
+
+    /// <summary>
+    /// Playerを見失っている（マップオブジェクト：草むらの効果）
+    /// </summary>
+    MissingPlayerByGrass,
 }

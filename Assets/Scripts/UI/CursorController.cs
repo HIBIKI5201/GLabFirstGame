@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ public class CursorController : MonoBehaviour
     private void Start()
     {
         _buttons[0].Select();
+        _buttons[0].OnSelect(null);
     }
     
     private void SelectButton(int _index)

@@ -10,15 +10,15 @@ using UnityEngine;
 public class EnemyDamageHandler : IDisposable
 {
     private int _currentHp; // 現在のHP
-    private bool _canDamage; // ダメージを受けるか
+    private bool _canReceiveDamage; // ダメージを受けるか
     private SpriteRenderer[] _spriteRenderers;
     private Enemy _enemy; // エネミー
     private CancellationTokenSource _damageCts = new CancellationTokenSource(); // キャンセル用
     
-    public EnemyDamageHandler(int hp, bool canDamage, SpriteRenderer[] spriteRenderers, Enemy enemy)
+    public EnemyDamageHandler(int hp, bool canReceiveDamage, SpriteRenderer[] spriteRenderers, Enemy enemy)
     {
         _currentHp = hp;
-        _canDamage = canDamage;
+        _canReceiveDamage = canReceiveDamage;
         _spriteRenderers = spriteRenderers;
         _enemy = enemy;
     }
@@ -27,19 +27,20 @@ public class EnemyDamageHandler : IDisposable
     /// HPを減らすメソッド
     /// </summary>
     /// <param name="value">ダメージを受ける場合は負の数を渡す</param>
-    public void LifeFluctuation(int value)
+    public int LifeFluctuation(int value)
     {
-        if (!_canDamage && value < 0)
+        if (!_canReceiveDamage && value < 0)
         {
-            return;
+            return _currentHp;
         }
 
         _currentHp += value;
         
         if (_currentHp <= 0)
         {
+            _currentHp = 0;
             _enemy.Die(); // HPがゼロになったら自分を破棄する
-            return;
+            return 0;
         }
         
         if (value < 0)
@@ -47,8 +48,9 @@ public class EnemyDamageHandler : IDisposable
             DamageEffect(); // ダメージエフェクトを再生する
             Debug.Log($"{value}ダメージを受けた  現在のHP:{_currentHp}");
         }
+        return _currentHp;
     }
-    
+
     /// <summary>
     /// ダメージを受けた時のエフェクト
     /// </summary>
@@ -70,7 +72,7 @@ public class EnemyDamageHandler : IDisposable
     /// </summary>
     private async UniTask Damage(CancellationToken cancellationToken)
     {
-        _canDamage = false;
+        _canReceiveDamage = false;
         float time = Time.time;
 
         try
@@ -96,7 +98,7 @@ public class EnemyDamageHandler : IDisposable
         }
         finally
         {
-            _canDamage = true;
+            _canReceiveDamage = true;
         }
     }
 
